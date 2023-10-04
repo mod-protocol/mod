@@ -4,6 +4,6 @@
     "types": "./index.ts",
     "version": "0.0.1",
     "dependencies": {
-        "@mod-protocol/core": "*"
+        "@mod-protocol/core": "^0.0.1"
     }
 }

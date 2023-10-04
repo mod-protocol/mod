@@ -46,7 +46,9 @@ export const EmbedsEditor = (props: {
           </Button>
           {embed.status === "loading" ? (
             <div>
-              <Skeleton className="h-100 w-[250px]" />
+              <Skeleton className="h-[100px] w-full items-center flex justify-center">
+                loading
+              </Skeleton>
             </div>
           ) : isFarcasterCastIdEmbed(embed) ? (
             <></>
