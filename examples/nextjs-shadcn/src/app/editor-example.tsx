@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Button } from "@mod-protocol/react-ui-shadcn/src/@/components/ui/button";
 import { CreationMiniApp } from "@mod-protocol/react";
-import { useEditor, EditorContent } from "@mod-protocol/tiptap";
+import { useEditor, EditorContent } from "@mod-protocol/react-editor";
 import { creationMiniApps } from "@mod-protocol/miniapp-registry";
 import {
   Manifest,

@@ -1,4 +1,4 @@
-import { useTextLength } from "@mod-protocol/tiptap";
+import { useTextLength } from "@mod-protocol/react-editor";
 
 type Props = {
   getText: () => string;

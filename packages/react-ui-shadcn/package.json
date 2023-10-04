@@ -10,7 +10,7 @@
   "dependencies": {
     "@mod-protocol/core": "*",
     "@mod-protocol/react": "*",
-    "@mod-protocol/tiptap": "*",
+    "@mod-protocol/react-editor": "*",
     "video.js": "^8.0.4",
     "tailwindcss-animate": "^1.0.6",
     "@primer/octicons-react": "^19.5.0",
