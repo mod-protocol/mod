@@ -1,0 +1,13 @@
+{
+  "index": "Getting started",
+  "farcaster": "Farcaster",
+  "integrate-into-your-app": "Integrate into your app",
+  "create-mini-app": "Create a mini app",
+  "faq": "FAQ",
+  "contact": {
+    "title": "Contact ↗",
+    "type": "page",
+    "href": "https://warpcast.com/df",
+    "newWindow": true
+  }
+}

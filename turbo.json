@@ -1,0 +1,31 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    "**/.env.*local"
+  ],
+  "pipeline": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "lint": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  },
+  "globalEnv": [
+    "CHATGPT_API_SECRET",
+    "NEYNAR_API_SECRET",
+    "GIPHY_API_KEY",
+    "INFURA_API_KEY",
+    "INFURA_API_SECRET",
+    "LIVEPEER_API_SECRET",
+    "NEXT_PUBLIC_API_URL"
+  ]
+}

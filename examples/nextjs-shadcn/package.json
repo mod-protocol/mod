@@ -1,0 +1,39 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@miniapps/chatgpt": "*",
+    "@miniapps/giphy-picker": "*",
+    "@miniapps/infura-ipfs-upload": "*",
+    "@miniapps/nft-minter": "*",
+    "@packages/miniapp-registry": "*",
+    "@packages/core": "*",
+    "@packages/react": "*",
+    "@packages/tiptap": "*",
+    "next": "^13.4.1",
+    "next-themes": "^0.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss-animate": "^1.0.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.9",
+    "@types/node": "^17.0.12",
+    "@types/react": "^18.0.22",
+    "@types/react-dom": "^18.0.7",
+    "autoprefixer": "^10.4.14",
+    "eslint-config-custom": "*",
+    "eslint-config-next": "^13.5.3",
+    "postcss": "^8.4.27",
+    "tailwindcss": "^3.3.3",
+    "tsconfig": "*",
+    "typescript": "^4.5.3"
+  }
+}

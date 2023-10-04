@@ -1,0 +1,43 @@
+{
+  "name": "@packages/tiptap",
+  "version": "1.0.0",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "private": true,
+  "scripts": {
+    "lint": "eslint \"**/*.ts*\""
+  },
+  "dependencies": {
+    "@tiptap/core": "^2.0.4",
+    "@tiptap/extension-document": "^2.0.4",
+    "@tiptap/extension-hard-break": "^2.0.4",
+    "@tiptap/extension-history": "^2.0.4",
+    "@tiptap/extension-link": "^2.0.4",
+    "@tiptap/extension-mention": "^2.0.4",
+    "@tiptap/extension-paragraph": "^2.0.4",
+    "@tiptap/extension-placeholder": "^2.0.4",
+    "@tiptap/extension-text": "^2.0.4",
+    "@tiptap/pm": "^2.0.4",
+    "@packages/tiptap-extension-link": "*",
+    "@tiptap/suggestion": "^2.0.4",
+    "@tiptap/react": "^2.0.4",
+    "prosemirror-model": "^1.19.3"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "workspaces": [
+    "configs/*",
+    "packages/*",
+    "examples/*"
+  ],
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "typescript": "^4.5.2"
+  }
+}

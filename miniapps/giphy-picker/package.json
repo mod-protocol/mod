@@ -1,0 +1,9 @@
+{
+  "name": "@miniapps/giphy-picker",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "@packages/core": "*"
+  }
+}

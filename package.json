@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@turbo/gen": "^1.9.7",
+    "eslint": "^8.46.0",
+    "eslint-config-custom": "*",
+    "react": "^18.2.0",
+    "prettier": "^2.5.1",
+    "turbo": "latest"
+  },
+  "name": "mod",
+  "license": "MIT",
+  "packageManager": "yarn@1.22.19",
+  "workspaces": [
+    "configs/*",
+    "examples/*",
+    "miniapps/*",
+    "packages/*",
+    "docs"
+  ]
+}
