@@ -61,26 +61,6 @@ export type StructuredCastNewline = {
   type: "newline";
   serializedContent: string;
 };
-export type StructuredCastDoubleBrackets = {
-  type: "doublebrackets";
-  serializedContent: string;
-};
-
-function extractDoubleBrackets(
-  structuredCast: StructuredCastUnit
-): StructuredCastUnit[] {
-  if (structuredCast.type !== "plaintext") return [structuredCast];
-
-  return [
-    {
-      type: "doublebrackets",
-      serializedContent: structuredCast.serializedContent.replaceAll(
-        /\[\[[^\]]+\]\]/gi,
-        ""
-      ),
-    },
-  ];
-}
 
 function extractMentions(
   structuredCast: StructuredCastUnit
