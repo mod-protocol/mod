@@ -7,7 +7,7 @@ type Props = {
 export function CastLengthUIIndicator({ getText }: Props) {
   const { length, label, tailwindColor } = useTextLength({
     getText,
-    maxCharacterLength: 320,
+    maxByteLength: 320,
   });
   return <div className="my-2 ml-2 text-sm">{label}</div>;
 }

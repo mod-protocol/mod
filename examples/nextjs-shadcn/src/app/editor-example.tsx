@@ -206,7 +206,18 @@ export default function EditorExample() {
 
         <CastLengthUIIndicator getText={getText} />
         <div className="grow"></div>
-        <Button type="submit">Cast</Button>
+        <Button
+          type="submit"
+          onClick={() =>
+            window.alert(
+              `This is a demo, and doesn't do anything.\n\nCast text:\n${getText()}\nEmbeds:\n${getEmbeds()
+                .map((embed) => (embed as any).url)
+                .join(", ")}`
+            )
+          }
+        >
+          Cast
+        </Button>
       </div>
     </form>
   );

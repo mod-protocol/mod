@@ -1,27 +1,31 @@
 export function useTextLength({
   getText,
-  maxCharacterLength,
+  maxByteLength,
 }: {
   getText: () => string;
-  maxCharacterLength: number;
+  maxByteLength: number;
 }) {
-  const len = getText().length;
-  const eightyFivePercentComplete = maxCharacterLength * 0.85;
+  const text = getText();
+  const lengthInBytes = new TextEncoder().encode(text).length;
+
+  const eightyFivePercentComplete = maxByteLength * 0.85;
 
   return {
-    length: len,
-    isValid: len <= maxCharacterLength,
+    length: lengthInBytes,
+    isValid: lengthInBytes <= maxByteLength,
     tailwindColor:
-      len > maxCharacterLength
+      lengthInBytes > maxByteLength
         ? "red"
-        : len > eightyFivePercentComplete
-        ? `orange.${2 + Math.floor((len - eightyFivePercentComplete) / 10)}00`
+        : lengthInBytes > eightyFivePercentComplete
+        ? `orange.${
+            2 + Math.floor((lengthInBytes - eightyFivePercentComplete) / 10)
+          }00`
         : "gray",
     label:
-      len > maxCharacterLength
-        ? `-${len - maxCharacterLength} characters left`
-        : len > eightyFivePercentComplete
-        ? `${maxCharacterLength - len} characters left`
+      lengthInBytes > maxByteLength
+        ? `-${lengthInBytes - maxByteLength} characters left`
+        : lengthInBytes > eightyFivePercentComplete
+        ? `${maxByteLength - lengthInBytes} characters left`
         : ``,
   };
 }

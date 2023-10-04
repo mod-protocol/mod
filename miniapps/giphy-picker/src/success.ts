@@ -46,6 +46,10 @@ const success: Element[] = [
           },
         },
       },
+      {
+        type: "image",
+        imageSrc: "https://i.imgur.com/rGB2Uev.png",
+      },
     ],
   },
 ];

@@ -6,7 +6,7 @@ import loading from "./loading";
 
 const manifest: Manifest = {
   slug: "giphy-picker",
-  name: "Search and pick GIFs from Giphy",
+  name: "GIFs and Stickers",
   custodyAddress: "furlong.eth",
   custodyGithubUsername: "davidfurlong",
   logo: "https://i.imgur.com/wBKGHbT.png",
