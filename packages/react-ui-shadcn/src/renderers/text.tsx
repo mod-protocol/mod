@@ -1,5 +1,5 @@
 import React from "react";
-import { Renderers } from "@packages/react";
+import { Renderers } from "@mod-protocol/react";
 
 export const TextRenderer = (
   props: React.ComponentProps<Renderers["Text"]>

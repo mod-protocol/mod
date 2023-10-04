@@ -1,4 +1,4 @@
-import { useTextLength } from "@packages/tiptap";
+import { useTextLength } from "@mod-protocol/tiptap";
 
 type Props = {
   getText: () => string;

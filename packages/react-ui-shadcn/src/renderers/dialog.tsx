@@ -1,5 +1,5 @@
 import React from "react";
-import { Renderers } from "@packages/react";
+import { Renderers } from "@mod-protocol/react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export const DialogRenderer = (

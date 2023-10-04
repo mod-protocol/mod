@@ -14,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Manifest } from "@packages/core";
+import { Manifest } from "@mod-protocol/core";
 import Image from "next/image";
 
 type Props = {

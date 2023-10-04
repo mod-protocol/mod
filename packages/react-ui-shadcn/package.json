@@ -1,5 +1,5 @@
 {
-  "name": "@packages/react-ui-shadcn",
+  "name": "@mod-protocol/react-ui-shadcn",
   "version": "0.0.0",
   "main": "./src/renderers/index.tsx",
   "types": "./src/renderers/index.tsx",
@@ -8,9 +8,9 @@
     "lint": "eslint \"**/*.ts*\""
   },
   "dependencies": {
-    "@packages/core": "*",
-    "@packages/react": "*",
-    "@packages/tiptap": "*",
+    "@mod-protocol/core": "*",
+    "@mod-protocol/react": "*",
+    "@mod-protocol/tiptap": "*",
     "video.js": "^8.0.4",
     "tailwindcss-animate": "^1.0.6",
     "@primer/octicons-react": "^19.5.0",

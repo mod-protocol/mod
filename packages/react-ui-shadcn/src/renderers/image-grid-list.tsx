@@ -1,5 +1,5 @@
 import React from "react";
-import { Renderers } from "@packages/react";
+import { Renderers } from "@mod-protocol/react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Skeleton } from "@/components/ui/skeleton";

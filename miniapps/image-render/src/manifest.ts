@@ -1,4 +1,4 @@
-import { Manifest } from "@packages/core";
+import { Manifest } from "@mod-protocol/core";
 import view from "./view";
 
 const manifest: Manifest = {

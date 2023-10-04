@@ -1,4 +1,4 @@
-import { Manifest } from "@packages/core";
+import { Manifest } from "@mod-protocol/core";
 
 import ChatGPTMiniText from "@miniapps/chatgpt";
 import InfuraIPFSUpload from "@miniapps/infura-ipfs-upload";

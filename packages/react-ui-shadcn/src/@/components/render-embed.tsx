@@ -6,12 +6,12 @@ import {
   Embed,
   Manifest,
   canRenderEntrypointWithContext,
-} from "@packages/core";
+} from "@mod-protocol/core";
 import {
   fallbackRenderMiniApp,
   renderMiniApps,
-} from "@packages/miniapp-registry";
-import { RenderMiniApp } from "@packages/react";
+} from "@mod-protocol/miniapp-registry";
+import { RenderMiniApp } from "@mod-protocol/react";
 import { renderers } from "../../renderers";
 
 if (!process.env.NEXT_PUBLIC_API_URL) {

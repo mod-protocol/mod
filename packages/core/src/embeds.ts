@@ -1,4 +1,4 @@
-import { FarcasterEmbed } from "@packages/farcaster";
+import { FarcasterEmbed } from "@mod-protocol/farcaster";
 
 export type NFTMetadata = {
   collectionName: string;

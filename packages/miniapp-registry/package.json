@@ -1,5 +1,5 @@
 {
-  "name": "@packages/miniapp-registry",
+  "name": "@mod-protocol/miniapp-registry",
   "version": "1.0.0",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

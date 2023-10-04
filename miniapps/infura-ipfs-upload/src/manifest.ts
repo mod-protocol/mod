@@ -1,4 +1,4 @@
-import { Manifest } from "@packages/core";
+import { Manifest } from "@mod-protocol/core";
 import action from "./action";
 import error from "./error";
 import loading from "./loading";

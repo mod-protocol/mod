@@ -6,8 +6,8 @@ import {
   Channel,
   isFarcasterCastIdEmbed,
   isFarcasterUrlEmbed,
-} from "@packages/farcaster";
-import { UrlMetadata, Embed } from "@packages/core";
+} from "@mod-protocol/farcaster";
+import { UrlMetadata, Embed } from "@mod-protocol/core";
 import { ErrorType, MAX_EMBEDS_REACHED_ERROR } from "./errors";
 
 declare module "@tiptap/core" {

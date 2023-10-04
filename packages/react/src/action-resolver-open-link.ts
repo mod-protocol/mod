@@ -1,7 +1,7 @@
 import {
   OpenLinkActionResolverInitType,
   OpenLinkActionResolverEventsType,
-} from "@packages/core";
+} from "@mod-protocol/core";
 
 export default function actionResolverOpenLink(
   init: OpenLinkActionResolverInitType,

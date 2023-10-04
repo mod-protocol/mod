@@ -14,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Channel } from "@packages/farcaster";
+import { Channel } from "@mod-protocol/farcaster";
 import Image from "next/image";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 

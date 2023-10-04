@@ -1,4 +1,4 @@
-import { Renderers } from "@packages/react";
+import { Renderers } from "@mod-protocol/react";
 import { TextRenderer } from "./text";
 import { ButtonRenderer } from "./button";
 import { CircularProgressRenderer } from "./circular-progress";

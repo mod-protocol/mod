@@ -1,7 +1,7 @@
 import {
   HttpActionResolverEventsType,
   HttpActionResolverInitType,
-} from "@packages/core";
+} from "@mod-protocol/core";
 
 export default function actionResolverHttp(
   init: HttpActionResolverInitType,

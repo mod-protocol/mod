@@ -1,4 +1,4 @@
-import { Renderers } from "@packages/react";
+import { Renderers } from "@mod-protocol/react";
 import React from "react";
 import { cn } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";

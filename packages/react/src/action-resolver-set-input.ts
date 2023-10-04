@@ -1,7 +1,7 @@
 import {
   SetInputActionResolverInitType,
   SetInputActionResolverEventsType,
-} from "@packages/core";
+} from "@mod-protocol/core";
 
 // This resolver is called when the miniapp calls the "SETINPUT" action type.
 //

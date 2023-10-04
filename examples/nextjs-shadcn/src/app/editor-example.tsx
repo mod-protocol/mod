@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@packages/react-ui-shadcn/src/@/components/ui/button";
-import { CreationMiniApp } from "@packages/react";
-import { useEditor, EditorContent } from "@packages/tiptap";
-import { creationMiniApps } from "@packages/miniapp-registry";
+import { Button } from "@mod-protocol/react-ui-shadcn/src/@/components/ui/button";
+import { CreationMiniApp } from "@mod-protocol/react";
+import { useEditor, EditorContent } from "@mod-protocol/tiptap";
+import { creationMiniApps } from "@mod-protocol/miniapp-registry";
 import {
   Manifest,
   AddEmbedActionResolverEventsType,
@@ -13,19 +13,19 @@ import {
   OpenFileActionResolverInitType,
   SetInputActionResolverEventsType,
   SetInputActionResolverInitType,
-} from "@packages/core";
-import { createRenderMentionsSuggestionConfig } from "@packages/react-ui-shadcn/src/@/lib/create-render-mentions-suggestion-config";
-import { CreationMiniAppsSearch } from "@packages/react-ui-shadcn/src/@/components/creation-miniapps-search";
-import { CastLengthUIIndicator } from "@packages/react-ui-shadcn/src/@/components/cast-length-ui-indicator";
-import { ChannelPicker } from "@packages/react-ui-shadcn/src/@/components/channel-picker";
-import { FARCASTER_MAX_EMBEDS } from "@packages/farcaster";
-import { EmbedsEditor } from "@packages/react-ui-shadcn/src/@/lib/embeds";
+} from "@mod-protocol/core";
+import { createRenderMentionsSuggestionConfig } from "@mod-protocol/react-ui-shadcn/src/@/lib/create-render-mentions-suggestion-config";
+import { CreationMiniAppsSearch } from "@mod-protocol/react-ui-shadcn/src/@/components/creation-miniapps-search";
+import { CastLengthUIIndicator } from "@mod-protocol/react-ui-shadcn/src/@/components/cast-length-ui-indicator";
+import { ChannelPicker } from "@mod-protocol/react-ui-shadcn/src/@/components/channel-picker";
+import { FARCASTER_MAX_EMBEDS } from "@mod-protocol/farcaster";
+import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/src/@/lib/embeds";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@packages/react-ui-shadcn/src/@/components/ui/popover";
-import { renderers } from "@packages/react-ui-shadcn/src/renderers";
+} from "@mod-protocol/react-ui-shadcn/src/@/components/ui/popover";
+import { renderers } from "@mod-protocol/react-ui-shadcn/src/renderers";
 
 if (!process.env.NEXT_PUBLIC_API_URL) {
   throw new Error(

@@ -3,10 +3,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   isFarcasterCastIdEmbed,
   isFarcasterUrlEmbed,
-} from "@packages/farcaster";
+} from "@mod-protocol/farcaster";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { VideoRenderer } from "../../renderers/video";
-import { Embed } from "@packages/core";
+import { Embed } from "@mod-protocol/core";
 
 export function isImageEmbed(embed: Embed) {
   return (

@@ -19,9 +19,9 @@ import {
   StructuredCastUrl,
   StructuredCastVideo,
   convertCastPlainTextToStructured,
-} from "@packages/farcaster";
+} from "@mod-protocol/farcaster";
 import { RenderEmbed } from "./render-embed";
-import { Embed } from "@packages/core";
+import { Embed } from "@mod-protocol/core";
 
 export const structuredCastToReactDOMComponentsConfig: Record<
   StructuredCastUnit["type"],

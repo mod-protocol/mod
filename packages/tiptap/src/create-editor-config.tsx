@@ -2,7 +2,7 @@ import TipTapDocument from "@tiptap/extension-document";
 import TipTapHardBreak from "@tiptap/extension-hard-break";
 import TipTapText from "@tiptap/extension-text";
 import TipTapParagraph from "@tiptap/extension-paragraph";
-import TipTapLink from "@packages/tiptap-extension-link";
+import TipTapLink from "@mod-protocol/tiptap-extension-link";
 import TipTapPlaceholder from "@tiptap/extension-placeholder";
 import TipTapHistory from "@tiptap/extension-history";
 import TipTapMention, { MentionOptions } from "@tiptap/extension-mention";

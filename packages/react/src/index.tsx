@@ -13,7 +13,7 @@ import {
   AddEmbedActionResolver,
   ContentContextType,
   CreationContextType,
-} from "@packages/core";
+} from "@mod-protocol/core";
 import actionResolverHttp from "./action-resolver-http";
 import actionResolverOpenFile from "./action-resolver-open-file";
 import actionResolverOpenLink from "./action-resolver-open-link";

@@ -1,4 +1,4 @@
-import { Element } from "@packages/core";
+import { Element } from "@mod-protocol/core";
 
 const action: Element[] = [
   {

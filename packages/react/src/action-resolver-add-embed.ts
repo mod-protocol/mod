@@ -1,7 +1,7 @@
 import {
   AddEmbedActionResolverInitType,
   AddEmbedActionResolverEventsType,
-} from "@packages/core";
+} from "@mod-protocol/core";
 
 // This resolver is called when the miniapp calls the "ADDEMBED" action type.
 //

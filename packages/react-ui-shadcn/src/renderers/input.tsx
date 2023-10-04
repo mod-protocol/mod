@@ -1,5 +1,5 @@
 import React from "react";
-import { Renderers } from "@packages/react";
+import { Renderers } from "@mod-protocol/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Cross1Icon } from "@radix-ui/react-icons";

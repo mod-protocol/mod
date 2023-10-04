@@ -1,4 +1,4 @@
-import { Manifest } from "@packages/core";
+import { Manifest } from "@mod-protocol/core";
 import action from "./action";
 import success from "./success";
 import error from "./error";

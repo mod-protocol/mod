@@ -1,4 +1,4 @@
-import { Embed } from "@packages/core";
+import { Embed } from "@mod-protocol/core";
 
 export const dummyCastData: Array<{
   avatar_url: string;

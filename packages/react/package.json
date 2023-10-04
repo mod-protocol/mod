@@ -1,5 +1,5 @@
 {
-  "name": "@packages/react",
+  "name": "@mod-protocol/react",
   "version": "0.0.0",
   "main": "./src/index.tsx",
   "types": "./src/index.tsx",
@@ -8,7 +8,7 @@
     "lint": "eslint \"**/*.ts*\""
   },
   "dependencies": {
-    "@packages/core": "*"
+    "@mod-protocol/core": "*"
   },
   "peerDependencies": {
     "react": "^18.2.0",
