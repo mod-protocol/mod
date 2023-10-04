@@ -1,12 +1,4 @@
-import { PageConfig } from "next";
 import { NextRequest } from "next/server";
-
-export const config: PageConfig = {
-  api: {
-    externalResolver: true,
-    bodyParser: false,
-  },
-};
 
 export async function GET(request: NextRequest) {
   const chain = request.nextUrl.searchParams.get("chain");

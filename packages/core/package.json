@@ -20,7 +20,7 @@
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "tsconfig": "*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "lodash.get": "^4.4.2",

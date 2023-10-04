@@ -101,7 +101,7 @@ export default function EditorExample() {
       addEmbed({ url: init.url, status: "loading" });
       events.onSuccess();
     },
-    [setText, addEmbed]
+    [addEmbed]
   );
 
   const handleOpenFile = React.useCallback(
