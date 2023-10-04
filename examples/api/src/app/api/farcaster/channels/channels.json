@@ -424,5 +424,71 @@
         "parent_url": "https://www.rust-lang.org",
         "image": "https://warpcast.com/~/channel-images/rust.png",
         "channel_id": "rust"
+    },
+    {
+        "parent_url": "chain://eip155:7777777/erc721:0xf6a7d848603aff875e4f35025e5c568679ccc17c",
+        "channel_id": "nature",
+        "image": "https://ipfs.decentralized-content.com/ipfs/bafybeia4rvvtf5wulljp6ogdbbsjtflvuw5gcfwbugikwtfom2rq5c65a4",
+        "name": "Nature"
+    },
+    {
+        "parent_url": "chain://eip155:8453/erc721:0x5fcd7a54fdf08c8dbcb969bc1f021ae87affafa8",
+        "channel_id": "jobs",
+        "image": "https://ipfs.decentralized-content.com/ipfs/bafkreie2uut3t5enmn6vtqainrmzwwy47evihl4dmxjqofwwjvqk6snbsu",
+        "name": "Jobs"
+    },
+    {
+        "parent_url": "https://www.apple.com",
+        "channel_id": "apple",
+        "image": "https://warpcast.com/~/channel-images/apple.png",
+        "name": "Apple"
+    },
+    {
+        "parent_url": "https://thenetworkstate.com",
+        "channel_id": "network-states",
+        "image": "https://warpcast.com/~/channel-images/network-states.png",
+        "name": "Network States"
+    },
+    {
+        "parent_url": "https://onchainsummer.xyz",
+        "channel_id": "onchain-summer",
+        "image": "https://warpcast.com/~/channel-images/onchain-summer.png",
+        "name": "Onchain Summer"
+    },
+    {
+        "parent_url": "chain://eip155:7777777/erc721:0x3312a43f15a9a9a1c6b7ee055e4b71041c2613e6",
+        "channel_id": "rust-x-ethereum",
+        "image": "https://warpcast.com/~/channel-images/rex.png",
+        "name": "RxE"
+    },
+    {
+        "parent_url": "chain://eip155:8453/erc721:0x1e5115dc60cdab3c1263a945201cb509ea7a8340",
+        "channel_id": "farcasther",
+        "image": "https://ipfs.decentralized-content.com/ipfs/bafkreifastwejsqeht6iwljuv2d5yqaabvkayktzfidxnb3nq4w653slai",
+        "name": "farcastHER"
+    },
+    {
+        "parent_url": "https://devconnect.org",
+        "channel_id": "devconnect",
+        "image": "https://warpcast.com/~/channel-images/devconnect.jpg",
+        "name": "Devconnect"
+    },
+    {
+        "parent_url": "https://www.cricketworldcup.com",
+        "channel_id": "cricket",
+        "image": "https://warpcast.com/~/channel-images/cricket.png",
+        "name": "Cricket"
+    },
+    {
+        "parent_url": "https://www.rugbyworldcup.com",
+        "channel_id": "rugby",
+        "image": "https://warpcast.com/~/channel-images/rugby.png",
+        "name": "Rugby"
+    },
+    {
+        "parent_url": "https://www.brightmoments.io",
+        "channel_id": "bright-moments",
+        "image": "https://warpcast.com/~/channel-images/bright-moments.jpg",
+        "name": "Bright Moments"
     }
 ]
