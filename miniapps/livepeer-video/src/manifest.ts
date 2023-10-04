@@ -8,7 +8,7 @@ const manifest: Manifest = {
   slug: "livepeer-video",
   name: "Upload a video using Livepeer",
   custodyAddress: "furlong.eth",
-  logo: "https://i.imgur.com/nnPVcMa.png",
+  logo: "https://i.imgur.com/UeuTxpI.png",
   custodyGithubUsername: "davidfurlong",
   version: "0.0.1",
   creationEntrypoints: action,

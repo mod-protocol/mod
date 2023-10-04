@@ -36,15 +36,15 @@ export const dummyCastData: Array<{
     display_name: "David Furlong",
     username: "df",
     timestamp: "2023-08-17 09:16:52.293739",
-    text: "[Automated] @df just starred the repo 0xOlias/ponder on Github",
+    text: "a fluke",
     embeds: [
       // image embed
       {
-        url: "https://opengraph.githubassets.com/dc3ad0a62f7156e3e055d38d5fe752540c446797089d9cc82467304244c028f3/0xOlias/ponder",
+        url: "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_jpg/https://i.imgur.com/TpOwGi4.jpg",
         status: "loaded",
         metadata: {
           image: {
-            url: "https://opengraph.githubassets.com/dc3ad0a62f7156e3e055d38d5fe752540c446797089d9cc82467304244c028f3/0xOlias/ponder",
+            url: "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_jpg/https://i.imgur.com/TpOwGi4.jpg",
           },
           alt: "Github",
         },
@@ -110,7 +110,7 @@ export const dummyCastData: Array<{
     display_name: "David Furlong",
     username: "df",
     timestamp: "2023-08-17 09:16:52.293739",
-    text: "[Automated] @df just starred the repo 0xOlias/ponder on Github",
+    text: "This is an example of an embedded video",
     embeds: [
       // video embed
       {
