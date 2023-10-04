@@ -13,6 +13,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(data.data);
   } catch (err) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An unknown error occurred" },
+      { status: err.status }
+    );
   }
 }
