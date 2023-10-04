@@ -7,7 +7,6 @@ import {
 } from "@tiptap/core";
 import { MarkType } from "@tiptap/pm/model";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { find } from "linkifyjs";
 import { findLinksAndTextcuts } from "./textcuts";
 
 type AutolinkOptions = {
