@@ -8,6 +8,7 @@ import VideoRender from "@miniapps/video-render";
 import NFTMinter from "@miniapps/nft-minter";
 import UrlRender from "@miniapps/url-render";
 import ImageRender from "@miniapps/image-render";
+import PollMiniApp from "@miniapps/polls";
 
 export const allMiniApps = [
   ChatGPTMiniText,
@@ -17,6 +18,7 @@ export const allMiniApps = [
   VideoRender,
   NFTMinter,
   ImageRender,
+  PollMiniApp,
 ];
 
 export const creationMiniApps: Manifest[] = allMiniApps.filter(

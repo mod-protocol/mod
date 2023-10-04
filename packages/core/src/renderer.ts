@@ -231,7 +231,9 @@ function replaceInlineContext(target: string, context: any): string {
 function matchesOp(value: string, op: Op, context: any): boolean {
   const replaceInlineContext_ = (v: string) => replaceInlineContext(v, context);
   if (
-    hasDefinedProperty(op, "equals") &&
+    // truthy check for `equals` property would skip the case where equals: ""
+    op.hasOwnProperty("equals") &&
+    typeof op.equals === "string" &&
     value !== replaceInlineContext_(op.equals)
   ) {
     return false;
