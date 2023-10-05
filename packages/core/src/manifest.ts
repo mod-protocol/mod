@@ -6,7 +6,7 @@ type ModConditionalElement = {
 export type ModManifest = {
   slug: string;
   name: string;
-  /** temporary property while Miniapps are managed via a github repo */
+  /** temporary property while Mini-apps are managed via a github repo */
   custodyGithubUsername: string;
   custodyAddress: string;
   logo: string;

@@ -2,6 +2,8 @@
 
 ## Variables
 
+Variables can be used to inside strings to access values. For example we might want to use a request's response to add to the input.
+
 `{{api}}` -> the api url provided
 
 `{{refs.[REF_NAME]}}` -> you can access values of elements that have a `ref` property. For example if you add `ref: "myInput"` to an element with `type: "input"`
@@ -15,10 +17,15 @@ then you can access the values of the input by chaining properties like `{{refs.
 
 ```ts
 type ModManifest = {
+  /** A unique string identifying this Miniapp */
   slug: string;
+  /** A human readable name for the Mini-app */
   name: string;
+  /** A (temporary) github username to define as the owner */
   custodyGithubUsername: string;
+  /** An ethereum address or ENS address to define as the owner */
   custodyAddress: string;
+  /** A valid url pointing to an image file */
   logo: string;
   version: string;
   creationEntrypoints?: Element[];
