@@ -1,25 +1,32 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@mod-protocol/react-ui-shadcn/src/@/components/ui/button";
+
+// Core
+import {
+  Channel,
+  getFarcasterChannels,
+  getFarcasterMentions,
+} from "@mod-protocol/farcaster";
 import { CreationMiniApp } from "@mod-protocol/react";
 import { useEditor, EditorContent } from "@mod-protocol/react-editor";
 import { creationMiniApps } from "@mod-protocol/miniapp-registry";
 import {
-  Manifest,
-  AddEmbedActionResolverEventsType,
-  AddEmbedActionResolverInitType,
-  OpenFileActionResolverEventsType,
-  OpenFileActionResolverInitType,
-  SetInputActionResolverEventsType,
-  SetInputActionResolverInitType,
+  Embed,
+  ModManifest,
+  fetchUrlMetadata,
+  handleAddEmbed,
+  handleOpenFile,
+  handleSetInput,
 } from "@mod-protocol/core";
+
+// UI implementation
 import { createRenderMentionsSuggestionConfig } from "@mod-protocol/react-ui-shadcn/src/@/lib/create-render-mentions-suggestion-config";
 import { CreationMiniAppsSearch } from "@mod-protocol/react-ui-shadcn/src/@/components/creation-miniapps-search";
 import { CastLengthUIIndicator } from "@mod-protocol/react-ui-shadcn/src/@/components/cast-length-ui-indicator";
 import { ChannelPicker } from "@mod-protocol/react-ui-shadcn/src/@/components/channel-picker";
-import { FARCASTER_MAX_EMBEDS } from "@mod-protocol/farcaster";
 import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/src/@/lib/embeds";
+import { Button } from "@mod-protocol/react-ui-shadcn/src/@/components/ui/button";
 import {
   Popover,
   PopoverContent,
@@ -27,143 +34,63 @@ import {
 } from "@mod-protocol/react-ui-shadcn/src/@/components/ui/popover";
 import { renderers } from "@mod-protocol/react-ui-shadcn/src/renderers";
 
-if (!process.env.NEXT_PUBLIC_API_URL) {
-  throw new Error(
-    "Please provide the NEXT_PUBLIC_API_URL environment variable"
-  );
-}
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+// Optionally replace with your API_URL here
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? "https://api.modprotocol.org";
 
-async function onSubmit() {
+const getResults = getFarcasterMentions(API_URL);
+const getChannels = getFarcasterChannels(API_URL);
+const getUrlMetadata = fetchUrlMetadata(API_URL);
+const onError = (err) => window.alert(err.message);
+const onSubmit = async ({
+  text,
+  embeds,
+  channel,
+}: {
+  text: string;
+  embeds: Embed[];
+  channel: Channel;
+}) => {
+  window.alert(
+    `This is a demo, and doesn't do anything.\n\nCast text:\n${text}\nEmbeds:\n${embeds
+      .map((embed) => (embed as any).url)
+      .join(", ")}\nChannel:\n${channel.name}`
+  );
+
   return true;
-}
+};
 
 export default function EditorExample() {
-  const getMentions = React.useCallback(async (query: string) => {
-    const req = await fetch(
-      `${API_URL}/farcaster/mentions?q=${encodeURIComponent(query)}`
-    );
-
-    const reqJson = await req.json();
-
-    return reqJson.data;
-  }, []);
-
-  const fetchUrlMetadata = React.useCallback(async (url: string) => {
-    const req = await fetch(
-      `${API_URL}/open-graph?url=${encodeURIComponent(url)}`
-    );
-
-    const reqJson = await req.json();
-
-    return reqJson;
-  }, []);
-
   const {
     editor,
     getText,
-    setText,
     getEmbeds,
-    addEmbed,
     setEmbeds,
+    setText,
     setChannel,
     getChannel,
+    addEmbed,
+    handleSubmit,
   } = useEditor({
-    fetchUrlMetadata: fetchUrlMetadata,
-    placeholderText: "Whats on your mind",
-    onError: (err) => {
-      window.alert(err.message);
-    },
-    onSubmit: onSubmit,
-    maxEmbeds: FARCASTER_MAX_EMBEDS,
+    fetchUrlMetadata: getUrlMetadata,
+    onError,
+    onSubmit,
     linkClassName: "text-blue-600",
     renderMentionsSuggestionConfig: createRenderMentionsSuggestionConfig({
-      getResults: getMentions,
+      getResults: getResults,
     }),
   });
 
-  const handleSetInput = React.useCallback(
-    (
-      init: SetInputActionResolverInitType,
-      events: SetInputActionResolverEventsType
-    ) => {
-      setText(init.input);
-      events.onSuccess(init.input);
-    },
-    [setText]
-  );
-
-  const handleAddEmbed = React.useCallback(
-    (
-      init: AddEmbedActionResolverInitType,
-      events: AddEmbedActionResolverEventsType
-    ) => {
-      addEmbed({ url: init.url, status: "loading" });
-      events.onSuccess();
-    },
-    [addEmbed]
-  );
-
-  const handleOpenFile = React.useCallback(
-    (
-      init: OpenFileActionResolverInitType,
-      events: OpenFileActionResolverEventsType
-    ) => {
-      const inputElement = document.createElement("input");
-
-      inputElement.style.display = "none";
-      document.body.appendChild(inputElement);
-
-      inputElement.type = "file";
-      inputElement.accept = init.accept.join(",");
-      inputElement.multiple = init.maxFiles > 1;
-
-      inputElement.addEventListener("change", (arg) => {
-        const inputElement = arg.target as HTMLInputElement;
-        const files = inputElement.files ? Array.from(inputElement.files) : [];
-
-        events.onSuccess(
-          files.map((file) => ({
-            name: file.name,
-            mimeType: file.type,
-            blob: file,
-          }))
-        );
-
-        document.body.removeChild(inputElement);
-      });
-
-      inputElement.dispatchEvent(new MouseEvent("click"));
-    },
-    []
-  );
-
-  const [currentMiniapp, setCurrentMiniapp] = React.useState<Manifest | null>(
-    null
-  );
-
-  const handleMiniappExit = React.useCallback(
-    () => setCurrentMiniapp(null),
-    []
-  );
-
-  const getChannels = React.useCallback(async (query) => {
-    const results = await fetch(
-      `${API_URL}/farcaster/channels?q=${encodeURIComponent(query)}`
-    );
-
-    const body = await results.json();
-
-    return body.channels;
-  }, []);
+  const [currentMiniapp, setCurrentMiniapp] =
+    React.useState<ModManifest | null>(null);
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit}>
       <div className="p-2 border-slate-200 rounded-md border">
         <EditorContent
           editor={editor}
           autoFocus
-          style={{ width: "100%", height: "100%", minHeight: "200px" }}
+          className="w-full h-full min-h-[200px]"
         />
         <EmbedsEditor embeds={getEmbeds()} setEmbeds={setEmbeds} />
       </div>
@@ -175,7 +102,9 @@ export default function EditorExample() {
         />
         <Popover
           open={!!currentMiniapp}
-          onOpenChange={(op) => (!op ? setCurrentMiniapp(null) : undefined)}
+          onOpenChange={(op: boolean) => {
+            if (!op) setCurrentMiniapp(null);
+          }}
         >
           <PopoverTrigger></PopoverTrigger>
           <CreationMiniAppsSearch
@@ -196,28 +125,16 @@ export default function EditorExample() {
                 manifest={currentMiniapp}
                 renderers={renderers}
                 onOpenFileAction={handleOpenFile}
-                onExitAction={handleMiniappExit}
-                onSetInputAction={handleSetInput}
-                onAddEmbedAction={handleAddEmbed}
+                onExitAction={() => setCurrentMiniapp(null)}
+                onSetInputAction={handleSetInput(setText)}
+                onAddEmbedAction={handleAddEmbed(addEmbed)}
               />
             </div>
           </PopoverContent>
         </Popover>
-
         <CastLengthUIIndicator getText={getText} />
         <div className="grow"></div>
-        <Button
-          type="submit"
-          onClick={() =>
-            window.alert(
-              `This is a demo, and doesn't do anything.\n\nCast text:\n${getText()}\nEmbeds:\n${getEmbeds()
-                .map((embed) => (embed as any).url)
-                .join(", ")}`
-            )
-          }
-        >
-          Cast
-        </Button>
+        <Button type="submit">Cast</Button>
       </div>
     </form>
   );

@@ -1,4 +1,4 @@
-import { Manifest } from "@mod-protocol/core";
+import { ModManifest } from "@mod-protocol/core";
 
 import ChatGPTMiniText from "@miniapps/chatgpt";
 import InfuraIPFSUpload from "@miniapps/infura-ipfs-upload";
@@ -19,15 +19,15 @@ export const allMiniApps = [
   ImageRender,
 ];
 
-export const creationMiniApps: Manifest[] = allMiniApps.filter(
+export const creationMiniApps: ModManifest[] = allMiniApps.filter(
   (manifest) =>
     manifest.creationEntrypoints && manifest.creationEntrypoints.length !== 0
 );
 
-export const renderMiniApps: Manifest[] = allMiniApps.filter(
+export const renderMiniApps: ModManifest[] = allMiniApps.filter(
   (manifest) =>
     manifest.contentEntrypoints && manifest.contentEntrypoints.length !== 0
 );
 
 /** When no renderMiniApp matches an embed, this one will be used **/
-export const fallbackRenderMiniApp: Manifest = UrlRender;
+export const fallbackRenderMiniApp: ModManifest = UrlRender;

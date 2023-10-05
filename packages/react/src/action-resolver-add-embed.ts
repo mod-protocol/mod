@@ -1,6 +1,6 @@
 import {
-  AddEmbedActionResolverInitType,
-  AddEmbedActionResolverEventsType,
+  AddEmbedActionResolverInit,
+  AddEmbedActionResolverEvents,
 } from "@mod-protocol/core";
 
 // This resolver is called when the miniapp calls the "ADDEMBED" action type.
@@ -8,8 +8,8 @@ import {
 // The action expected from the user is to update the current input field
 // (or equivalent) to embed the file specified in the init.
 export default function actionResolverAddEmbed(
-  init: AddEmbedActionResolverInitType,
-  events: AddEmbedActionResolverEventsType
+  init: AddEmbedActionResolverInit,
+  events: AddEmbedActionResolverEvents
 ) {
   // eslint-disable-next-line no-console
   console.warn(

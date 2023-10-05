@@ -2,17 +2,17 @@
 
 import React from "react";
 import {
-  ContentContextType,
+  ContentContext,
   Embed,
-  Manifest,
+  ModManifest,
+  Renderer,
   canRenderEntrypointWithContext,
 } from "@mod-protocol/core";
 import {
   fallbackRenderMiniApp,
   renderMiniApps,
 } from "@mod-protocol/miniapp-registry";
-import { RenderMiniApp } from "@mod-protocol/react";
-import { renderers } from "../../renderers";
+import { RenderMiniApp, Renderers } from "@mod-protocol/react";
 
 if (!process.env.NEXT_PUBLIC_API_URL) {
   throw new Error(
@@ -21,21 +21,21 @@ if (!process.env.NEXT_PUBLIC_API_URL) {
 }
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export function RenderEmbed(props: { embed: Embed }) {
+export function RenderEmbed(props: { embed: Embed; renderers: Renderers }) {
   const { embed } = props;
 
   let matchingMiniapps = [{ embed, api: API_URL }].flatMap<{
-    context: ContentContextType;
-    manifest: Manifest;
+    context: ContentContext;
+    manifest: ModManifest;
   }>((context) => {
-    function getMatchingMiniApps(miniApps: Manifest[]) {
+    function getMatchingMiniApps(miniApps: ModManifest[]) {
       return miniApps
         .map(
           (
             miniapp
           ): null | {
-            context: ContentContextType;
-            manifest: Manifest;
+            context: ContentContext;
+            manifest: ModManifest;
           } => {
             for (const entrypoint of miniapp.contentEntrypoints ?? []) {
               if (canRenderEntrypointWithContext(entrypoint, context)) {
@@ -49,8 +49,8 @@ export function RenderEmbed(props: { embed: Embed }) {
           }
         )
         .filter(Boolean) as Array<{
-        context: ContentContextType;
-        manifest: Manifest;
+        context: ContentContext;
+        manifest: ModManifest;
       }>;
     }
 
@@ -66,14 +66,13 @@ export function RenderEmbed(props: { embed: Embed }) {
 
   return matchingMiniapps.length
     ? matchingMiniapps.map((miniapp, index) => (
-        <div key={index} className="mt-2 rounded-md overflow-hidden border">
-          <RenderMiniApp
-            {...miniapp.context}
-            variant="content"
-            manifest={miniapp.manifest}
-            renderers={renderers}
-          />
-        </div>
+        <RenderMiniApp
+          {...miniapp.context}
+          key={index}
+          variant="content"
+          manifest={miniapp.manifest}
+          renderers={props.renderers}
+        />
       ))
     : null;
 }

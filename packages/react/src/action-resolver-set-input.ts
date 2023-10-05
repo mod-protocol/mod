@@ -1,6 +1,6 @@
 import {
-  SetInputActionResolverInitType,
-  SetInputActionResolverEventsType,
+  SetInputActionResolverInit,
+  SetInputActionResolverEvents,
 } from "@mod-protocol/core";
 
 // This resolver is called when the miniapp calls the "SETINPUT" action type.
@@ -8,8 +8,8 @@ import {
 // The action expected from the user is to update the current input field with
 // the result of this action.
 export default function actionResolverSetInput(
-  init: SetInputActionResolverInitType,
-  events: SetInputActionResolverEventsType
+  init: SetInputActionResolverInit,
+  events: SetInputActionResolverEvents
 ) {
   // eslint-disable-next-line no-console
   console.warn(

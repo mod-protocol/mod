@@ -1,7 +1,7 @@
-import { Manifest } from "@mod-protocol/core";
+import { ModManifest } from "@mod-protocol/core";
 import view from "./view";
 
-const manifest: Manifest = {
+const manifest: ModManifest = {
   slug: "nft-minter",
   name: "Preview and mint NFTs",
   custodyAddress: "furlong.eth",

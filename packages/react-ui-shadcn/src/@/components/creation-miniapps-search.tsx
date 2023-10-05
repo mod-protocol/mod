@@ -14,12 +14,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Manifest } from "@mod-protocol/core";
+import { ModManifest } from "@mod-protocol/core";
 import Image from "next/image";
 
 type Props = {
-  miniapps: Manifest[];
-  onSelect: (value: Manifest) => void;
+  miniapps: ModManifest[];
+  onSelect: (value: ModManifest) => void;
 };
 
 export function CreationMiniAppsSearch(props: Props) {

@@ -1,7 +1,7 @@
-import { Manifest } from "@mod-protocol/core";
+import { ModManifest } from "@mod-protocol/core";
 import view from "./view";
 
-const manifest: Manifest = {
+const manifest: ModManifest = {
   slug: "url-render",
   name: "View urls",
   custodyAddress: "furlong.eth",

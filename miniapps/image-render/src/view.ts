@@ -1,6 +1,6 @@
-import { Element } from "@mod-protocol/core";
+import { ModElement } from "@mod-protocol/core";
 
-const view: Element[] = [
+const view: ModElement[] = [
   {
     type: "image",
     imageSrc: "{{embed.url}}",

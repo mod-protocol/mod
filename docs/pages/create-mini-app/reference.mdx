@@ -1,0 +1,126 @@
+# Schema Reference
+
+## Variables
+
+`{{api}}` -> the api url provided
+
+`{{refs.[REF_NAME]}}` -> you can access values of elements that have a `ref` property. For example if you add `ref: "myInput"` to an element with `type: "input"`
+then you can access the values of the input by chaining properties like `{{refs.myInput.value}}`. This can be used for requests as well.
+
+`{{input}}` -> the current value of the input, only defined for elements within `creationEntrypoints`
+
+`{{embed}}` -> the embed value that triggered the `contentEntrypoints`
+
+## Properties of the Manifest
+
+```ts
+type ModManifest = {
+  slug: string;
+  name: string;
+  custodyGithubUsername: string;
+  custodyAddress: string;
+  logo: string;
+  version: string;
+  creationEntrypoints?: Element[];
+  contentEntrypoints?: ModConditionalElement[];
+  elements?: Record<string, Element[]>;
+};
+```
+
+## Elements that build up a UI
+
+```ts
+export type ModElement =
+  | {
+      type: "text";
+      label: string;
+    }
+  | {
+      type: "image";
+      imageSrc: string;
+    }
+  | {
+      type: "button";
+      label: string;
+      onclick: ModEvent;
+    }
+  | {
+      type: "circular-progress";
+    }
+  | {
+      type: "horizontal-layout";
+      elements?: string | ElementOrConditionalFlow[];
+      onload?: ModEvent;
+    }
+  | {
+      type: "vertical-layout";
+      elements?: string | ElementOrConditionalFlow[];
+      onload?: ModEvent;
+    }
+  | {
+      ref?: string;
+      type: "input";
+      placeholder?: string;
+      clearable?: boolean;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
+    }
+  | {
+      type: "video";
+      videoSrc: string;
+    }
+  | {
+      ref?: string;
+      type: "tabs";
+      values: string[];
+      names: string[];
+      onload?: ModEvent;
+      onchange?: ModEvent;
+    }
+  | ({
+      ref?: string;
+      type: "image-grid-list";
+      onload?: ModEvent;
+      onpick?: ModEvent;
+    } & (
+      | { loading: boolean; imagesListRef?: never }
+      | { loading?: never; imagesListRef: string }
+    ))
+  | {
+      type: "dialog";
+      elements?: string | ElementOrConditionalFlow[];
+      onclose?: ModEvent;
+    }
+  | {
+      type: "alert";
+      title: string;
+      description: string;
+      variant: "success" | "error";
+    }
+  | {
+      type: "avatar";
+      src: string;
+    }
+  | ({
+      type: "card";
+      elements?: string | ElementOrConditionalFlow[];
+      onclick?: ModEvent;
+    } & (
+      | {
+          imageSrc: string;
+          aspectRatio?: number;
+          topLeftBadge?: string;
+          topRightBadge?: string;
+          bottomLeftBadge?: string;
+          bottomRightBadge?: string;
+        }
+      | {
+          imageSrc?: never;
+          aspectRatio?: never;
+          topLeftBadge?: never;
+          topRightBadge?: never;
+          bottomLeftBadge?: never;
+          bottomRightBadge?: never;
+        }
+    ));
+```

@@ -1,31 +1,32 @@
-type ConditionalElement = {
-  element: Element[];
+type ModConditionalElement = {
+  element: ModElement[];
   if: ValueOp;
 };
 
-export type Manifest = {
+export type ModManifest = {
   slug: string;
   name: string;
+  /** temporary property while Miniapps are managed via a github repo */
   custodyGithubUsername: string;
   custodyAddress: string;
   logo: string;
   version: string;
-  creationEntrypoints?: Element[];
-  contentEntrypoints?: ConditionalElement[];
-  elements?: Record<string, Element[]>;
+  creationEntrypoints?: ModElement[];
+  contentEntrypoints?: ModConditionalElement[];
+  elements?: Record<string, ModElement[]>;
 };
 
-export type EventType =
-  | Action
+export type ModEvent =
+  | ModAction
   | string
-  | Element[]
-  | ConditionalFlow<Action | string | Element[]>;
+  | ModElement[]
+  | ConditionalFlow<ModAction | string | ModElement[]>;
 
 type BaseAction = {
   ref?: string;
-  onsuccess?: EventType;
-  onerror?: EventType;
-  onloading?: EventType;
+  onsuccess?: ModEvent;
+  onerror?: ModEvent;
+  onloading?: ModEvent;
 };
 
 export type Op = {
@@ -58,6 +59,7 @@ export type JsonType =
   | { type: "boolean"; value: boolean }
   | { type: "array"; value: JsonType[] }
   | { type: "object"; value: Record<string, JsonType> };
+
 type FormDataType =
   | { type: "blobRef"; value: string }
   | { type: "string"; value: string };
@@ -95,7 +97,7 @@ type OpenFileAction = BaseAction & {
   type: "OPENFILE";
   accept: string[];
   maxFiles: number;
-  oncancel?: EventType;
+  oncancel?: ModEvent;
 };
 
 type AddEmbedAction = BaseAction & {
@@ -119,7 +121,7 @@ type ExitAction = {
   type: "EXIT";
 };
 
-export type Action =
+export type ModAction =
   | HTTPAction
   | OpenFileAction
   | AddEmbedAction
@@ -127,9 +129,9 @@ export type Action =
   | OpenLinkAction
   | ExitAction;
 
-type ElementOrConditionalFlow = Element | ConditionalFlow<Element>;
+type ElementOrConditionalFlow = ModElement | ConditionalFlow<ModElement>;
 
-export type Element =
+export type ModElement =
   | {
       type: "text";
       label: string;
@@ -141,7 +143,7 @@ export type Element =
   | {
       type: "button";
       label: string;
-      onclick: EventType;
+      onclick: ModEvent;
     }
   | {
       type: "circular-progress";
@@ -149,20 +151,20 @@ export type Element =
   | {
       type: "horizontal-layout";
       elements?: string | ElementOrConditionalFlow[];
-      onload?: EventType;
+      onload?: ModEvent;
     }
   | {
       type: "vertical-layout";
       elements?: string | ElementOrConditionalFlow[];
-      onload?: EventType;
+      onload?: ModEvent;
     }
   | {
       ref?: string;
       type: "input";
       placeholder?: string;
       clearable?: boolean;
-      onchange?: EventType;
-      onsubmit?: EventType;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
     }
   | {
       type: "video";
@@ -173,14 +175,14 @@ export type Element =
       type: "tabs";
       values: string[];
       names: string[];
-      onload?: EventType;
-      onchange?: EventType;
+      onload?: ModEvent;
+      onchange?: ModEvent;
     }
   | ({
       ref?: string;
       type: "image-grid-list";
-      onload?: EventType;
-      onpick?: EventType;
+      onload?: ModEvent;
+      onpick?: ModEvent;
     } & (
       | { loading: boolean; imagesListRef?: never }
       | { loading?: never; imagesListRef: string }
@@ -188,7 +190,7 @@ export type Element =
   | {
       type: "dialog";
       elements?: string | ElementOrConditionalFlow[];
-      onclose?: EventType;
+      onclose?: ModEvent;
     }
   | {
       type: "alert";
@@ -203,7 +205,7 @@ export type Element =
   | ({
       type: "card";
       elements?: string | ElementOrConditionalFlow[];
-      onclick?: EventType;
+      onclick?: ModEvent;
     } & (
       | {
           imageSrc: string;

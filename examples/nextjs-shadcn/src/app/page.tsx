@@ -2,7 +2,7 @@ import Link from "next/link";
 import * as React from "react";
 import EditorExample from "./editor-example";
 import { dummyCastData } from "./dummy-casts";
-import { Cast } from "@/components/cast";
+import { Cast } from "./cast";
 
 export default function Page() {
   return (

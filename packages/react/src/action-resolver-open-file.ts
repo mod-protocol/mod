@@ -1,6 +1,6 @@
 import {
-  OpenFileActionResolverEventsType,
-  OpenFileActionResolverInitType,
+  OpenFileActionResolverEvents,
+  OpenFileActionResolverInit,
 } from "@mod-protocol/core";
 
 // This resolver is called when the miniapp calls the "OPENFILE" action type.
@@ -13,8 +13,8 @@ import {
 // { name: string; type: string; blob: any }
 //
 export default function actionResolverOpenFile(
-  init: OpenFileActionResolverInitType,
-  events: OpenFileActionResolverEventsType
+  init: OpenFileActionResolverInit,
+  events: OpenFileActionResolverEvents
 ) {
   // eslint-disable-next-line no-console
   console.warn(

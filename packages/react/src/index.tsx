@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import {
-  Manifest,
-  ElementRefType,
+  ModManifest,
+  ModElementRef,
   Renderer,
   HttpActionResolver,
   OpenFileActionResolver,
@@ -11,8 +11,8 @@ import {
   SetInputActionResolver,
   ExitActionResolver,
   AddEmbedActionResolver,
-  ContentContextType,
-  CreationContextType,
+  ContentContext,
+  CreationContext,
 } from "@mod-protocol/core";
 import actionResolverHttp from "./action-resolver-http";
 import actionResolverOpenFile from "./action-resolver-open-file";
@@ -20,8 +20,10 @@ import actionResolverOpenLink from "./action-resolver-open-link";
 import actionResolverSetInput from "./action-resolver-set-input";
 import actionResolverAddEmbed from "./action-resolver-add-embed";
 import actionResolverExit from "./action-resolver-exit";
+export * from "./render-embed";
 
 export type Renderers = {
+  Container: React.ComponentType<{ children: React.ReactNode }>;
   Video: React.ComponentType<{
     videoSrc: string;
   }>;
@@ -82,7 +84,7 @@ export type Renderers = {
 
 const WrappedVideoRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Video"];
-  element: Extract<ElementRefType<T>, { type: "video" }>;
+  element: Extract<ModElementRef<T>, { type: "video" }>;
 }) => {
   const { component: Component, element } = props;
   const { type, ...rest } = element;
@@ -91,7 +93,7 @@ const WrappedVideoRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedTextRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Text"];
-  element: Extract<ElementRefType<T>, { type: "text" }>;
+  element: Extract<ModElementRef<T>, { type: "text" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -100,7 +102,7 @@ const WrappedTextRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedButtonRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Button"];
-  element: Extract<ElementRefType<T>, { type: "button" }>;
+  element: Extract<ModElementRef<T>, { type: "button" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -114,7 +116,7 @@ const WrappedButtonRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedCircularProgressRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["CircularProgress"];
-  element: Extract<ElementRefType<T>, { type: "circular-progress" }>;
+  element: Extract<ModElementRef<T>, { type: "circular-progress" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -124,7 +126,7 @@ const WrappedCircularProgressRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedHorizontalLayoutRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["HorizontalLayout"];
-  element: Extract<ElementRefType<T>, { type: "horizontal-layout" }>;
+  element: Extract<ModElementRef<T>, { type: "horizontal-layout" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, elements, ...rest } = element;
@@ -138,7 +140,7 @@ const WrappedHorizontalLayoutRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedVerticalLayoutRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["VerticalLayout"];
-  element: Extract<ElementRefType<T>, { type: "vertical-layout" }>;
+  element: Extract<ModElementRef<T>, { type: "vertical-layout" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, elements, ...rest } = element;
@@ -152,7 +154,7 @@ const WrappedVerticalLayoutRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedInputRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Input"];
-  element: Extract<ElementRefType<T>, { type: "input" }>;
+  element: Extract<ModElementRef<T>, { type: "input" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -175,7 +177,7 @@ const WrappedInputRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedTabsRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Tabs"];
-  element: Extract<ElementRefType<T>, { type: "tabs" }>;
+  element: Extract<ModElementRef<T>, { type: "tabs" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, elements, ...rest } = element;
@@ -200,7 +202,7 @@ const WrappedTabsRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedImageGridListRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["ImageGridList"];
-  element: Extract<ElementRefType<T>, { type: "image-grid-list" }>;
+  element: Extract<ModElementRef<T>, { type: "image-grid-list" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -221,7 +223,7 @@ const WrappedImageGridListRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedDialogRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Dialog"];
-  element: Extract<ElementRefType<T>, { type: "dialog" }>;
+  element: Extract<ModElementRef<T>, { type: "dialog" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, elements, ...rest } = element;
@@ -239,7 +241,7 @@ const WrappedDialogRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedAlertRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Alert"];
-  element: Extract<ElementRefType<T>, { type: "alert" }>;
+  element: Extract<ModElementRef<T>, { type: "alert" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -249,7 +251,7 @@ const WrappedAlertRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedImageRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Image"];
-  element: Extract<ElementRefType<T>, { type: "image" }>;
+  element: Extract<ModElementRef<T>, { type: "image" }>;
 }) => {
   const { component: Component, element } = props;
   const { type, ...rest } = element;
@@ -259,7 +261,7 @@ const WrappedImageRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedAvatarRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Avatar"];
-  element: Extract<ElementRefType<T>, { type: "avatar" }>;
+  element: Extract<ModElementRef<T>, { type: "avatar" }>;
 }) => {
   const { component: Component, element } = props;
   const { type, ...rest } = element;
@@ -269,7 +271,7 @@ const WrappedAvatarRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedCardRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Card"];
-  element: Extract<ElementRefType<T>, { type: "card" }>;
+  element: Extract<ModElementRef<T>, { type: "card" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, elements, ...rest } = element;
@@ -293,7 +295,7 @@ const useForceRerender = () => {
 };
 
 type Props = {
-  manifest: Manifest;
+  manifest: ModManifest;
   renderers: Renderers;
   onHttpAction?: HttpActionResolver;
   onOpenFileAction?: OpenFileActionResolver;
@@ -304,7 +306,7 @@ type Props = {
 };
 
 export const CreationMiniApp = (
-  props: Props & ({ variant: "creation" } & CreationContextType)
+  props: Props & ({ variant: "creation" } & CreationContext)
 ) => {
   const {
     manifest,
@@ -320,7 +322,7 @@ export const CreationMiniApp = (
   const forceRerender = useForceRerender();
 
   const input = variant === "creation" ? props.input : "";
-  const context = React.useMemo<CreationContextType>(
+  const context = React.useMemo<CreationContext>(
     () => ({ input, embeds: props.embeds, api: props.api }),
     [input, props.api, props.embeds]
   );
@@ -350,7 +352,7 @@ export const CreationMiniApp = (
 };
 
 export const RenderMiniApp = (
-  props: Props & ({ variant: "content" } & ContentContextType)
+  props: Props & ({ variant: "content" } & ContentContext)
 ) => {
   const {
     manifest,
@@ -364,7 +366,7 @@ export const RenderMiniApp = (
 
   const forceRerender = useForceRerender();
 
-  const context = React.useMemo<ContentContextType>(
+  const context = React.useMemo<ContentContext>(
     () => ({ embed: props.embed, api: props.api }),
     [props.embed, props.api]
   );
@@ -389,8 +391,13 @@ export const RenderMiniApp = (
     renderer.setContext(context);
     forceRerender();
   }, [forceRerender, context, renderer]);
+  const Container = props.renderers["Container"];
 
-  return <MiniApp {...props} renderer={renderer} />;
+  return (
+    <Container>
+      <MiniApp {...props} renderer={renderer} />
+    </Container>
+  );
 };
 
 export const MiniApp = (props: Props & { renderer: Renderer }) => {
@@ -428,7 +435,7 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
 
   return (
     <VerticalLayout>
-      {renderer.mapCurrentTree((el: ElementRefType<React.ReactNode>, key) => {
+      {renderer.mapCurrentTree((el: ModElementRef<React.ReactNode>, key) => {
         switch (el.type) {
           // TODO: this switch should enforce completeness via types
           case "image":

@@ -1,10 +1,10 @@
-import { Manifest } from "@mod-protocol/core";
+import { ModManifest } from "@mod-protocol/core";
 import action from "./action";
 import success from "./success";
 import error from "./error";
 import loading from "./loading";
 
-const manifest: Manifest = {
+const manifest: ModManifest = {
   slug: "giphy-picker",
   name: "GIFs and Stickers",
   custodyAddress: "furlong.eth",

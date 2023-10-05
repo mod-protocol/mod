@@ -1,25 +1,26 @@
-export type { Element, Action, Manifest, EventType } from "./manifest";
+export type { ModElement, ModAction, ModManifest, ModEvent } from "./manifest";
 export type {
-  ElementRefType,
+  ModElementRef,
   HttpActionResolver,
-  HttpActionResolverInitType,
-  HttpActionResolverEventsType,
+  HttpActionResolverInit,
+  HttpActionResolverEvents,
   OpenFileActionResolver,
-  OpenFileActionResolverInitType,
-  OpenFileActionResolverEventsType,
+  OpenFileActionResolverInit,
+  OpenFileActionResolverEvents,
   SetInputActionResolver,
-  SetInputActionResolverInitType,
-  SetInputActionResolverEventsType,
+  SetInputActionResolverInit,
+  SetInputActionResolverEvents,
   AddEmbedActionResolver,
-  AddEmbedActionResolverInitType,
-  AddEmbedActionResolverEventsType,
+  AddEmbedActionResolverInit,
+  AddEmbedActionResolverEvents,
   OpenLinkActionResolver,
-  OpenLinkActionResolverInitType,
-  OpenLinkActionResolverEventsType,
+  OpenLinkActionResolverInit,
+  OpenLinkActionResolverEvents,
   ExitActionResolver,
   ContextType,
-  ContentContextType,
-  CreationContextType,
+  ContentContext,
+  CreationContext,
 } from "./renderer";
 export { Renderer, canRenderEntrypointWithContext } from "./renderer";
 export * from "./embeds";
+export * from "./web-handlers";

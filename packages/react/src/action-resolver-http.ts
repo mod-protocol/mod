@@ -1,11 +1,11 @@
 import {
-  HttpActionResolverEventsType,
-  HttpActionResolverInitType,
+  HttpActionResolverEvents,
+  HttpActionResolverInit,
 } from "@mod-protocol/core";
 
 export default function actionResolverHttp(
-  init: HttpActionResolverInitType,
-  events: HttpActionResolverEventsType
+  init: HttpActionResolverInit,
+  events: HttpActionResolverEvents
 ) {
   const xhr = new XMLHttpRequest();
   xhr.open(init.method, init.url);

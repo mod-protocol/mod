@@ -1,1 +1,21 @@
 # Getting started making a Miniapp
+
+A Miniapp is just a JSON file. Part of this JSON is the manifest, defining things like the version and name, and other parts
+are the elements rendered by the Miniapp, like a text or an image.
+
+Our convention is to write Miniapps in TypeScript, for better autocompletion and legibility, with the mini-apps being built to JSON.
+You can take a look inside the `/miniapps` folder of [this repo](https://github.com/mod-protocol/mod) to see how miniapps work
+
+## Why does Mod protocol use configuration files and not React components?
+
+Miniapps that are displayed within feeds need to be secure, performant and consistent in design.
+This is harder to achieve with React Components, and also restricts Mod protocol to only projects that use React.
+
+## Steps to make a new Miniapp
+
+1. Fork [this repo](https://github.com/mod-protocol/mod)
+2. Create a new miniapp by duplicating an existing one in `/miniapps` or creating a new folder
+3. Name your miniapp consistently between the folder name and the `slug` in the `manifest.ts` file
+4. Create the elements of your miniapp
+5. Add your miniapp to `/packages/miniapp-registry/src/index.ts`
+6. Submit a Pull request

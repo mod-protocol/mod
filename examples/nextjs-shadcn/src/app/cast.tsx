@@ -8,7 +8,6 @@ import {
   SyncIcon,
   BookmarkIcon,
 } from "@primer/octicons-react";
-import { Button } from "./ui/button";
 import {
   StructuredCastImageUrl,
   StructuredCastMention,
@@ -20,8 +19,8 @@ import {
   StructuredCastVideo,
   convertCastPlainTextToStructured,
 } from "@mod-protocol/farcaster";
-import { RenderEmbed } from "./render-embed";
 import { Embed } from "@mod-protocol/core";
+import { Embeds } from "./embeds";
 
 export const structuredCastToReactDOMComponentsConfig: Record<
   StructuredCastUnit["type"],
@@ -144,35 +143,31 @@ export function Cast(props: {
                 }}
               >
                 {convertStructuredCastToReactDOMComponents(structuredCast, {})}
-                <div>
-                  {props.cast.embeds.map((embed, i) => (
-                    <RenderEmbed embed={embed} key={i} />
-                  ))}
-                </div>
+                <Embeds embeds={props.cast.embeds} />
               </div>
               <div
                 className="flex justify-between mt-2"
                 style={{ maxWidth: "400px", marginLeft: "-14px" }}
               >
-                <Button variant="link" className="text-slate-500">
+                <button className="text-slate-500">
                   <CommentIcon />
                   <span className="ml-2">69</span>
-                </Button>
-                <Button variant="link" className="text-slate-500">
+                </button>
+                <button className="text-slate-500">
                   <SyncIcon />
                   <span className="ml-2">3</span>
-                </Button>
-                <Button variant="link" className="text-slate-500">
+                </button>
+                <button className="text-slate-500">
                   <HeartIcon /> <span className="ml-2">420</span>
-                </Button>
-                <Button variant="link" className="text-slate-500">
+                </button>
+                <button className="text-slate-500">
                   <BookmarkIcon />
                   <span className="ml-2"></span>
-                </Button>
-                <Button variant="link" className="text-slate-500">
+                </button>
+                <button className="text-slate-500">
                   <ShareIcon />
                   <span className="ml-2"></span>
-                </Button>
+                </button>
               </div>
             </div>
           </div>

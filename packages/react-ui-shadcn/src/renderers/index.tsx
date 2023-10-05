@@ -13,8 +13,10 @@ import { VideoRenderer } from "./video";
 import { CardRenderer } from "./card";
 import { AvatarRenderer } from "./avatar";
 import { ImageRenderer } from "./image";
+import { ContainerRenderer } from "./container";
 
 export const renderers: Renderers = {
+  Container: ContainerRenderer,
   Text: TextRenderer,
   Image: ImageRenderer,
   Card: CardRenderer,

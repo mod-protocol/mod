@@ -4,6 +4,7 @@ import { Editor, useEditor as useTipTapEditor } from "@tiptap/react";
 import { EditorConfig, createEditorConfig } from "./create-editor-config";
 import {
   Channel,
+  FARCASTER_MAX_EMBEDS,
   isFarcasterCastIdEmbed,
   isFarcasterUrlEmbed,
 } from "@mod-protocol/farcaster";
@@ -26,15 +27,25 @@ declare module "@tiptap/core" {
 }
 
 export type useEditorParameter = {
+  placeholderText?: string;
   initialText?: string;
   maxEmbeds?: number;
   onError: (errorType: ErrorType) => void;
   fetchUrlMetadata: (url: string) => Promise<UrlMetadata>;
-  onSubmit: ({ text }: { text: string }) => Promise<boolean>;
-} & Omit<EditorConfig, "onAddLink">;
+  onSubmit: ({
+    text,
+    embeds,
+    channel,
+  }: {
+    text: string;
+    embeds: Embed[];
+    channel: Channel;
+  }) => Promise<boolean>;
+} & Omit<EditorConfig, "onAddLink" | "placeholderText">;
 
 export type useEditorReturn = {
   getText: () => string;
+  handleSubmit: (e?: FormEvent<HTMLFormElement> | null) => Promise<boolean>;
   setChannel: (c: Channel) => void;
   getChannel: () => Channel;
   addEmbed: (e: Embed) => void;
@@ -47,13 +58,13 @@ export type useEditorReturn = {
 
 export function useEditor({
   initialText,
-  placeholderText,
+  placeholderText = "What's on your mind?",
   fetchUrlMetadata,
   onSubmit,
   onError,
   linkClassName,
   renderMentionsSuggestionConfig,
-  maxEmbeds,
+  maxEmbeds = FARCASTER_MAX_EMBEDS,
 }: useEditorParameter): useEditorReturn {
   const [embeds, setEmbeds] = useState<Embed[]>([]);
 
@@ -175,7 +186,11 @@ export function useEditor({
 
     editor?.commands.blur();
     const fullText = getText();
-    const submission = await onSubmit({ text: fullText });
+    const submission = await onSubmit({
+      text: fullText,
+      embeds: embeds,
+      channel,
+    });
 
     // if success
     if (submission) {
@@ -207,6 +222,7 @@ export function useEditor({
 
   return {
     getText,
+    handleSubmit,
     getEmbeds,
     addEmbed,
     setEmbeds,

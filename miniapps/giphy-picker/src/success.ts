@@ -1,6 +1,6 @@
-import { Element } from "@mod-protocol/core";
+import { ModElement } from "@mod-protocol/core";
 
-const success: Element[] = [
+const success: ModElement[] = [
   {
     type: "vertical-layout",
     elements: [

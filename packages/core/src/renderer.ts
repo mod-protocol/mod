@@ -4,17 +4,17 @@ import isArray from "lodash.isarray";
 import isString from "lodash.isstring";
 import mapValues from "lodash.mapvalues";
 import {
-  Action,
-  EventType,
-  Element,
-  Manifest,
+  ModAction,
+  ModEvent,
+  ModElement,
+  ModManifest,
   JsonType,
   Op,
   ConditionalFlow,
 } from "./manifest";
 import { Embed } from "./embeds";
 
-export type ElementRefType<T> =
+export type ModElementRef<T> =
   | {
       type: "text";
       label: string;
@@ -115,7 +115,7 @@ export type ElementRefType<T> =
       };
     };
 
-export type CreationContextType = {
+export type CreationContext = {
   input: any;
   embeds: Embed[];
   /** The url of the api hosting the mini-app backends. (including /api) **/
@@ -123,12 +123,12 @@ export type CreationContextType = {
 };
 
 // Render mini apps only are triggered by a single embed right now
-export type ContentContextType = {
+export type ContentContext = {
   embed: Embed;
   api: string;
 };
 
-export type ContextType = CreationContextType | ContentContextType;
+export type ContextType = CreationContext | ContentContext;
 
 function nonNullable<T>(value: T): value is NonNullable<T> {
   return value !== null && value !== undefined;
@@ -140,13 +140,13 @@ function hasDefinedProperty<T extends Record<any, any>, K extends keyof T>(
   return property in obj && typeof obj[property] !== "undefined";
 }
 
-export type HttpActionResolverInitType = {
+export type HttpActionResolverInit = {
   url: string;
   method: string;
   body?: any;
   headers?: Record<string, string>;
 };
-export type HttpActionResolverEventsType = {
+export type HttpActionResolverEvents = {
   onUploadProgress: (progress: number) => void;
   onAbort: () => void;
   onSuccess: (response: {
@@ -157,66 +157,65 @@ export type HttpActionResolverEventsType = {
   onError: (error: { status: number; statusText: string; error: any }) => void;
 };
 export interface HttpActionResolver {
-  (
-    init: HttpActionResolverInitType,
-    events: HttpActionResolverEventsType
-  ): void;
+  (init: HttpActionResolverInit, events: HttpActionResolverEvents): void;
 }
 
-export type OpenFileActionResolverInitType = {
+export type OpenFileActionResolverInit = {
   maxFiles: number;
   accept: string[];
 };
-export type OpenFileActionResolverEventsType = {
+export type OpenFileActionResolverEvents = {
   onAbort: () => void;
   onSuccess: (files: { name: string; mimeType: string; blob: any }[]) => void;
   onError: (error: { message: string }) => void;
 };
 export interface OpenFileActionResolver {
   (
-    init: OpenFileActionResolverInitType,
-    events: OpenFileActionResolverEventsType
+    init: OpenFileActionResolverInit,
+    events: OpenFileActionResolverEvents
   ): void;
 }
 
-export type SetInputActionResolverInitType = {
+export type SetInputActionResolverInit = {
   input: any;
 };
-export type SetInputActionResolverEventsType = {
+
+export type SetInputActionResolverEvents = {
   onSuccess: (input: any) => void;
 };
+
 export interface SetInputActionResolver {
   (
-    init: SetInputActionResolverInitType,
-    events: SetInputActionResolverEventsType
+    init: SetInputActionResolverInit,
+    events: SetInputActionResolverEvents
   ): void;
 }
 
-export type AddEmbedActionResolverInitType = {
+export type AddEmbedActionResolverInit = {
   url: string;
   name: string;
   mimeType: string;
 };
-export type AddEmbedActionResolverEventsType = {
+export type AddEmbedActionResolverEvents = {
   onSuccess: () => void;
 };
 export interface AddEmbedActionResolver {
   (
-    init: AddEmbedActionResolverInitType,
-    events: AddEmbedActionResolverEventsType
+    init: AddEmbedActionResolverInit,
+    events: AddEmbedActionResolverEvents
   ): void;
 }
 
-export type OpenLinkActionResolverInitType = {
+export type OpenLinkActionResolverInit = {
   url: string;
 };
-export type OpenLinkActionResolverEventsType = {
+export type OpenLinkActionResolverEvents = {
   onSuccess: () => void;
 };
 export interface OpenLinkActionResolver {
   (
-    init: OpenLinkActionResolverInitType,
-    events: OpenLinkActionResolverEventsType
+    init: OpenLinkActionResolverInit,
+    events: OpenLinkActionResolverEvents
   ): void;
 }
 
@@ -319,8 +318,8 @@ function matchesOp(value: string, op: Op, context: any): boolean {
 }
 
 export function canRenderEntrypointWithContext(
-  entrypoint: NonNullable<Manifest["contentEntrypoints"]>[number],
-  context: ContentContextType
+  entrypoint: NonNullable<ModManifest["contentEntrypoints"]>[number],
+  context: ContentContext
 ) {
   const arrayOfIfs = isArray(entrypoint.if) ? entrypoint.if : [entrypoint.if];
 
@@ -331,7 +330,7 @@ export function canRenderEntrypointWithContext(
 }
 
 export type RendererOptions = {
-  manifest: Manifest;
+  manifest: ModManifest;
   onTreeChange: () => void;
   onHttpAction: HttpActionResolver;
   onOpenFileAction: OpenFileActionResolver;
@@ -342,25 +341,25 @@ export type RendererOptions = {
 } & (
   | {
       variant: "creation";
-      context: CreationContextType;
+      context: CreationContext;
     }
   | {
       variant: "content";
-      context: ContentContextType;
+      context: ContentContext;
     }
 );
 
 export class Renderer {
   private interrupted: boolean = false;
-  private currentTree: Element[] = [];
+  private currentTree: ModElement[] = [];
   private asyncAction: {
     promise: Promise<any>;
-    ref: Action;
+    ref: ModAction;
   } | null = null;
   private refs: Record<string, any> = {};
   private context: Readonly<ContextType>;
   private manifestContext: Record<string, any> = {};
-  private readonly manifest: Manifest;
+  private readonly manifest: ModManifest;
   private onTreeChange: () => void;
   private onHttpAction: HttpActionResolver;
   private onOpenFileAction: OpenFileActionResolver;
@@ -438,14 +437,14 @@ export class Renderer {
     });
   }
 
-  private executeAction(action: Action) {
+  private executeAction(action: ModAction) {
     switch (action.type) {
       case "GET":
       case "POST":
       case "PUT":
       case "PATCH":
       case "DELETE": {
-        let options: HttpActionResolverInitType = {
+        let options: HttpActionResolverInit = {
           url: this.replaceInlineContext(action.url),
           method: action.type,
         };
@@ -758,7 +757,7 @@ export class Renderer {
     }
   }
 
-  private stepIntoOrTriggerAction(maybeElementTreeOrAction: EventType): void {
+  private stepIntoOrTriggerAction(maybeElementTreeOrAction: ModEvent): void {
     if (this.interrupted) {
       return;
     }
@@ -818,9 +817,9 @@ export class Renderer {
     this.onTreeChange();
   }
 
-  mapCurrentTree<T = any>(fn: (element: ElementRefType<T>, key: string) => T) {
+  mapCurrentTree<T = any>(fn: (element: ModElementRef<T>, key: string) => T) {
     const mapper = (
-      el: Element | ConditionalFlow<Element>,
+      el: ModElement | ConditionalFlow<ModElement>,
       index: number
     ): T | null => {
       const key = index + "";
