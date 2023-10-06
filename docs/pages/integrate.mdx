@@ -1,5 +1,7 @@
 # Getting started with React
 
+[See a live example](https://example-nextjs.modprotocol.org)
+
 Add the core libraries
 
 `yarn add @mod-protocol/react @mod-protocol/react-editor @mod-protocol/miniapp-registry`
@@ -45,7 +47,8 @@ import {
 } from "@mod-protocol/react-ui-shadcn/src/@/components/ui/popover";
 import { renderers } from "@mod-protocol/react-ui-shadcn/src/renderers";
 
-const API_URL = "https://api.modprotocol.org"; // Optionally replace with your API_URL here
+// Optionally replace with your API_URL here if you want to self host by running your own instance of https://github.com/mod-protocol/mod/tree/main/examples/api
+const API_URL = "https://api.modprotocol.org";
 const getResults = getFarcasterMentions(API_URL);
 const getChannels = getFarcasterChannels(API_URL);
 const getUrlMetadata = fetchUrlMetadata(API_URL);

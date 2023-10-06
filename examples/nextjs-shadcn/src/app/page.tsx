@@ -7,14 +7,19 @@ import { Cast } from "./cast";
 export default function Page() {
   return (
     <div className="flex flex-col container">
-      <div className="gap-5 py-3">
+      <div className="gap-2 py-3 flex flex-col">
         <h1 className="font-bold text-3xl">
-          The easiest way to integrate Farcaster cast creation and rich embeds
-          in React
+          An open source library for Farcaster cast creation
         </h1>
-        <h2 className="text-xl mt-2">
-          Using Mini-apps powered by Mod protocol
-        </h2>
+        <h2 className="text-xl">Using Mini-apps powered by Mod. </h2>
+        <a
+          href="https://docs.modprotocol.org"
+          target="_blank"
+          className="text-blue-700 text-xl hover:underline"
+          rel="noopener noreferrer"
+        >
+          Documentation →
+        </a>
       </div>
       <hr className="mb-10" />
       <div className="flex md:flex-row gap-10 flex-col">

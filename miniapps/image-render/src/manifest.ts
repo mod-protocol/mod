@@ -6,7 +6,7 @@ const manifest: ModManifest = {
   name: "View Images",
   custodyAddress: "furlong.eth",
   version: "0.0.1",
-  logo: "https://i.imgur.com/UkDzVVB.png",
+  logo: "https://i.imgur.com/75cFuT9.png",
   custodyGithubUsername: "davidfurlong",
   contentEntrypoints: [
     {

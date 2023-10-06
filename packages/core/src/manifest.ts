@@ -3,17 +3,21 @@ type ModConditionalElement = {
   if: ValueOp;
 };
 
-export type ModManifest = {
+type ModManifest = {
+  /** A unique string identifying this Miniapp */
   slug: string;
+  /** A human readable name for the Mini-app */
   name: string;
-  /** temporary property while Mini-apps are managed via a github repo */
+  /** A (temporary) github username to define as the owner */
   custodyGithubUsername: string;
+  /** An ethereum address or ENS address to define as the owner */
   custodyAddress: string;
+  /** A valid url pointing to an image file, it should be a square */
   logo: string;
   version: string;
-  creationEntrypoints?: ModElement[];
+  creationEntrypoints?: Element[];
   contentEntrypoints?: ModConditionalElement[];
-  elements?: Record<string, ModElement[]>;
+  elements?: Record<string, Element[]>;
 };
 
 export type ModEvent =

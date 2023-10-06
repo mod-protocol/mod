@@ -8,7 +8,7 @@ const manifest: ModManifest = {
   slug: "infura-ipfs-upload",
   name: "Upload files to IPFS using infura",
   custodyAddress: "furlong.eth",
-  logo: "https://i.imgur.com/ks7Akx5.png",
+  logo: "https://i.imgur.com/ptsz1Ig.png",
   custodyGithubUsername: "davidfurlong",
   version: "0.0.1",
   creationEntrypoints: action,
