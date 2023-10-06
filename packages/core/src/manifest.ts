@@ -3,7 +3,7 @@ type ModConditionalElement = {
   if: ValueOp;
 };
 
-type ModManifest = {
+export type ModManifest = {
   /** A unique string identifying this Miniapp */
   slug: string;
   /** A human readable name for the Mini-app */
