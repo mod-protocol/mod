@@ -5,13 +5,9 @@ import {
   ContentContext,
   Embed,
   ModManifest,
-  Renderer,
   canRenderEntrypointWithContext,
 } from "@mod-protocol/core";
-import {
-  fallbackRenderMiniApp,
-  renderMiniApps,
-} from "@mod-protocol/miniapp-registry";
+
 import { RenderMiniApp, Renderers } from ".";
 
 if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -21,10 +17,15 @@ if (!process.env.NEXT_PUBLIC_API_URL) {
 }
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export function RenderEmbed(props: { embed: Embed; renderers: Renderers }) {
-  const { embed } = props;
+type Props = {
+  embed: Embed;
+  renderers: Renderers;
+  fallbackRenderMiniApp: ModManifest;
+  renderMiniApps: ModManifest[];
+};
 
-  let matchingMiniapps = [{ embed, api: API_URL }].flatMap<{
+export function RenderEmbed(props: Props) {
+  let matchingMiniapps = [{ embed: props.embed, api: API_URL }].flatMap<{
     context: ContentContext;
     manifest: ModManifest;
   }>((context) => {
@@ -54,14 +55,14 @@ export function RenderEmbed(props: { embed: Embed; renderers: Renderers }) {
       }>;
     }
 
-    let matchingMiniApps = getMatchingMiniApps(renderMiniApps);
+    let matchingMiniApps = getMatchingMiniApps(props.renderMiniApps);
 
     if (matchingMiniApps.length) {
       return matchingMiniApps;
     }
 
     // use fallback instead
-    return getMatchingMiniApps([fallbackRenderMiniApp]);
+    return getMatchingMiniApps([props.fallbackRenderMiniApp]);
   });
 
   return matchingMiniapps.length
