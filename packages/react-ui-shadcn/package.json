@@ -7,10 +7,10 @@
     "dev": "npm run build -- --watch"
   },
   "dependencies": {
-    "@mod-protocol/core": "*",
-    "@mod-protocol/react": "*",
-    "@mod-protocol/react-editor": "*",
-    "@mod-protocol/farcaster": "*",
+    "@mod-protocol/core": "^0.0.1",
+    "@mod-protocol/react": "^0.0.1",
+    "@mod-protocol/react-editor": "^0.0.1",
+    "@mod-protocol/farcaster": "^0.0.1",
     "video.js": "^8.0.4",
     "tailwindcss-animate": "^1.0.6",
     "@primer/octicons-react": "^19.5.0",

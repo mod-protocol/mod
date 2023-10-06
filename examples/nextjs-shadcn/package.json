@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,14 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@miniapps/chatgpt": "*",
-    "@miniapps/giphy-picker": "*",
-    "@miniapps/infura-ipfs-upload": "*",
-    "@miniapps/nft-minter": "*",
-    "@mod-protocol/miniapp-registry": "*",
-    "@mod-protocol/core": "*",
-    "@mod-protocol/react": "*",
-    "@mod-protocol/react-editor": "*",
+    "@mod-protocol/miniapp-registry": "^0.0.1",
+    "@mod-protocol/core": "^0.0.1",
+    "@mod-protocol/react": "^0.0.1",
+    "@mod-protocol/react-editor": "^0.0.1",
     "next": "^13.5.4",
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
