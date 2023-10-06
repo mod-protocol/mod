@@ -24,10 +24,10 @@ export const creationMiniApps: ModManifest[] = allMiniApps.filter(
     manifest.creationEntrypoints && manifest.creationEntrypoints.length !== 0
 );
 
-export const renderMiniApps: ModManifest[] = allMiniApps.filter(
+export const contentMiniApps: ModManifest[] = allMiniApps.filter(
   (manifest) =>
     manifest.contentEntrypoints && manifest.contentEntrypoints.length !== 0
 );
 
 /** When no renderMiniApp matches an embed, this one will be used **/
-export const fallbackRenderMiniApp: ModManifest = UrlRender;
+export const defaultContentMiniApp: ModManifest = UrlRender;

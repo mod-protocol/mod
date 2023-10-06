@@ -5,8 +5,8 @@ import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
 import { RenderEmbed } from "@mod-protocol/react";
 import { Embed } from "@mod-protocol/core";
 import {
-  fallbackRenderMiniApp,
-  renderMiniApps,
+  defaultContentMiniApp,
+  contentMiniApps,
 } from "@mod-protocol/miniapp-registry";
 
 export function Embeds(props: { embeds: Array<Embed> }) {
@@ -17,8 +17,8 @@ export function Embeds(props: { embeds: Array<Embed> }) {
           embed={embed}
           key={i}
           renderers={renderers}
-          fallbackRenderMiniApp={fallbackRenderMiniApp}
-          renderMiniApps={renderMiniApps}
+          defaultContentMiniApp={defaultContentMiniApp}
+          contentMiniApps={contentMiniApps}
         />
       ))}
     </div>

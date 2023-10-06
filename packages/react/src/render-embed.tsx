@@ -20,8 +20,9 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 type Props = {
   embed: Embed;
   renderers: Renderers;
-  fallbackRenderMiniApp: ModManifest;
-  renderMiniApps: ModManifest[];
+  /** is used as a fallback when all other contentMiniApps fail to match the content type */
+  defaultContentMiniApp: ModManifest;
+  contentMiniApps: ModManifest[];
 };
 
 export function RenderEmbed(props: Props) {
@@ -55,14 +56,14 @@ export function RenderEmbed(props: Props) {
       }>;
     }
 
-    let matchingMiniApps = getMatchingMiniApps(props.renderMiniApps);
+    let matchingMiniApps = getMatchingMiniApps(props.contentMiniApps);
 
     if (matchingMiniApps.length) {
       return matchingMiniApps;
     }
 
     // use fallback instead
-    return getMatchingMiniApps([props.fallbackRenderMiniApp]);
+    return getMatchingMiniApps([props.defaultContentMiniApp]);
   });
 
   return matchingMiniapps.length
