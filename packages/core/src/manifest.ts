@@ -15,9 +15,9 @@ export type ModManifest = {
   /** A valid url pointing to an image file, it should be a square */
   logo: string;
   version: string;
-  creationEntrypoints?: Element[];
+  creationEntrypoints?: ModElement[];
   contentEntrypoints?: ModConditionalElement[];
-  elements?: Record<string, Element[]>;
+  elements?: Record<string, ModElement[]>;
 };
 
 export type ModEvent =
