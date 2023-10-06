@@ -3,7 +3,8 @@ module.exports = {
   darkMode: ["class"],
   content: [
     "./src/**/*.{ts,tsx,css}",
-    "../../packages/react-ui-shadcn/src/**/*.{ts,tsx,css}",
+    // make sure tailwind doesn't tree shake classes used by the library
+    "../../packages/react-ui-shadcn/dist/**/*.{ts,tsx,css,js}",
   ],
   theme: {
     container: {

@@ -1,4 +1,4 @@
-import { useRelativeDate } from "@/lib/relative-date";
+import { useRelativeDate } from "./relative-date";
 import Image from "next/image";
 import React from "react";
 import {

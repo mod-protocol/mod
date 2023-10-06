@@ -1,8 +1,8 @@
 "use client";
 
 import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
+import { Skeleton } from "components/ui/skeleton";
+import { cn } from "lib/utils";
 
 type MentionListRef = {
   onKeyDown: (props: { event: Event }) => boolean;

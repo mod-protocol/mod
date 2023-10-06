@@ -1,11 +1,13 @@
 {
   "name": "@mod-protocol/react",
-  "version": "0.0.0",
-  "main": "./src/index.tsx",
-  "types": "./src/index.tsx",
-  "private": true,
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "lint": "eslint \"**/*.ts*\""
+    "lint": "eslint \"**/*.ts*\"",
+    "build": "tsup src/index.tsx --format cjs,esm --dts",
+    "dev": "npm run build -- --watch"
   },
   "dependencies": {
     "@mod-protocol/core": "*"

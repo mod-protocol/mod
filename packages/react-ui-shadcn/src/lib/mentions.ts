@@ -1,6 +1,6 @@
 import tippy from "tippy.js";
 import { ReactRenderer } from "@tiptap/react";
-import { MentionList, MentionListItem } from "@/components/mention-list";
+import { MentionList, MentionListItem } from "components/mention-list";
 
 type MentionListRef = {
   onKeyDown: (props: { event: Event }) => boolean;

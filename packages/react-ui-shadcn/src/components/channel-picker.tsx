@@ -1,19 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+} from "components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { Channel } from "@mod-protocol/farcaster";
 import Image from "next/image";
 import { CaretDownIcon } from "@radix-ui/react-icons";
@@ -57,7 +53,7 @@ export function ChannelPicker(props: Props) {
       <PopoverTrigger asChild>
         <Button variant="outline" role="combobox" aria-expanded={open}>
           <Image
-            src={props.value.image}
+            src={props.value.image ?? ""}
             alt={props.value.name}
             width={24}
             height={24}
@@ -85,7 +81,7 @@ export function ChannelPicker(props: Props) {
                   onSelect={() => handleSelect(channel)}
                 >
                   <Image
-                    src={channel.image}
+                    src={channel.image ?? ""}
                     alt={channel.name}
                     width={24}
                     height={24}

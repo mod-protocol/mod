@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@mod-protocol/react-ui-shadcn/src/@/components/theme-provider";
+import { ThemeProvider } from "@mod-protocol/react-ui-shadcn/dist/components/theme-provider";
 
 import "./globals.css";
 

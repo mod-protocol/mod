@@ -6,17 +6,6 @@
         "name": "next"
       }
     ],
-    "paths": {
-      "@/components/*": [
-        "../../packages/react-ui-shadcn/src/@/components/*"
-      ],
-      "@/lib/*": [
-        "../../packages/react-ui-shadcn/src/@/lib/*"
-      ],
-      "src/@/lib/*": [
-        "../../packages/react-ui-shadcn/src/@/lib/*"
-      ],
-    },
   },
   "include": [
     "next-env.d.ts",

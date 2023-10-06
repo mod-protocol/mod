@@ -21,18 +21,18 @@ import {
 } from "@mod-protocol/core";
 
 // UI implementation
-import { createRenderMentionsSuggestionConfig } from "@mod-protocol/react-ui-shadcn/src/@/lib/create-render-mentions-suggestion-config";
-import { CreationMiniAppsSearch } from "@mod-protocol/react-ui-shadcn/src/@/components/creation-miniapps-search";
-import { CastLengthUIIndicator } from "@mod-protocol/react-ui-shadcn/src/@/components/cast-length-ui-indicator";
-import { ChannelPicker } from "@mod-protocol/react-ui-shadcn/src/@/components/channel-picker";
-import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/src/@/lib/embeds";
-import { Button } from "@mod-protocol/react-ui-shadcn/src/@/components/ui/button";
+import { createRenderMentionsSuggestionConfig } from "@mod-protocol/react-ui-shadcn/dist/lib/mentions";
+import { CreationMiniAppsSearch } from "@mod-protocol/react-ui-shadcn/dist/components/creation-miniapps-search";
+import { CastLengthUIIndicator } from "@mod-protocol/react-ui-shadcn/dist/components/cast-length-ui-indicator";
+import { ChannelPicker } from "@mod-protocol/react-ui-shadcn/dist/components/channel-picker";
+import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/dist/lib/embeds";
+import { Button } from "@mod-protocol/react-ui-shadcn/dist/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@mod-protocol/react-ui-shadcn/src/@/components/ui/popover";
-import { renderers } from "@mod-protocol/react-ui-shadcn/src/renderers";
+} from "@mod-protocol/react-ui-shadcn/dist/components/ui/popover";
+import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
 
 // Optionally replace with your API_URL here
 const API_URL =

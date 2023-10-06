@@ -1,4 +1,23 @@
-import { FarcasterEmbed } from "@mod-protocol/farcaster";
+import { FarcasterEmbed, isFarcasterUrlEmbed } from "@mod-protocol/farcaster";
+
+export function isImageEmbed(embed: Embed) {
+  return (
+    isFarcasterUrlEmbed(embed) &&
+    embed.metadata?.hasOwnProperty("image") &&
+    embed.url === embed.metadata?.image?.url
+  );
+}
+
+export function isVideoEmbed(embed: Embed) {
+  return isFarcasterUrlEmbed(embed) && embed.url.endsWith(".m3u8");
+}
+
+export function hasFullSizedImage(embed: Embed) {
+  return (
+    embed.metadata?.image?.url &&
+    embed.metadata?.image.width !== embed.metadata.image.height
+  );
+}
 
 export type NFTMetadata = {
   collectionName: string;
