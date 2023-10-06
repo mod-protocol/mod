@@ -1,14 +1,17 @@
 {
   "name": "@mod-protocol/react-editor",
   "version": "1.0.0",
-  "main": "./src/index.tsx",
-  "types": "./src/index.tsx",
-  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "lint": "eslint \"**/*.ts*\""
+    "lint": "eslint \"**/*.ts*\"",
+    "build": "tsup src/index.tsx --format cjs,esm --dts",
+    "dev": "npm run build -- --watch"
   },
   "dependencies": {
     "@tiptap/core": "^2.0.4",
+    "@mod-protocol/farcaster": "*",
     "@tiptap/extension-document": "^2.0.4",
     "@tiptap/extension-hard-break": "^2.0.4",
     "@tiptap/extension-history": "^2.0.4",

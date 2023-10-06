@@ -1,8 +1,8 @@
 import React from "react";
 import { Renderers } from "@mod-protocol/react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "components/ui/scroll-area";
+import { AspectRatio } from "components/ui/aspect-ratio";
+import { Skeleton } from "components/ui/skeleton";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 export const ImageGridListRenderer = (

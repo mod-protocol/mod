@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { renderers } from "@mod-protocol/react-ui-shadcn";
+import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
 import { RenderEmbed } from "@mod-protocol/react";
 import { Embed } from "@mod-protocol/core";
 

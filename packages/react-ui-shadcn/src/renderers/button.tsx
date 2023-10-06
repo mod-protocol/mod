@@ -1,7 +1,7 @@
 import React from "react";
 import { Renderers } from "@mod-protocol/react";
-import { CircularProgress } from "@/components/ui/circular-progress";
-import { Button } from "@/components/ui/button";
+import { CircularProgress } from "components/ui/circular-progress";
+import { Button } from "components/ui/button";
 
 export const ButtonRenderer = (
   props: React.ComponentProps<Renderers["Button"]>

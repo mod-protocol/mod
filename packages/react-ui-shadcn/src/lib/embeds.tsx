@@ -1,31 +1,17 @@
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "components/ui/button";
+import { Skeleton } from "components/ui/skeleton";
 import {
   isFarcasterCastIdEmbed,
   isFarcasterUrlEmbed,
 } from "@mod-protocol/farcaster";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { VideoRenderer } from "../../renderers/video";
-import { Embed } from "@mod-protocol/core";
-
-export function isImageEmbed(embed: Embed) {
-  return (
-    isFarcasterUrlEmbed(embed) &&
-    embed.metadata?.hasOwnProperty("image") &&
-    embed.url === embed.metadata?.image?.url
-  );
-}
-
-export function isVideoEmbed(embed: Embed) {
-  return isFarcasterUrlEmbed(embed) && embed.url.endsWith(".m3u8");
-}
-
-export function hasFullSizedImage(embed: Embed) {
-  return (
-    embed.metadata?.image?.url &&
-    embed.metadata?.image.width !== embed.metadata.image.height
-  );
-}
+import { VideoRenderer } from "../renderers/video";
+import {
+  Embed,
+  hasFullSizedImage,
+  isImageEmbed,
+  isVideoEmbed,
+} from "@mod-protocol/core";
 
 export const EmbedsEditor = (props: {
   embeds: Embed[];

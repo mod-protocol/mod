@@ -12,7 +12,7 @@ import {
   fallbackRenderMiniApp,
   renderMiniApps,
 } from "@mod-protocol/miniapp-registry";
-import { RenderMiniApp, Renderers } from "@mod-protocol/react";
+import { RenderMiniApp, Renderers } from ".";
 
 if (!process.env.NEXT_PUBLIC_API_URL) {
   throw new Error(
