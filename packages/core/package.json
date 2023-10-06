@@ -25,6 +25,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@mod-protocol/farcaster": "*",
     "lodash.get": "^4.4.2",
     "lodash.isarray": "^4.0.0",
     "lodash.isstring": "^4.0.1",
