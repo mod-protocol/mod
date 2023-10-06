@@ -13,6 +13,7 @@
     "@mod-protocol/core": "^0.0.1",
     "@mod-protocol/react": "^0.0.1",
     "@mod-protocol/react-editor": "^0.0.1",
+    "@mod-protocol/react-ui-shadcn": "^0.0.1",
     "next": "^13.5.4",
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
