@@ -1,6 +1,6 @@
 {
   "name": "@mod-protocol/react-editor",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@tiptap/core": "^2.0.4",
-    "@mod-protocol/farcaster": "*",
+    "@mod-protocol/core": "^0.0.1",
+    "@mod-protocol/farcaster": "^0.0.1",
     "@tiptap/extension-document": "^2.0.4",
     "@tiptap/extension-hard-break": "^2.0.4",
     "@tiptap/extension-history": "^2.0.4",
