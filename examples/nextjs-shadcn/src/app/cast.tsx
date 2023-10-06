@@ -111,16 +111,12 @@ export function Cast(props: {
       <div>
         <div className="px-4 py-3 pb-0 cursor-pointer break-words">
           <div className="flex gap-3 flex-row">
-            <div style={{ minWidth: "48px" }} className="relative">
+            <div className="relative min-w-[48px]">
               <div>
                 <div className="pt-1">
                   <Image
                     alt=""
-                    style={{
-                      width: "48px",
-                      height: "48px",
-                    }}
-                    className="rounded-full"
+                    className="rounded-full w-[48px] h-[48px]"
                     src={
                       props.cast.avatar_url ||
                       "https://www.discove.xyz/black.png"
@@ -136,19 +132,11 @@ export function Cast(props: {
                 <b>{props.cast.display_name}</b>
               </span>{" "}
               <span>@{props.cast.username}</span> <span>· {publishedAt}</span>
-              <div
-                className="cursor-pointer mt-1"
-                style={{
-                  maxWidth: "600px",
-                }}
-              >
+              <div className="cursor-pointer mt-1 max-w-[600px]">
                 {convertStructuredCastToReactDOMComponents(structuredCast, {})}
                 <Embeds embeds={props.cast.embeds} />
               </div>
-              <div
-                className="flex justify-between mt-2"
-                style={{ maxWidth: "400px", marginLeft: "-14px" }}
-              >
+              <div className="flex justify-between mt-2 max-w-[400px]">
                 <button className="text-slate-500">
                   <CommentIcon />
                   <span className="ml-2">69</span>
