@@ -5,7 +5,6 @@ import { EditorConfig, createEditorConfig } from "./create-editor-config";
 import {
   Channel,
   FARCASTER_MAX_EMBEDS,
-  isFarcasterCastIdEmbed,
   isFarcasterUrlEmbed,
 } from "@mod-protocol/farcaster";
 import { UrlMetadata, Embed } from "@mod-protocol/core";
@@ -50,7 +49,6 @@ export type useEditorReturn = {
   getChannel: () => Channel;
   addEmbed: (e: Embed) => void;
   getEmbeds: () => Embed[];
-  /** embeds set using this method with status: 'loading' won't be automatically loaded **/
   setEmbeds: (embeds: Embed[]) => void;
   setText: (t: string) => void;
   editor: Editor | null;
@@ -75,42 +73,23 @@ export function useEditor({
     channel_id: "home",
   });
 
-  const updateEmbedsWithLoadedData = useCallback(
-    (url: string, urlMetadata: object) => {
-      setEmbeds((embedsState) =>
-        embedsState.map((embed) => {
-          if (isFarcasterCastIdEmbed(embed)) return embed;
-          if (embed.url === url)
-            return {
-              status: "loaded",
-              url: embed.url,
-              metadata: urlMetadata,
-            };
-          return embed;
-        })
-      );
-    },
-    [setEmbeds]
-  );
-
   const addEmbed = useCallback(
-    (embed: Embed) => {
+    (newEmbed: Embed) => {
       if (maxEmbeds !== undefined && !Number.isNaN(maxEmbeds)) {
         setEmbeds((embedsState) => {
           if (embedsState.length < maxEmbeds) {
-            if (isFarcasterUrlEmbed(embed)) {
-              // Fetch type (url or image) and OG data async
-              fetchUrlMetadata(embed.url)
-                .then((urlMetadata: UrlMetadata) => {
-                  updateEmbedsWithLoadedData(embed.url, urlMetadata);
-                })
-                .catch((err) => {
-                  onError(err);
-                });
-
-              return [...embedsState, { url: embed.url, status: "loading" }];
+            if (
+              !embedsState.find((embed) => {
+                return (
+                  isFarcasterUrlEmbed(embed) &&
+                  isFarcasterUrlEmbed(newEmbed) &&
+                  embed.url === newEmbed.url
+                );
+              }) // Deduplication
+            ) {
+              return [...embedsState, newEmbed];
             } else {
-              return [...embedsState, embed];
+              return embedsState;
             }
           } else {
             onError(MAX_EMBEDS_REACHED_ERROR);
@@ -119,13 +98,7 @@ export function useEditor({
         });
       }
     },
-    [
-      setEmbeds,
-      maxEmbeds,
-      fetchUrlMetadata,
-      updateEmbedsWithLoadedData,
-      onError,
-    ]
+    [setEmbeds, maxEmbeds, onError]
   );
 
   const onAddLink = useCallback(
@@ -139,15 +112,19 @@ export function useEditor({
       start: number;
       end: number;
     }) => {
-      if (
-        !embeds.find(
-          (embed) => isFarcasterUrlEmbed(embed) && embed.url === link.href
-        )
-      ) {
-        addEmbed({ url: link.href, status: "loading" });
-      }
+      fetchUrlMetadata(link.href)
+        .then((urlMetadata: UrlMetadata) => {
+          addEmbed({
+            url: link.href,
+            metadata: urlMetadata,
+            status: "loaded",
+          });
+        })
+        .catch((err) => {
+          onError(err);
+        });
     },
-    [embeds, addEmbed]
+    [addEmbed, fetchUrlMetadata, onError]
   );
 
   const editorConfig = useMemo(
