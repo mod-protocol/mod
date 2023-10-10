@@ -5,6 +5,7 @@ import { EditorConfig, createEditorConfig } from "./create-editor-config";
 import {
   Channel,
   FARCASTER_MAX_EMBEDS,
+  isFarcasterCastIdEmbed,
   isFarcasterUrlEmbed,
 } from "@mod-protocol/farcaster";
 import { UrlMetadata, Embed } from "@mod-protocol/core";
@@ -49,6 +50,7 @@ export type useEditorReturn = {
   getChannel: () => Channel;
   addEmbed: (e: Embed) => void;
   getEmbeds: () => Embed[];
+  /** embeds set using this method with status: 'loading' won't be automatically loaded **/
   setEmbeds: (embeds: Embed[]) => void;
   setText: (t: string) => void;
   editor: Editor | null;
@@ -73,32 +75,72 @@ export function useEditor({
     channel_id: "home",
   });
 
+  const updateEmbedsWithLoadedData = useCallback(
+    (url: string, urlMetadata: object) => {
+      setEmbeds((embedsState) =>
+        embedsState.map((embed) => {
+          if (isFarcasterCastIdEmbed(embed)) return embed;
+          if (embed.url === url)
+            return {
+              status: "loaded",
+              url: embed.url,
+              metadata: urlMetadata,
+            };
+          return embed;
+        })
+      );
+    },
+    [setEmbeds]
+  );
+
   const addEmbed = useCallback(
     (newEmbed: Embed) => {
       if (maxEmbeds !== undefined && !Number.isNaN(maxEmbeds)) {
         setEmbeds((embedsState) => {
-          if (embedsState.length < maxEmbeds) {
-            if (
-              !embedsState.find((embed) => {
-                return (
-                  isFarcasterUrlEmbed(embed) &&
-                  isFarcasterUrlEmbed(newEmbed) &&
-                  embed.url === newEmbed.url
-                );
-              }) // Deduplication
-            ) {
-              return [...embedsState, newEmbed];
-            } else {
-              return embedsState;
-            }
-          } else {
+          // Max embeds reached
+          if (embedsState.length >= maxEmbeds) {
             onError(MAX_EMBEDS_REACHED_ERROR);
+            return embedsState;
+          }
+
+          // Embed not loaded yet
+          if (isFarcasterUrlEmbed(newEmbed) && newEmbed.status !== "loaded") {
+            // Fetch type (url or image) and OG data async
+            fetchUrlMetadata(newEmbed.url)
+              .then((urlMetadata: UrlMetadata) => {
+                updateEmbedsWithLoadedData(newEmbed.url, urlMetadata);
+              })
+              .catch((err) => {
+                onError(err);
+              });
+
+            return [...embedsState, { url: newEmbed.url, status: "loading" }];
+          }
+
+          // Embed already loaded
+          if (
+            !embedsState.find((embed) => {
+              return (
+                isFarcasterUrlEmbed(embed) &&
+                isFarcasterUrlEmbed(newEmbed) &&
+                embed.url === newEmbed.url
+              );
+            }) // Deduplication
+          ) {
+            return [...embedsState, newEmbed];
+          } else {
             return embedsState;
           }
         });
       }
     },
-    [setEmbeds, maxEmbeds, onError]
+    [
+      setEmbeds,
+      maxEmbeds,
+      onError,
+      fetchUrlMetadata,
+      updateEmbedsWithLoadedData,
+    ]
   );
 
   const onAddLink = useCallback(
@@ -124,7 +166,9 @@ export function useEditor({
           onError(err);
         });
     },
-    [addEmbed, fetchUrlMetadata, onError]
+    // Editor config isn't reactive
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const editorConfig = useMemo(
