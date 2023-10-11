@@ -35,7 +35,7 @@ export type NFTMetadata = {
     mintUrl: string;
     openSeaUrl?: string;
   };
-  creator: {
+  creator?: {
     fid: number;
     username: string;
     displayName: string;
