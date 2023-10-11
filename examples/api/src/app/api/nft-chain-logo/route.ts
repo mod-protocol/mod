@@ -1,17 +1,23 @@
 import { NextRequest } from "next/server";
+import { resolveChainIcon } from "../../../lib/chains/chain-icon";
+import { chainById, chainByName } from "../../../lib/chains/chain-index";
 
 export async function GET(request: NextRequest) {
-  const chain = request.nextUrl.searchParams.get("chain");
-  const url = new URL("https://warpcast.com/");
+  let chainNameOrId =
+    request.nextUrl.searchParams.get("chain") ||
+    parseInt(request.nextUrl.searchParams.get("chain-id"));
 
-  if (!chain || chain === "base") {
-    url.pathname = "~/images/og/BaseChain.webp";
-  } else {
-    // TODO: other chains
-    url.pathname = "~/images/og/BaseChain.webp";
+  const chain = chainById[chainNameOrId] || chainByName[chainNameOrId];
+
+  if (!chain) {
+    return new Response(null, {
+      status: 404,
+    });
   }
 
-  const res = await fetch(url);
+  let chainIconUrl = await resolveChainIcon(chain.id);
+
+  const res = await fetch(chainIconUrl);
 
   return new Response(res.body, {
     status: res.status,
