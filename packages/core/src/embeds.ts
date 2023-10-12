@@ -29,8 +29,8 @@ export type NFTMetadata = {
     id: string;
     name: string;
     description: string;
-    itemCount: number;
-    ownerCount: number;
+    itemCount?: number;
+    ownerCount?: number;
     imageUrl: string;
     mintUrl: string;
     openSeaUrl?: string;
