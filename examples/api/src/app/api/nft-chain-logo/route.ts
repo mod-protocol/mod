@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
-import { resolveChainIcon } from "../../../lib/chains/chain-icon";
-import { chainById, chainByName } from "../../../lib/chains/chain-index";
+import { resolveChainIcon } from "./lib/chains/chain-icon";
+import { chainById, chainByName } from "./lib/chains/chain-index";
 
 export async function GET(request: NextRequest) {
   let chainNameOrId =

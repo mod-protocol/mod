@@ -1,6 +1,6 @@
 import { chainById } from "./chain-index";
 
-export async function resolveChainIcon(chainId: number) {
+export async function resolveChainIcon(chainId: number): Promise<string> {
   const chain = await fetch(
     `https://raw.githubusercontent.com/ethereum-lists/chains/master/_data/chains/eip155-${chainId}.json`
   );
