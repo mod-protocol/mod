@@ -2,9 +2,57 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const form = await request.formData();
-  // https://docs.livepeer.org/reference/api#upload-an-asset
-  const requestedUrlReq = await fetch(
-    "https://livepeer.studio/api/asset/request-upload",
+
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  // Cancel upload if it takes longer than 15s
+  setTimeout(() => {
+    controller.abort();
+  }, 15_000);
+
+  const uploadRes: Response | null = await fetch(
+    "https://ipfs.infura.io:5001/api/v0/add",
+    {
+      method: "POST",
+      body: form,
+      headers: {
+        Authorization:
+          "Basic " +
+          Buffer.from(
+            process.env.INFURA_API_KEY + ":" + process.env.INFURA_API_SECRET
+          ).toString("base64"),
+      },
+      signal,
+    }
+  );
+
+  const { Hash: hash } = await uploadRes.json();
+
+  const responseData = { url: `ipfs://${hash}` };
+
+  return NextResponse.json({ data: responseData });
+}
+
+// needed for preflight requests to succeed
+export const OPTIONS = async (request: NextRequest) => {
+  return NextResponse.json({});
+};
+
+export const GET = async (request: NextRequest) => {
+  let url = request.nextUrl.searchParams.get("url");
+
+  // Exchange for livepeer url
+  const cid = url.replace("ipfs://", "");
+  const gatewayUrl = `${process.env.IPFS_DEFAULT_GATEWAY}/${cid}`;
+
+  // Get HEAD to get content type
+  const response = await fetch(gatewayUrl, { method: "HEAD" });
+  const contentType = response.headers.get("content-type");
+
+  // TODO: Cache this
+  const uploadRes = await fetch(
+    "https://livepeer.studio/api/asset/upload/url",
     {
       method: "POST",
       headers: {
@@ -12,82 +60,30 @@ export async function POST(request: NextRequest) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: "video.mp4",
-        staticMp4: true,
+        name: "filename.mp4",
+        staticMp4: contentType === "video/mp4" ? true : false,
         playbackPolicy: {
           type: "public",
         },
-        storage: {
-          ipfs: true,
-        },
+        url: gatewayUrl,
       }),
     }
   );
 
-  const requestedUrl = await requestedUrlReq.json();
+  if (!uploadRes.ok) {
+    // console.error(uploadRes.status, await uploadRes.text());
+    return NextResponse.error();
+  }
 
-  const url = requestedUrl.url;
+  const { asset } = await uploadRes.json();
 
-  const videoUpload = await fetch(url, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${process.env.LIVEPEER_API_SECRET}`,
-      "Content-Type": "video/mp4",
-    },
-    body: form.get("file"),
+  const playbackUrl = `https://lp-playback.com/hls/${asset.playbackId}/index.m3u8`;
+
+  return NextResponse.json({
+    url: playbackUrl,
+    fallbackUrl: gatewayUrl,
+    mimeType: contentType,
   });
-
-  if (videoUpload.status >= 400) {
-    return NextResponse.json(
-      { message: "Something went wrong" },
-      {
-        status: videoUpload.status,
-      }
-    );
-  }
-
-  // simpler than webhooks, but constrained by serverless function timeout time
-  let isUploadSuccess = false;
-  let maxTries = 10;
-  let tries = 0;
-  while (!isUploadSuccess && tries < maxTries) {
-    const details = await fetch(
-      `https://livepeer.studio/api/asset/${requestedUrl.asset.id}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${process.env.LIVEPEER_API_SECRET}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const detailsJson = await details.json();
-
-    if (detailsJson.status !== "waiting") {
-      break;
-    }
-
-    // wait 1s
-    await new Promise((resolve) => setTimeout(() => resolve(null), 1000));
-    tries = tries + 1;
-  }
-
-  if (tries === maxTries) {
-    return NextResponse.json(
-      {
-        message: "Took too long to upload. Try a smaller file",
-      },
-      { status: 400 }
-    );
-  }
-
-  // hack, wait at least 3s to make sure url doesn't error
-  await new Promise((resolve) => setTimeout(() => resolve(null), 3000));
-
-  return NextResponse.json({ data: requestedUrl });
-}
-
-// needed for preflight requests to succeed
-export const OPTIONS = async (request: NextRequest) => {
-  return NextResponse.json({});
 };
+
+export const runtime = "edge";
