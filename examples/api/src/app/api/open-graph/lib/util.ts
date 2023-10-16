@@ -121,10 +121,8 @@ export async function fetchNFTMetadata({
     `https://api.opensea.io/api/v1/collection/${collectionSlug}/stats`,
     authOptions
   );
-  let collectionStats: any = {};
-  if (collectionStatsResponse.ok) {
-    collectionStats = await collectionStatsResponse.json();
-  }
+  // Collection stats should exist if the collection exists
+  const collectionStats = await collectionStatsResponse.json();
 
   const fcUser = await fetchUserData(collectionData.owner);
 
@@ -150,8 +148,8 @@ export async function fetchNFTMetadata({
       id: caip19Uri,
       name: collectionData.name,
       description: collectionData.description,
-      itemCount: collectionStats?.stats.count,
-      ownerCount: collectionStats?.stats.num_owners,
+      itemCount: collectionStats.stats.count,
+      ownerCount: collectionStats.stats.num_owners,
       imageUrl: image,
       mintUrl: mintUrl || collectionData.opensea_url,
       openSeaUrl: collectionData.opensea_url,
