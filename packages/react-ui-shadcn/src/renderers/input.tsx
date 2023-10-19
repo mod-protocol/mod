@@ -29,6 +29,7 @@ export const InputRenderer = (
       />
       {isClearable && value ? (
         <Button
+          type="button"
           className="rounded-l-none text-gray-400 hover:bg-transparent"
           variant="ghost"
           size="icon"

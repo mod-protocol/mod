@@ -23,6 +23,7 @@ export const ImageGridListRenderer = (
           images.map((item) => (
             <AspectRatio key={item} ratio={1}>
               <button
+                type="button"
                 className="w-full h-full active:opacity-50 rounded-md"
                 onClick={() => onPick(item)}
               >
