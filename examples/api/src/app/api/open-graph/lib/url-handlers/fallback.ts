@@ -41,11 +41,20 @@ const ethSearchParams = ethDataSelectors.map(
 async function fallbackUrlHandler(url: string): Promise<UrlMetadata> {
   const response = await fetch(
     // To self host, use https://github.com/microlinkhq/metascraper
-    `https://api.microlink.io/?url=${encodeURIComponent(
+    `https://pro.microlink.io/?url=${encodeURIComponent(
       url
-    )}&${ethSearchParams.join("&")}`
+    )}&${ethSearchParams.join("&")}`,
+    {
+      headers: {
+        "x-api-key": process.env.MICROLINK_API_KEY,
+      },
+    }
   );
-  const { data } = await response.json();
+  const { data, status, message, code, more } = await response.json();
+
+  if (!response.ok) {
+    throw new Error(message);
+  }
 
   const urlMetadata: UrlMetadata = {
     image: data.image

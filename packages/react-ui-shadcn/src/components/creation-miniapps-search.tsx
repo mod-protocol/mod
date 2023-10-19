@@ -37,7 +37,12 @@ export function CreationMiniAppsSearch(props: Props) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={open}>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          type="button"
+        >
           +
         </Button>
       </PopoverTrigger>

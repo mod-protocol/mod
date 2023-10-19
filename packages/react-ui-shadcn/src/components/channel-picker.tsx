@@ -51,7 +51,12 @@ export function ChannelPicker(props: Props) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={open}>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          type="button"
+        >
           <Image
             src={props.value.image ?? ""}
             alt={props.value.name}

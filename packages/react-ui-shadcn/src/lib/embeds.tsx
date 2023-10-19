@@ -24,6 +24,7 @@ export const EmbedsEditor = (props: {
           <Button
             className="rounded-full text-white hover:text-gray-300 absolute -top-4 -left-4 border-white border z-50"
             size="icon"
+            type="button"
             onClick={() => {
               props.setEmbeds(props.embeds.filter((item, j) => j !== i));
             }}
