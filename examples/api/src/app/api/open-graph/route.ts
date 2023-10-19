@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(urlMetadata);
   } catch (err) {
-    // console.error(err);
+    console.error(err);
     return NextResponse.json(
       { message: "An unknown error occurred" },
       { status: err.status }
