@@ -58,12 +58,7 @@ export const VideoRenderer = (props: PlayerProps) => {
       videoElement.classList.add("vjs-big-play-centered");
       videoRef.current?.appendChild(videoElement);
 
-      const player = (playerRef.current = videojs(videoElement, options, () => {
-        videojs.log("player is ready");
-      }));
-
-      // You could update an existing player in the `else` block here
-      // on prop change, for example:
+      playerRef.current = videojs(videoElement, options);
     } else {
       const player = playerRef.current;
 
