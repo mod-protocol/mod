@@ -37,12 +37,12 @@ All PRs with meaningful changes should have a changeset which is a short descrip
 
 ## Add a new changeset
 
-changeset
+yarn changeset
 
 ## Create new versions of packages
 
-changeset version
+yarn changeset version
 
 ## Publish all changed packages to npm
 
-changeset publish
+yarn changeset publish
