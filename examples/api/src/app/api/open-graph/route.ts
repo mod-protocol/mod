@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextResponse, NextRequest } from "next/server";
 import { UrlMetadata } from "@mod-protocol/core";
 import urlHandlers from "./lib/url-handlers";
