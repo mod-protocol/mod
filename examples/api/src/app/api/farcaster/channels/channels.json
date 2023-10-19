@@ -30,9 +30,9 @@
         "channel_id": "farcaster"
     },
     {
-        "name": "/dev",
+        "name": "dev",
         "parent_url": "chain://eip155:1/erc721:0x7dd4e31f1530ac682c8ea4d8016e95773e08d8b0",
-        "image": "https://i.seadn.io/gcs/files/b110857d29c31ab3a379ab50e2fdcf54.png?auto=format&dpr=1&w=512",
+        "image": "https://ipfs.decentralized-content.com/ipfs/bafkreigbei45ni5zsliszzeivotgee5auj2ykkh6zrzjwvm4izviidusny",
         "channel_id": "farcaster-dev"
     },
     {
@@ -326,7 +326,7 @@
     {
         "name": "Nouns",
         "parent_url": "chain://eip155:1/erc721:0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03",
-        "image": "https://i.seadn.io/gae/vfYB4RarIqixy2-wyfP4lIdK6fsOT8uNrmKxvYCJdjdRwAMj2ZjC2zTSxL-YKky0s-4Pb6eML7ze3Ouj54HrpUlfSWx52xF_ZK2TYw?w=500&auto=format",
+        "image": "https://warpcast.com/~/channel-images/nouns.png",
         "channel_id": "nouns"
     },
     {
@@ -336,9 +336,9 @@
         "channel_id": "orange-dao"
     },
     {
-        "name": "Zorbs",
+        "name": "Zora",
         "parent_url": "chain://eip155:1/erc721:0xca21d4228cdcc68d4e23807e5e370c07577dd152",
-        "image": "https://i.seadn.io/gae/O2J_GV66yHfYeHIl-ASFknUqJ1qPB-W1D6xB2Xk-Po9GVE5Te9hkBSPsjCVTTHzq1QYgLppo4LcDtHiV3pxeSfB1b9_fP5pGbiRuUg?auto=format&dpr=1&w=256",
+        "image": "https://warpcast.com/~/channel-images/zora.png",
         "channel_id": "zorbs"
     },
     {
@@ -426,69 +426,195 @@
         "channel_id": "rust"
     },
     {
+        "name": "Nature",
         "parent_url": "chain://eip155:7777777/erc721:0xf6a7d848603aff875e4f35025e5c568679ccc17c",
-        "channel_id": "nature",
         "image": "https://ipfs.decentralized-content.com/ipfs/bafybeia4rvvtf5wulljp6ogdbbsjtflvuw5gcfwbugikwtfom2rq5c65a4",
-        "name": "Nature"
+        "channel_id": "nature"
     },
     {
+        "name": "Jobs",
         "parent_url": "chain://eip155:8453/erc721:0x5fcd7a54fdf08c8dbcb969bc1f021ae87affafa8",
-        "channel_id": "jobs",
         "image": "https://ipfs.decentralized-content.com/ipfs/bafkreie2uut3t5enmn6vtqainrmzwwy47evihl4dmxjqofwwjvqk6snbsu",
-        "name": "Jobs"
+        "channel_id": "jobs"
     },
     {
+        "name": "Apple",
         "parent_url": "https://www.apple.com",
-        "channel_id": "apple",
         "image": "https://warpcast.com/~/channel-images/apple.png",
-        "name": "Apple"
+        "channel_id": "apple"
     },
     {
+        "name": "Network States",
         "parent_url": "https://thenetworkstate.com",
-        "channel_id": "network-states",
         "image": "https://warpcast.com/~/channel-images/network-states.png",
-        "name": "Network States"
+        "channel_id": "network-states"
     },
     {
+        "name": "Base",
         "parent_url": "https://onchainsummer.xyz",
-        "channel_id": "onchain-summer",
-        "image": "https://warpcast.com/~/channel-images/onchain-summer.png",
-        "name": "Onchain Summer"
+        "image": "https://warpcast.com/~/channel-images/base.png",
+        "channel_id": "onchain-summer"
     },
     {
+        "name": "RxE",
         "parent_url": "chain://eip155:7777777/erc721:0x3312a43f15a9a9a1c6b7ee055e4b71041c2613e6",
-        "channel_id": "rust-x-ethereum",
         "image": "https://warpcast.com/~/channel-images/rex.png",
-        "name": "RxE"
+        "channel_id": "rust-x-ethereum"
     },
     {
+        "name": "farcastHER",
         "parent_url": "chain://eip155:8453/erc721:0x1e5115dc60cdab3c1263a945201cb509ea7a8340",
-        "channel_id": "farcasther",
         "image": "https://ipfs.decentralized-content.com/ipfs/bafkreifastwejsqeht6iwljuv2d5yqaabvkayktzfidxnb3nq4w653slai",
-        "name": "farcastHER"
+        "channel_id": "farcasther"
     },
     {
+        "name": "Devconnect",
         "parent_url": "https://devconnect.org",
-        "channel_id": "devconnect",
         "image": "https://warpcast.com/~/channel-images/devconnect.jpg",
-        "name": "Devconnect"
+        "channel_id": "devconnect"
     },
     {
+        "name": "Cricket",
         "parent_url": "https://www.cricketworldcup.com",
-        "channel_id": "cricket",
         "image": "https://warpcast.com/~/channel-images/cricket.png",
-        "name": "Cricket"
+        "channel_id": "cricket"
     },
     {
+        "name": "Rugby",
         "parent_url": "https://www.rugbyworldcup.com",
-        "channel_id": "rugby",
         "image": "https://warpcast.com/~/channel-images/rugby.png",
-        "name": "Rugby"
+        "channel_id": "rugby"
     },
     {
+        "name": "Bright Moments",
         "parent_url": "https://www.brightmoments.io",
-        "channel_id": "bright-moments",
         "image": "https://warpcast.com/~/channel-images/bright-moments.jpg",
-        "name": "Bright Moments"
+        "channel_id": "bright-moments"
+    },
+    {
+        "name": "Founders",
+        "parent_url": "https://farcaster.group/founders",
+        "image": "https://warpcast.com/~/channel-images/founders.png",
+        "channel_id": "founders"
+    },
+    {
+        "name": "PoolTogether",
+        "parent_url": "https://pooltogether.com",
+        "image": "https://warpcast.com/~/channel-images/pool-together.png",
+        "channel_id": "pool-together"
+    },
+    {
+        "name": "Viem",
+        "parent_url": "https://viem.sh",
+        "image": "https://warpcast.com/~/channel-images/viem.png",
+        "channel_id": "viem"
+    },
+    {
+        "name": "Data",
+        "parent_url": "https://farcaster.group/data",
+        "image": "https://warpcast.com/~/channel-images/data.png",
+        "channel_id": "data"
+    },
+    {
+        "name": "EthStaker",
+        "parent_url": "https://ethstaker.cc",
+        "image": "https://warpcast.com/~/channel-images/eth-staker.png",
+        "channel_id": "eth-staker"
+    },
+    {
+        "name": "ENS",
+        "parent_url": "https://ens.domains",
+        "image": "https://warpcast.com/~/channel-images/ens.png",
+        "channel_id": "ens"
+    },
+    {
+        "name": "Product",
+        "parent_url": "https://farcaster.group/product",
+        "image": "https://warpcast.com/~/channel-images/product.png",
+        "channel_id": "product"
+    },
+    {
+        "name": "Basepaint",
+        "parent_url": "https://basepaint.xyz",
+        "image": "https://warpcast.com/~/channel-images/basepaint.png",
+        "channel_id": "basepaint"
+    },
+    {
+        "name": "Onchain Gaming",
+        "parent_url": "https://farcaster.group/onchain-gaming",
+        "image": "https://warpcast.com/~/channel-images/onchain-gaming.png",
+        "channel_id": "onchain-gaming"
+    },
+    {
+        "name": "Gitcoin",
+        "parent_url": "https://www.gitcoin.co",
+        "image": "https://warpcast.com/~/channel-images/gitcoin.jpg",
+        "channel_id": "gitcoin"
+    },
+    {
+        "name": "Gnars",
+        "parent_url": "chain://eip155:1/erc721:0x558bfff0d583416f7c4e380625c7865821b8e95c",
+        "image": "https://i.seadn.io/gcs/files/18a26500ca1bb1ec29811ae2af6ac19e.png?auto=format&dpr=1&w=512",
+        "channel_id": "gnars"
+    },
+    {
+        "name": "Recommend",
+        "parent_url": "https://farcaster.group/recommend",
+        "image": "https://warpcast.com/~/channel-images/recommendations.png",
+        "channel_id": "recommendations"
+    },
+    {
+        "name": "Paragraph",
+        "parent_url": "https://paragraph.xyz",
+        "image": "https://warpcast.com/~/channel-images/paragraph.png",
+        "channel_id": "paragraph"
+    },
+    {
+        "name": "Milady",
+        "parent_url": "chain://eip155:1/erc721:0x5af0d9827e0c53e4799bb226655a1de152a425a5",
+        "image": "https://i.seadn.io/gae/a_frplnavZA9g4vN3SexO5rrtaBX_cBTaJYcgrPtwQIqPhzgzUendQxiwUdr51CGPE2QyPEa1DHnkW1wLrHAv5DgfC3BP-CWpFq6BA?auto=format&dpr=1&w=512",
+        "channel_id": "milady"
+    },
+    {
+        "name": "Gen Art",
+        "parent_url": "chain://eip155:8453/erc721:0xe7a43b5942f15fddeb9733fdcc57c6232f1d5aa0",
+        "image": "https://warpcast.com/~/channel-images/gen-art.png",
+        "channel_id": "gen-art"
+    },
+    {
+        "name": "Lil Nouns",
+        "parent_url": "chain://eip155:1/erc721:0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b",
+        "image": "https://i.seadn.io/gae/NeMen42xORQc--X_rAm6d5HCcRxkL5ZqAFi8LCSdFoRLi3AVNvEJ4Eo_-kFMnk8TVtPsnFxrMZ-DQIy-qjHgZnw4UFZYhjOWTmI_0w?auto=format&dpr=1&w=512",
+        "channel_id": "lil-nouns"
+    },
+    {
+        "name": "FarCats",
+        "parent_url": "chain://eip155:1/erc721:0x9340204616750cb61e56437befc95172c6ff6606",
+        "image": "https://ipfs.decentralized-content.com/ipfs/bafybeie2eyq6ezqkzxq7w5pbhlabr2ts2seynxieixy23xeijhor7rdjni",
+        "channel_id": "farcats"
+    },
+    {
+        "name": "Classical",
+        "parent_url": "https://en.wikipedia.org/wiki/Johann_Sebastian_Bach",
+        "image": "https://warpcast.com/~/channel-images/classical.png",
+        "channel_id": "classical"
+    },
+    {
+        "name": "Opepen",
+        "parent_url": "chain://eip155:1/erc721:0x6339e5e072086621540d0362c4e3cea0d643e114",
+        "image": "https://i.seadn.io/gcs/files/b1c9ed2e584b4f6e418bf1ca15311844.jpg?auto=format&dpr=1&w=512",
+        "channel_id": "opepen"
+    },
+    {
+        "name": "Checks",
+        "parent_url": "chain://eip155:1/erc721:0x34eebee6942d8def3c125458d1a86e0a897fd6f9",
+        "image": "https://i.seadn.io/gcs/files/864dce41a43d14e0c083ad9434cb8261.png?auto=format&dpr=1&w=512",
+        "channel_id": "checks"
+    },
+    {
+        "name": "Curta",
+        "parent_url": "https://www.curta.wtf",
+        "image": "https://warpcast.com/~/channel-images/curta.jpg",
+        "channel_id": "curta"
     }
 ]
