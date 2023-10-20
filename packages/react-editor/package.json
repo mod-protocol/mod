@@ -22,7 +22,6 @@
     "@tiptap/extension-placeholder": "^2.0.4",
     "@tiptap/extension-text": "^2.0.4",
     "@tiptap/pm": "^2.0.4",
-    "@mod-protocol/tiptap-extension-link": "*",
     "@tiptap/suggestion": "^2.0.4",
     "@tiptap/react": "^2.0.4",
     "prosemirror-model": "^1.19.3"
