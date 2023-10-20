@@ -1,4 +1,4 @@
-import { Embed } from "./embeds";
+import { Embed, UrlMetadata } from "./embeds";
 import {
   AddEmbedActionResolverEvents,
   AddEmbedActionResolverInit,
@@ -23,7 +23,7 @@ export const fetchUrlMetadata = (api_url: string) => {
 
     const reqJson = await req.json();
 
-    return reqJson;
+    return reqJson as UrlMetadata;
   };
 };
 
