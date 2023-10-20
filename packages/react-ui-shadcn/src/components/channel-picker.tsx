@@ -11,7 +11,6 @@ import {
 } from "components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { Channel } from "@mod-protocol/farcaster";
-import Image from "next/image";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 
 type Props = {
@@ -57,7 +56,7 @@ export function ChannelPicker(props: Props) {
           aria-expanded={open}
           type="button"
         >
-          <Image
+          <img
             src={props.value.image ?? ""}
             alt={props.value.name}
             width={24}
@@ -85,7 +84,7 @@ export function ChannelPicker(props: Props) {
                   className="cursor-pointer"
                   onSelect={() => handleSelect(channel)}
                 >
-                  <Image
+                  <img
                     src={channel.image ?? ""}
                     alt={channel.name}
                     width={24}
