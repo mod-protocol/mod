@@ -10,14 +10,8 @@ import {
 
 import { RenderMiniApp, Renderers } from ".";
 
-if (!process.env.NEXT_PUBLIC_API_URL) {
-  throw new Error(
-    "Please provide the NEXT_PUBLIC_API_URL environment variable"
-  );
-}
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 type Props = {
+  api: string;
   embed: Embed;
   renderers: Renderers;
   /** is used as a fallback when all other contentMiniApps fail to match the content type */
@@ -26,7 +20,7 @@ type Props = {
 };
 
 export function RenderEmbed(props: Props) {
-  let matchingMiniapps = [{ embed: props.embed, api: API_URL }].flatMap<{
+  let matchingMiniapps = [{ embed: props.embed, api: props.api }].flatMap<{
     context: ContentContext;
     manifest: ModManifest;
   }>((context) => {
