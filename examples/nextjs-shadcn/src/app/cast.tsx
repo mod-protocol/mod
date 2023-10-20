@@ -1,5 +1,4 @@
 import { useRelativeDate } from "./relative-date";
-import Image from "next/image";
 import React from "react";
 import {
   CommentIcon,
@@ -114,7 +113,8 @@ export function Cast(props: {
             <div className="relative min-w-[48px]">
               <div>
                 <div className="pt-1">
-                  <Image
+                  {/* eslint-disable-next-line */}
+                  <img
                     alt=""
                     className="rounded-full w-[48px] h-[48px]"
                     src={

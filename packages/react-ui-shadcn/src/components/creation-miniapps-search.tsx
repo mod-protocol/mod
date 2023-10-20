@@ -11,7 +11,6 @@ import {
 } from "components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { ModManifest } from "@mod-protocol/core";
-import Image from "next/image";
 
 type Props = {
   miniapps: ModManifest[];
@@ -58,7 +57,7 @@ export function CreationMiniAppsSearch(props: Props) {
                 className="cursor-pointer"
                 onSelect={handleSelect}
               >
-                <Image
+                <img
                   height={24}
                   width={24}
                   alt={miniApp.name}
