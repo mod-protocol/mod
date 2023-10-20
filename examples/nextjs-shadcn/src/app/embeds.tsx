@@ -14,6 +14,7 @@ export function Embeds(props: { embeds: Array<Embed> }) {
     <div>
       {props.embeds.map((embed, i) => (
         <RenderEmbed
+          api={process.env.NEXT_PUBLIC_API_URL}
           embed={embed}
           key={i}
           renderers={renderers}
