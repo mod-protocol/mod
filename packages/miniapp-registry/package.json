@@ -14,15 +14,5 @@
     "eslint-config-custom": "*",
     "tsconfig": "*",
     "typescript": "^5.2.2"
-  },
-  "dependencies": {
-    "@miniapps/url-render": "*",
-    "@miniapps/image-render": "*",
-    "@miniapps/video-render": "*",
-    "@miniapps/nft-minter": "*",
-    "@miniapps/chatgpt": "*",
-    "@miniapps/infura-ipfs-upload": "*",
-    "@miniapps/giphy-picker": "*",
-    "@miniapps/livepeer-video": "*"
   }
 }
