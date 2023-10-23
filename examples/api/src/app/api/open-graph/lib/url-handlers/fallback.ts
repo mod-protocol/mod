@@ -50,7 +50,7 @@ async function fallbackUrlHandler(url: string): Promise<UrlMetadata> {
       },
     }
   );
-  const { data, status, message, code, more } = await response.json();
+  const { data, headers, message } = await response.json();
 
   if (!response.ok) {
     throw new Error(message);
@@ -73,6 +73,7 @@ async function fallbackUrlHandler(url: string): Promise<UrlMetadata> {
           url: data.logo.url,
         }
       : undefined,
+    mimeType: headers["content-type"],
   };
 
   // Zip opengraph extension data into a single object

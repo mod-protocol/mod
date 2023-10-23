@@ -3,8 +3,9 @@ import { FarcasterEmbed, isFarcasterUrlEmbed } from "@mod-protocol/farcaster";
 export function isImageEmbed(embed: Embed) {
   return (
     isFarcasterUrlEmbed(embed) &&
-    embed.metadata?.hasOwnProperty("image") &&
-    embed.url === embed.metadata?.image?.url
+    ((embed.metadata?.hasOwnProperty("image") &&
+      embed.url === embed.metadata?.image?.url) ||
+      embed.metadata?.mimeType?.startsWith("image"))
   );
 }
 
@@ -59,6 +60,7 @@ export type UrlMetadata = {
     url: string;
   };
   nft?: NFTMetadata;
+  mimeType?: string;
 };
 
 export type Embed = {
