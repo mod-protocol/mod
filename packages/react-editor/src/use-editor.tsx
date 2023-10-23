@@ -106,6 +106,7 @@ export function useEditor({
           // Embed not loaded yet
           if (isFarcasterUrlEmbed(newEmbed) && newEmbed.status !== "loaded") {
             // Fetch type (url or image) and OG data async
+
             fetchUrlMetadata(newEmbed.url)
               .then((urlMetadata: UrlMetadata) => {
                 updateEmbedsWithLoadedData(newEmbed.url, urlMetadata);
@@ -114,7 +115,14 @@ export function useEditor({
                 onError(err);
               });
 
-            return [...embedsState, { url: newEmbed.url, status: "loading" }];
+            return [
+              ...embedsState,
+              {
+                url: newEmbed.url,
+                metadata: newEmbed.metadata,
+                status: "loading",
+              },
+            ];
           }
 
           // Embed already loaded

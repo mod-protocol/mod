@@ -30,7 +30,11 @@ export const fetchUrlMetadata = (api_url: string) => {
 export const handleAddEmbed =
   (addEmbed: (embed: Embed) => void) =>
   (init: AddEmbedActionResolverInit, events: AddEmbedActionResolverEvents) => {
-    addEmbed({ url: init.url, status: "loading" });
+    addEmbed({
+      url: init.url,
+      status: "loading",
+      metadata: { mimeType: init.mimeType },
+    });
     events.onSuccess();
   };
 

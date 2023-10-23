@@ -1,17 +1,14 @@
-import { Button } from "components/ui/button";
-import { Skeleton } from "components/ui/skeleton";
-import {
-  isFarcasterCastIdEmbed,
-  isFarcasterUrlEmbed,
-} from "@mod-protocol/farcaster";
-import { Cross1Icon } from "@radix-ui/react-icons";
-import { VideoRenderer } from "../renderers/video";
 import {
   Embed,
   hasFullSizedImage,
   isImageEmbed,
   isVideoEmbed,
 } from "@mod-protocol/core";
+import { isFarcasterUrlEmbed } from "@mod-protocol/farcaster";
+import { Cross1Icon } from "@radix-ui/react-icons";
+import { Button } from "components/ui/button";
+import { Skeleton } from "components/ui/skeleton";
+import { VideoRenderer } from "../renderers/video";
 
 export const EmbedsEditor = (props: {
   embeds: Embed[];
@@ -31,67 +28,61 @@ export const EmbedsEditor = (props: {
           >
             <Cross1Icon />
           </Button>
-          {embed.status === "loading" ? (
-            <div>
-              <Skeleton className="h-[100px] w-full items-center flex justify-center">
-                loading
-              </Skeleton>
+          {isFarcasterUrlEmbed(embed) && isImageEmbed(embed) ? (
+            <div className="border rounded mt-2" key={i}>
+              <img
+                src={embed.url}
+                alt={embed.metadata?.alt}
+                className="rounded"
+                style={{ width: "100%" }}
+                width={300}
+                height={100}
+              />
             </div>
-          ) : isFarcasterCastIdEmbed(embed) ? (
-            <></>
-          ) : isVideoEmbed(embed) ? (
+          ) : isFarcasterUrlEmbed(embed) && isVideoEmbed(embed) ? (
             <VideoRenderer videoSrc={embed.url} />
-          ) : isFarcasterUrlEmbed(embed) ? (
-            isImageEmbed(embed) ? (
-              <div className="border rounded mt-2" key={i}>
+          ) : embed.status === "loading" ? (
+            <Skeleton className="h-[100px] w-full items-center flex justify-center">
+              Loading...
+            </Skeleton>
+          ) : hasFullSizedImage(embed) ? (
+            <div className="border rounded mt-2" key={i}>
+              <div style={{ maxHeight: "200px", overflow: "hidden" }}>
                 <img
-                  src={embed.url}
-                  alt={embed.metadata?.alt}
-                  className="rounded"
+                  src={embed.metadata?.image?.url}
+                  alt={embed.metadata?.title}
+                  className="rounded-t"
                   style={{ width: "100%" }}
                   width={300}
                   height={100}
                 />
               </div>
-            ) : hasFullSizedImage(embed) ? (
-              <div className="border rounded mt-2" key={i}>
-                <div style={{ maxHeight: "200px", overflow: "hidden" }}>
+              <div className="p-2">
+                <div className="font-bold">{embed.metadata?.title}</div>
+                <div className="text-slate-600">
+                  {embed.metadata?.publisher}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="border rounded mt-2" key={i}>
+              <div className="p-2">
+                <div className="flex flex-row">
                   <img
-                    src={embed.metadata?.image?.url}
+                    src={embed.metadata?.logo?.url}
                     alt={embed.metadata?.title}
-                    className="rounded-t"
-                    style={{ width: "100%" }}
-                    width={300}
-                    height={100}
+                    className="w-6 rounded mr-1"
+                    width={6}
+                    height={6}
                   />
-                </div>
-                <div className="p-2">
                   <div className="font-bold">{embed.metadata?.title}</div>
-                  <div className="text-slate-600">
-                    {embed.metadata?.publisher}
-                  </div>
+                </div>
+                <div className="text-slate-600">
+                  {embed.metadata?.publisher}
                 </div>
               </div>
-            ) : (
-              <div className="border rounded mt-2" key={i}>
-                <div className="p-2">
-                  <div className="flex flex-row">
-                    <img
-                      src={embed.metadata?.logo?.url}
-                      alt={embed.metadata?.title}
-                      className="w-6 rounded mr-1"
-                      width={6}
-                      height={6}
-                    />
-                    <div className="font-bold">{embed.metadata?.title}</div>
-                  </div>
-                  <div className="text-slate-600">
-                    {embed.metadata?.publisher}
-                  </div>
-                </div>
-              </div>
-            )
-          ) : null}
+            </div>
+          )}
         </div>
       ))}
     </>
