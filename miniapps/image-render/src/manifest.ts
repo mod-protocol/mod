@@ -13,7 +13,15 @@ const manifest: ModManifest = {
       if: {
         value: "{{embed.url}}",
         match: {
-          equals: "{{embed.metadata.image.url}}",
+          OR: [
+            { equals: "{{embed.metadata.image.url}}" },
+            { endsWith: ".png" },
+            { endsWith: ".jpg" },
+            { endsWith: ".jpeg" },
+            { endsWith: ".gif" },
+            { endsWith: ".svg" },
+            { endsWith: ".webp" },
+          ],
         },
       },
       element: view,
