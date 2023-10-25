@@ -147,6 +147,7 @@ export type ModElement =
   | {
       type: "button";
       label: string;
+      variant?: "primary" | "secondary" | "destructive";
       onclick: ModEvent;
     }
   | {

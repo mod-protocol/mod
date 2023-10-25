@@ -6,7 +6,7 @@ import loading from "./loading";
 
 const manifest: ModManifest = {
   slug: "gpt-mini-text",
-  name: "Shorten using ChatGPT",
+  name: "Shorten text using AI",
   custodyAddress: "furlong.eth",
   logo: "https://i.imgur.com/YayIWi1.png",
   custodyGithubUsername: "davidfurlong",

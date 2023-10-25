@@ -31,6 +31,7 @@ export type ModElementRef<T> =
   | {
       type: "button";
       label: string;
+      variant?: "primary" | "secondary" | "destructive";
       isLoading: boolean;
       isDisabled: boolean;
       events: {
@@ -860,6 +861,7 @@ export class Renderer {
               label: this.replaceInlineContext(el.label),
               isLoading: this.asyncAction?.ref === el.onclick,
               isDisabled: Boolean(this.asyncAction),
+              variant: el.variant,
               events: {
                 onClick: () => {
                   this.stepIntoOrTriggerAction(el.onclick);

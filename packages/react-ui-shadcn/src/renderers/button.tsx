@@ -6,10 +6,10 @@ import { Button } from "components/ui/button";
 export const ButtonRenderer = (
   props: React.ComponentProps<Renderers["Button"]>
 ) => {
-  const { label, isDisabled, isLoading, onClick } = props;
+  const { label, isDisabled, isLoading, onClick, variant = "primary" } = props;
   return (
     <Button
-      // className="flex-1"
+      variant={variant}
       disabled={isDisabled || isLoading}
       onClick={onClick}
     >

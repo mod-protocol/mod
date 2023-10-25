@@ -26,6 +26,7 @@ const success: ModElement[] = [
           {
             type: "button",
             label: "Retry",
+            variant: "secondary",
             onclick: {
               ref: "myChatGPTServerRequest",
               type: "POST",
