@@ -34,6 +34,7 @@ export type Renderers = {
   Button: React.ComponentType<{
     label: string;
     isLoading: boolean;
+    variant?: "primary" | "secondary" | "destructive";
     isDisabled: boolean;
     onClick: () => void;
   }>;
