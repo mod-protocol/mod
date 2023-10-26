@@ -1,14 +1,7 @@
-import { NFTMetadata, UrlMetadata } from "@mod-protocol/core";
+import { FarcasterUser, NFTMetadata, UrlMetadata } from "@mod-protocol/core";
 import { chainByName } from "./chains/chain-index";
 
-async function fetchUserData(address: string): Promise<{
-  fid: number;
-  username: string;
-  displayName: string;
-  pfp: {
-    url: string;
-  };
-} | null> {
+async function fetchUserData(address: string): Promise<FarcasterUser | null> {
   try {
     const searchParams = new URLSearchParams({
       api_key: process.env.NEYNAR_API_SECRET,
@@ -47,13 +40,14 @@ export function toUrlMetadata(nftMetadata: NFTMetadata): UrlMetadata {
     description: nftMetadata.collection.description,
     alt: nftMetadata.collection.name,
     title: nftMetadata.collection.name,
-    publisher: nftMetadata.creator?.displayName,
-    logo: nftMetadata.creator
+    publisher: nftMetadata.collection.creator?.displayName,
+    logo: nftMetadata.collection.creator
       ? {
-          url: nftMetadata.creator?.pfp.url,
+          url: nftMetadata.collection.creator.pfp.url,
         }
       : undefined,
     nft: nftMetadata,
+    mimeType: null,
   };
 }
 
@@ -79,6 +73,7 @@ export async function fetchNFTMetadata({
   let tokenData: any = {};
   let collectionSlug: string | undefined = openSeaSlug;
   let tokenStandard = "erc721";
+  let tokenOwnerAddress: string | undefined;
 
   const tokenResponse = await fetch(
     `https://api.opensea.io/api/v2/chain/${chain}/contract/${contractAddress}/nfts/${
@@ -92,6 +87,8 @@ export async function fetchNFTMetadata({
     tokenData = nft;
     collectionSlug = tokenData.collection;
     tokenStandard = tokenData.token_standard;
+    if (tokenData.owners?.length > 0)
+      tokenOwnerAddress = tokenData.owners[0].address;
   } else if (!collectionSlug) {
     const contractResponse = await fetch(
       `https://api.opensea.io/api/v2/chain/${chain}/contract/${contractAddress}`,
@@ -124,7 +121,11 @@ export async function fetchNFTMetadata({
   // Collection stats should exist if the collection exists
   const collectionStats = await collectionStatsResponse.json();
 
-  const fcUser = await fetchUserData(collectionData.owner);
+  const creatorFcUser = await fetchUserData(collectionData.owner);
+  const ownerFcUser =
+    tokenId && tokenOwnerAddress
+      ? await fetchUserData(tokenOwnerAddress || "")
+      : null;
 
   // If the tokenId was specified, use the token image, otherwise use the collection image and
   // fallback to the first token in the collection's image if collection image is not available.
@@ -134,18 +135,17 @@ export async function fetchNFTMetadata({
     ? collectionData.image_url
     : tokenData.image_url;
 
-  const caip19Uri = `chain://eip155:${
-    chainByName[chain].id
-  }/${tokenStandard}:${contractAddress}${tokenId ? `/${tokenId}` : ""}`;
+  const collectionCaip19Uri = `chain://eip155:${chainByName[chain].id}/${tokenStandard}:${contractAddress}`;
 
   const nftMetadata: NFTMetadata = {
-    collectionName: collectionData.name,
-    contractAddress: collectionData.contracts[0].address,
-    creatorAddress: collectionData.creator,
     mediaUrl: image,
-    chain: collectionData.contracts[0].chain,
+    tokenId: tokenId,
+    owner: ownerFcUser,
     collection: {
-      id: caip19Uri,
+      id: collectionCaip19Uri,
+      chain: collectionData.contracts[0].chain,
+      contractAddress: collectionData.contracts[0].address,
+      creatorAddress: collectionData.owner,
       name: collectionData.name,
       description: collectionData.description,
       itemCount: collectionStats.stats.count,
@@ -153,8 +153,8 @@ export async function fetchNFTMetadata({
       imageUrl: image,
       mintUrl: mintUrl || collectionData.opensea_url,
       openSeaUrl: collectionData.opensea_url,
+      creator: creatorFcUser,
     },
-    creator: fcUser,
   };
 
   return nftMetadata;
