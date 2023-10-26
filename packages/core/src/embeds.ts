@@ -20,29 +20,32 @@ export function hasFullSizedImage(embed: Embed) {
   );
 }
 
+export type FarcasterUser = {
+  fid: number;
+  username: string;
+  displayName: string;
+  pfp: {
+    url: string;
+  };
+};
+
 export type NFTMetadata = {
-  collectionName: string;
-  contractAddress: string;
-  creatorAddress: string;
-  mediaUrl: string;
-  chain: string;
+  owner?: FarcasterUser;
+  tokenId?: string;
+  mediaUrl?: string;
   collection: {
     id: string;
     name: string;
-    description: string;
+    chain: string;
+    contractAddress: string;
+    creatorAddress: string;
     itemCount: number;
     ownerCount: number;
-    imageUrl: string;
     mintUrl: string;
+    description?: string;
+    imageUrl?: string;
     openSeaUrl?: string;
-  };
-  creator?: {
-    fid: number;
-    username: string;
-    displayName: string;
-    pfp: {
-      url: string;
-    };
+    creator?: FarcasterUser;
   };
 };
 

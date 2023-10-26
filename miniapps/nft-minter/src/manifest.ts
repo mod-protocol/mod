@@ -11,7 +11,7 @@ const manifest: ModManifest = {
   contentEntrypoints: [
     {
       if: {
-        value: "{{embed.metadata.nft.collectionName}}",
+        value: "{{embed.metadata.nft.collection.name}}",
         match: {
           NOT: {
             equals: "",

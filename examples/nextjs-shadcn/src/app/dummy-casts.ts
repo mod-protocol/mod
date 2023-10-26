@@ -73,13 +73,12 @@ export const dummyCastData: Array<{
             url: "https://ipfs.decentralized-content.com/ipfs/bafybeicto6doldfjy7nrqxn7jiduw47xs7cmzppjd6mm3mrao4z46asiwq",
           },
           nft: {
-            collectionName: "Farcaster v3",
-            contractAddress: "0xbfdb5d8d1856b8617f1881fd718580256fa8cf35",
-            creatorAddress: "0xd7029bdea1c17493893aafe29aad69ef892b8ff2",
             mediaUrl:
-              "https://zora.co/api/thumbnail/https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeicto6doldfjy7nrqxn7jiduw47xs7cmzppjd6mm3mrao4z46asiwq",
-            chain: "base",
+              "https://remote-image.decentralized-content.com/image?url=https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeicto6doldfjy7nrqxn7jiduw47xs7cmzppjd6mm3mrao4z46asiwq&w=1920&q=75",
             collection: {
+              contractAddress: "0xbfdb5d8d1856b8617f1881fd718580256fa8cf35",
+              creatorAddress: "0xd7029bdea1c17493893aafe29aad69ef892b8ff2",
+              chain: "base",
               id: "farcaster-v3-1",
               name: "Farcaster v3",
               description: "A new chapter for Farcaster",
@@ -90,13 +89,13 @@ export const dummyCastData: Array<{
               mintUrl:
                 "https://zora.co/collect/base:0xbfdb5d8d1856b8617f1881fd718580256fa8cf35",
               openSeaUrl: "https://opensea.io/collection/farcaster-v3-1",
-            },
-            creator: {
-              fid: 3,
-              username: "dwr.eth",
-              displayName: "Dan Romero",
-              pfp: {
-                url: "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_256/https://lh3.googleusercontent.com/MyUBL0xHzMeBu7DXQAqv0bM9y6s4i4qjnhcXz5fxZKS3gwWgtamxxmxzCJX7m2cuYeGalyseCA2Y6OBKDMR06TWg2uwknnhdkDA1AA",
+              creator: {
+                fid: 3,
+                username: "dwr.eth",
+                displayName: "Dan Romero",
+                pfp: {
+                  url: "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_256/https://lh3.googleusercontent.com/MyUBL0xHzMeBu7DXQAqv0bM9y6s4i4qjnhcXz5fxZKS3gwWgtamxxmxzCJX7m2cuYeGalyseCA2Y6OBKDMR06TWg2uwknnhdkDA1AA",
+                },
               },
             },
           },
