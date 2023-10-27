@@ -1,6 +1,10 @@
 import { useKeyPress } from "./use-key-press";
 import { useEffect, FormEvent, useMemo, useState, useCallback } from "react";
-import { Editor, useEditor as useTipTapEditor } from "@tiptap/react";
+import {
+  Editor,
+  JSONContent,
+  useEditor as useTipTapEditor,
+} from "@tiptap/react";
 import { EditorConfig, createEditorConfig } from "./create-editor-config";
 import { Link } from "@mod-protocol/tiptap-extension-link";
 import {
@@ -8,6 +12,8 @@ import {
   FARCASTER_MAX_EMBEDS,
   isFarcasterCastIdEmbed,
   isFarcasterUrlEmbed,
+  usernameRegex,
+  usernameRegexForSplit,
 } from "@mod-protocol/farcaster";
 import { UrlMetadata, Embed } from "@mod-protocol/core";
 import { ErrorType, MAX_EMBEDS_REACHED_ERROR } from "./errors";
@@ -183,7 +189,7 @@ export function useEditor({
   );
   const editor: Editor | null = useTipTapEditor(editorConfig);
   useEffect(() => {
-    if (initialText) editor?.commands.setContent(initialText);
+    if (initialText) editor?.commands.setContent(initialText, true);
   }, [editor, initialText]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -230,7 +236,9 @@ export function useEditor({
   }
 
   function setText(text: string) {
-    editor?.commands.setContent(text);
+    if (!editor) return;
+
+    setEditorContentWithPlaintext(editor, text);
   }
 
   const getEmbeds = useCallback(() => {
@@ -252,4 +260,106 @@ export function useEditor({
     setText,
     editor,
   };
+}
+
+function setEditorContentWithPlaintext(editor: Editor, text: string): void {
+  // Use this instead of .setContent in order to trigger link plugin's pasteHandler
+  const sourceJSON = editor?.getJSON();
+  editor?.commands.setContent("", true);
+  editor?.view.pasteHTML(text);
+  const newContentJSON = editor?.getJSON();
+
+  const finalJSON = preserveMentionsInTextTransform({
+    sourceJSON: sourceJSON ?? {},
+    newContentJSON: newContentJSON ?? {},
+  });
+
+  editor.commands.setContent(finalJSON, true);
+}
+
+/**
+The Chatgpt Mini-app transforms plaintext, and our editor should be able to convert plaintext
+**/
+function preserveMentionsInTextTransform({
+  sourceJSON,
+  newContentJSON,
+}: {
+  sourceJSON: JSONContent;
+  newContentJSON: JSONContent;
+}): JSONContent {
+  /**
+  For every mention in the source JSON, look for the mention in the end text, and replace.
+  **/
+  const mentionsInSource = findMentions(sourceJSON);
+  return convertPlainTextToMentions(newContentJSON, mentionsInSource);
+}
+
+function findMentions(i: JSONContent): string[] {
+  if (i.type === "paragraph" || i.type === "doc")
+    return i.content!.flatMap((x) => findMentions(x));
+  if (i.type === "mention" && i.attrs?.id)
+    return ["@" + i.attrs?.id] as string[];
+  return [];
+}
+
+function convertPlainTextToMentions(
+  el: JSONContent,
+  mentions: string[]
+): JSONContent {
+  return mergeNestedParagraphs(
+    convertPlainTextToMentionsRecursive(el, mentions)
+  );
+}
+
+// Prevent backspace from deleting the entire block (paragraph)
+function mergeNestedParagraphs(el: JSONContent) {
+  if (
+    el.type === "paragraph" &&
+    el.content?.length === 1 &&
+    el.content[0].type === "paragraph"
+  ) {
+    return {
+      ...el,
+      content: el.content[0].content,
+    };
+  }
+
+  return el;
+}
+
+function convertPlainTextToMentionsRecursive(
+  el: JSONContent,
+  mentions: string[]
+): JSONContent {
+  if (!mentions.length) return el;
+  if (el.type === "paragraph" || el.type === "doc")
+    return {
+      ...el,
+      content: el.content?.map((sub) =>
+        convertPlainTextToMentions(sub, mentions)
+      ),
+    };
+  if (el.type === "text") {
+    const newContent: JSONContent[] =
+      el.text
+        ?.split(usernameRegexForSplit)
+        .map((part, i): JSONContent => {
+          const e = usernameRegex.exec(part);
+
+          if (mentions.includes(part) && e)
+            return {
+              type: "mention",
+              attrs: { id: part.replace("@", ""), label: null },
+            };
+
+          return { type: "text", text: part };
+        })
+        .filter((x) => x.text !== "") ?? [];
+    return {
+      type: "paragraph",
+      content: newContent,
+    };
+  }
+
+  return el;
 }

@@ -41,7 +41,7 @@ const API_URL =
 const getResults = getFarcasterMentions(API_URL);
 const getChannels = getFarcasterChannels(API_URL);
 const getUrlMetadata = fetchUrlMetadata(API_URL);
-const onError = (err) => window.alert(err.message);
+const onError = (err) => console.error(err.message);
 const onSubmit = async ({
   text,
   embeds,
