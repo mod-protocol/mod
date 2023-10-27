@@ -5,7 +5,9 @@ import { fetchNFTMetadata, toUrlMetadata } from "../util";
 async function handleZoraCollectUrl(url: string): Promise<UrlMetadata | null> {
   const [, , , , chainAndContractAddress] = url.split("/");
 
-  const [chain, contractAddress] = chainAndContractAddress.split(":");
+  let [chain, contractAddress] = chainAndContractAddress.split(":");
+
+  if (chain === "eth") chain = "ethereum";
 
   const nftMetadata = await fetchNFTMetadata({
     contractAddress,
