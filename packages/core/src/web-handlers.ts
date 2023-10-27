@@ -23,6 +23,10 @@ export const fetchUrlMetadata = (api_url: string) => {
 
     const reqJson = await req.json();
 
+    if (!req.ok) {
+      throw new Error(reqJson.message);
+    }
+
     return reqJson as UrlMetadata;
   };
 };

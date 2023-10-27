@@ -11,6 +11,21 @@ export interface LinkProtocolOptions {
   optionalSlashes?: boolean;
 }
 
+export type LinkifyLink = {
+  type: string;
+  value: string;
+  isLink: boolean;
+  isTextcut: boolean;
+  href: string;
+  start: number;
+  end: number;
+};
+
+export interface Link extends LinkifyLink {
+  from: number;
+  to: number;
+}
+
 export interface LinkOptions {
   /**
    * If enabled, it adds links as you type.
@@ -28,16 +43,7 @@ export interface LinkOptions {
    * Adds a link to the current selection if the pasted content only contains an url.
    */
   linkOnPaste: boolean;
-  onAddLink?: (link: {
-    from: number;
-    to: number;
-    type: string;
-    value: string;
-    isLink: boolean;
-    href: string;
-    start: number;
-    end: number;
-  }) => void;
+  onAddLink?: (link: Link) => void;
 
   /**
    * A list of HTML attributes to be rendered.

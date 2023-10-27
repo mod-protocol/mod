@@ -2,6 +2,7 @@ import { useKeyPress } from "./use-key-press";
 import { useEffect, FormEvent, useMemo, useState, useCallback } from "react";
 import { Editor, useEditor as useTipTapEditor } from "@tiptap/react";
 import { EditorConfig, createEditorConfig } from "./create-editor-config";
+import { Link } from "@mod-protocol/tiptap-extension-link";
 import {
   Channel,
   FARCASTER_MAX_EMBEDS,
@@ -152,16 +153,7 @@ export function useEditor({
   );
 
   const onAddLink = useCallback(
-    (link: {
-      from: number;
-      to: number;
-      type: string;
-      value: string;
-      isLink: boolean;
-      href: string;
-      start: number;
-      end: number;
-    }) => {
+    (link: Link) => {
       fetchUrlMetadata(link.href)
         .then((urlMetadata: UrlMetadata) => {
           addEmbed({
