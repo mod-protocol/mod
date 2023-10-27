@@ -67,7 +67,7 @@ export const dummyCastData: Array<{
           description: "A new chapter for Farcaster",
           publisher: "zora.co",
           image: {
-            url: "https://zora.co/api/thumbnail/https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeicto6doldfjy7nrqxn7jiduw47xs7cmzppjd6mm3mrao4z46asiwq",
+            url: "https://ipfs.decentralized-content.com/ipfs/bafybeicto6doldfjy7nrqxn7jiduw47xs7cmzppjd6mm3mrao4z46asiwq",
           },
           logo: {
             url: "https://ipfs.decentralized-content.com/ipfs/bafybeicto6doldfjy7nrqxn7jiduw47xs7cmzppjd6mm3mrao4z46asiwq",
