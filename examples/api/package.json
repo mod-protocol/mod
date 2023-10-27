@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "db-types": "kysely-codegen --out-file src/app/api/cast-embeds-metadata/types/db.d.ts --dialect postgres",
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start -p 3001",
@@ -11,17 +12,21 @@
   "dependencies": {
     "@mod-protocol/core": "^0.0.1",
     "chatgpt": "^5.2.5",
+    "kysely": "^0.26.3",
     "next": "^13.5.6",
+    "pg": "^8.11.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.12",
+    "@types/pg": "^8.10.7",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "autoprefixer": "^10.4.14",
     "eslint-config-custom": "*",
     "eslint-config-next": "^13.5.3",
+    "kysely-codegen": "^0.11.0",
     "postcss": "^8.4.27",
     "tailwindcss": "^3.3.3",
     "tsconfig": "*",
