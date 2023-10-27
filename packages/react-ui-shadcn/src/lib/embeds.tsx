@@ -10,6 +10,12 @@ import { Button } from "components/ui/button";
 import { Skeleton } from "components/ui/skeleton";
 import { VideoRenderer } from "../renderers/video";
 
+function shorten(str?: string, maxLength = 64) {
+  if (!str) return str;
+  if (str.length > 64) return str.slice(0, 61) + "...";
+  return str;
+}
+
 export const EmbedsEditor = (props: {
   embeds: Embed[];
   setEmbeds: (e: Embed[]) => void;
@@ -58,7 +64,9 @@ export const EmbedsEditor = (props: {
                 />
               </div>
               <div className="p-2">
-                <div className="font-bold">{embed.metadata?.title}</div>
+                <div className="font-bold">
+                  {shorten(embed.metadata?.title)}
+                </div>
                 <div className="text-slate-600">
                   {embed.metadata?.publisher}
                 </div>
@@ -71,11 +79,11 @@ export const EmbedsEditor = (props: {
                   <img
                     src={embed.metadata?.logo?.url}
                     alt={embed.metadata?.title}
-                    className="w-6 rounded mr-1"
-                    width={6}
-                    height={6}
+                    className="w-6 rounded mr-1 flex-shrink-0 h-6"
                   />
-                  <div className="font-bold">{embed.metadata?.title}</div>
+                  <div className="font-bold">
+                    {shorten(embed.metadata?.title)}
+                  </div>
                 </div>
                 <div className="text-slate-600">
                   {embed.metadata?.publisher}
