@@ -70,6 +70,8 @@ export async function fetchNFTMetadata({
     },
   };
 
+  chain = chain.toLowerCase();
+
   let tokenData: any = {};
   let collectionSlug: string | undefined = openSeaSlug;
   let tokenStandard = "erc721";
@@ -96,6 +98,10 @@ export async function fetchNFTMetadata({
     );
 
     if (!contractResponse.ok) {
+      // console.error(
+      //   `Error fetching contract ${contractAddress}`,
+      //   await contractResponse.text()
+      // );
       return null;
     }
 
@@ -109,6 +115,24 @@ export async function fetchNFTMetadata({
   );
 
   if (!collectionResponse.ok) {
+    if (collectionResponse.status === 429) {
+      // console.log(`Rate limited, waiting 1 second...`);
+      // Wait 1 second and try again
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return fetchNFTMetadata({
+        contractAddress,
+        tokenId,
+        chain,
+        mintUrl,
+        openSeaSlug,
+      });
+    }
+
+    // console.error(
+    //   `Error fetching collection ${collectionSlug}`,
+    //   collectionResponse.status,
+    //   await collectionResponse.text()
+    // );
     return null;
   }
 
