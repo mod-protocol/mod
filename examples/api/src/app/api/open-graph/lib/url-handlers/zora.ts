@@ -7,7 +7,14 @@ async function handleZoraCollectUrl(url: string): Promise<UrlMetadata | null> {
 
   let [chain, contractAddress] = chainAndContractAddress.split(":");
 
-  if (chain === "eth") chain = "ethereum";
+  const chainMapping = {
+    eth: "ethereum",
+    oeth: "optimism",
+  };
+
+  if (chainMapping[chain]) {
+    chain = chainMapping[chain];
+  }
 
   const nftMetadata = await fetchNFTMetadata({
     contractAddress,
