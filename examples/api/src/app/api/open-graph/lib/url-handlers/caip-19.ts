@@ -16,8 +16,17 @@ async function handleCaip19Url(url: string): Promise<UrlMetadata | null> {
   const [, , prefixAndChainId, prefixAndContractAddress, tokenId] =
     url.split("/");
 
-  const [, chainId] = prefixAndChainId.split(":");
+  let [, chainId] = prefixAndChainId.split(":");
   const [, contractAddress] = prefixAndContractAddress.split(":");
+
+  if (!chainId) {
+    // Many of the of CAIP-19 URLs today are malformed missing the chain ID, default to ethereum
+    // console.warn(
+    //   "No chain ID found in CAIP-19 URL, defaulting to ethereum",
+    //   url
+    // );
+    chainId = "1";
+  }
 
   const chain = chainById[chainId].network;
 
