@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    /* Needed to import CJS modules like Jest */
+    "allowSyntheticDefaultImports": true,
+
+    /* Emit additional JS to ease support for importing CJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
+    "esModuleInterop": true,
+
+    /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+    "target": "es2022",
+
+    "moduleResolution": "Node",
+    "sourceMap": true,
+
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    "strict": true,
+    "allowUnreachableCode": false,
+    "exactOptionalPropertyTypes": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": false, // causes hard failures when iterating in dev, enforce with instead
+    "noUnusedParameters": false,
+
+    "resolveJsonModule": true,
+    // BullMQ doesn't support ESM
+    // https://github.com/taskforcesh/bullmq/issues/1534
+    "module": "CommonJS",
+    "baseUrl": "./src",
+    "outDir": "build",
+    "rootDir": "src"
+  },
+
+  "ts-node": {
+    "swc": true
+  },
+
+  "exclude": ["node_modules"]
+}
