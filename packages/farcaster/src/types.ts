@@ -1,6 +1,8 @@
 // https://github.com/farcasterxyz/protocol/blob/main/docs/SPECIFICATION.md#14-casts
 export type FarcasterUrlEmbed = { url: string };
-export type FarcasterCastIdEmbed = { cast_id: string };
+export type FarcasterCastIdEmbed = {
+  castId: { fid: number; hash: Uint8Array };
+};
 export type FarcasterEmbed = FarcasterCastIdEmbed | FarcasterUrlEmbed;
 
 export function isFarcasterUrlEmbed(
@@ -12,7 +14,7 @@ export function isFarcasterUrlEmbed(
 export function isFarcasterCastIdEmbed(
   embed: FarcasterEmbed
 ): embed is FarcasterCastIdEmbed {
-  return embed.hasOwnProperty("cast_id");
+  return embed.hasOwnProperty("castId");
 }
 
 export const FARCASTER_MAX_EMBEDS = 2;

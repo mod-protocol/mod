@@ -56,6 +56,7 @@ const onSubmit = async ({
 }) => {
   const formattedCast = await formatPlaintextToHubCastMessage({
     text,
+    embeds,
     parentUrl: channel.parent_url,
     getMentionFidsByUsernames: getMentionFids,
   });

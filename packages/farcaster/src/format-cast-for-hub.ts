@@ -3,6 +3,8 @@ import {
   convertCastPlainTextToStructured,
 } from "./structure-cast";
 import { makeCastAdd } from "@farcaster/hub-nodejs";
+import { FARCASTER_MAX_EMBEDS } from "./types";
+import { Embed } from "@mod-protocol/core";
 
 // returns arrayify(hash) by removing the prefixing "0x" from a hexstring and converting to a uint8 array
 export function stringHashToUint(hash: string): Uint8Array {
@@ -11,15 +13,22 @@ export function stringHashToUint(hash: string): Uint8Array {
 
 type ValidMention = { fid: number; username: string };
 
-// https://github.com/farcasterxyz/protocol/blob/e929829e158bc780c7c847a8e0154cccf6b8ae83/README.md#store
+/**
+ * Formats a cast to be ready for a hub, including validating and calculating `mentions` and `mentionsPositions`
+ * @link https://github.com/farcasterxyz/protocol/blob/e929829e158bc780c7c847a8e0154cccf6b8ae83/README.md#store
+ * @returns false if validation failed, otherwise returns an object ready for the `makeCastAdd` function
+ */
+//
 export async function formatPlaintextToHubCastMessage({
   text,
+  embeds,
   parentCastFid,
   parentCastHash,
   parentUrl,
   getMentionFidsByUsernames,
 }: {
   text: string;
+  embeds: Embed[];
   getMentionFidsByUsernames: (
     usernames: string[]
   ) => Promise<Array<{ fid: number; username: string }>>;
@@ -27,21 +36,24 @@ export async function formatPlaintextToHubCastMessage({
   parentCastFid?: number;
   parentCastHash?: string;
 }): Promise<Parameters<typeof makeCastAdd>[0] | false> {
-  // mentions formatting
-  // 320 bytes max length
+  // Up to 2 embed urls allowed by Farcaster
+  if (embeds.length > FARCASTER_MAX_EMBEDS) {
+    return false;
+  }
+
+  // TODO: enforce constraint of may not be over 256 bytes
 
   const structuredCast = convertCastPlainTextToStructured({
     text,
   });
 
-  // Up to 2 embed urls allowed by the protocol
-  // TODO: enforce constraint of may not be over 256 bytes
-  const embeds = structuredCast
-    .filter((x) => x.type === "url" || x.type === "videourl")
-    .slice(0, 2)
-    .map((x) => {
-      return { url: x.serializedContent };
-    });
+  // To detect embeds in the plaintext, use the following code.
+  // const embeds = structuredCast
+  //   .filter((x) => x.type === "url" || x.type === "videourl")
+  //   .slice(0, 2)
+  //   .map((x) => {
+  //     return { url: x.serializedContent };
+  //   });
 
   const mentionCandidates: StructuredCastMention[] = structuredCast.filter(
     (x): x is StructuredCastMention => x.type === "mention"
@@ -111,7 +123,11 @@ export async function formatPlaintextToHubCastMessage({
           parentUrl: parentUrl,
         }
       : {}),
-    embeds: embeds,
+    embeds: embeds.map(({ status, metadata, ...embed }) => {
+      return {
+        ...embed,
+      };
+    }),
   };
 
   return res;
