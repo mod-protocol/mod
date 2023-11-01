@@ -3,8 +3,12 @@ import {
   convertCastPlainTextToStructured,
 } from "./structure-cast";
 import { makeCastAdd } from "@farcaster/hub-nodejs";
-import { FARCASTER_MAX_EMBEDS } from "./types";
-import { Embed } from "@mod-protocol/core";
+import {
+  FARCASTER_MAX_EMBEDS,
+  FarcasterEmbed,
+  isFarcasterCastIdEmbed,
+  isFarcasterUrlEmbed,
+} from "./types";
 
 // returns arrayify(hash) by removing the prefixing "0x" from a hexstring and converting to a uint8 array
 export function stringHashToUint(hash: string): Uint8Array {
@@ -28,7 +32,7 @@ export async function formatPlaintextToHubCastMessage({
   getMentionFidsByUsernames,
 }: {
   text: string;
-  embeds: Embed[];
+  embeds: FarcasterEmbed[];
   getMentionFidsByUsernames: (
     usernames: string[]
   ) => Promise<Array<{ fid: number; username: string }>>;
@@ -123,10 +127,17 @@ export async function formatPlaintextToHubCastMessage({
           parentUrl: parentUrl,
         }
       : {}),
-    embeds: embeds.map(({ status, metadata, ...embed }) => {
-      return {
-        ...embed,
-      };
+    embeds: embeds.map((embed) => {
+      if (isFarcasterCastIdEmbed(embed))
+        return {
+          castId: embed.castId,
+        };
+      if (isFarcasterUrlEmbed(embed)) {
+        return {
+          url: embed.url,
+        };
+      }
+      return embed;
     }),
   };
 
