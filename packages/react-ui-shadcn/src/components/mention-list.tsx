@@ -3,20 +3,14 @@
 import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
 import { Skeleton } from "components/ui/skeleton";
 import { cn } from "lib/utils";
+import { FarcasterMention } from "@mod-protocol/farcaster";
 
 type MentionListRef = {
   onKeyDown: (props: { event: Event }) => boolean;
 };
 
-export type MentionListItem = {
-  fid: string;
-  display_name: string;
-  username: string;
-  avatar_url: string;
-};
-
 type Props = {
-  items: Array<MentionListItem | null>;
+  items: Array<FarcasterMention | null>;
   command: any;
 };
 
