@@ -24,13 +24,9 @@ const view: ModElement[] = [
             label: "{{embed.metadata.nft.collection.name}}",
           },
           {
-            type: "button",
+            type: "link",
             label: "Mint",
-            onclick: {
-              type: "OPENLINK",
-              url: "{{embed.metadata.nft.collection.mintUrl}}",
-              onsuccess: "#view",
-            },
+            url: "{{embed.metadata.nft.collection.mintUrl}}",
           },
         ],
       },

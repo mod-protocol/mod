@@ -29,6 +29,15 @@ export type ModElementRef<T> =
       videoSrc: string;
     }
   | {
+      type: "link";
+      label: string;
+      variant?: "link" | "primary" | "secondary" | "destructive";
+      url: string;
+      events: {
+        onClick?: () => void;
+      };
+    }
+  | {
       type: "button";
       label: string;
       variant?: "primary" | "secondary" | "destructive";
@@ -850,6 +859,24 @@ export class Renderer {
             {
               type: "text",
               label: this.replaceInlineContext(el.label),
+            },
+            key
+          );
+        }
+        case "link": {
+          return fn(
+            {
+              type: "link",
+              label: this.replaceInlineContext(el.label),
+              variant: el.variant,
+              url: this.replaceInlineContext(el.url),
+              events: {
+                onClick: el.onclick
+                  ? () => {
+                      this.stepIntoOrTriggerAction(el.onclick!);
+                    }
+                  : undefined,
+              },
             },
             key
           );

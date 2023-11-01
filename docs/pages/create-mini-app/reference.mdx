@@ -47,6 +47,13 @@ export type ModElement =
       imageSrc: string;
     }
   | {
+      type: "link";
+      label: string;
+      variant?: "link" | "primary" | "secondary" | "destructive";
+      url: string;
+      onclick?: ModEvent;
+    }
+  | {
       type: "button";
       label: string;
       variant?: "primary" | "secondary" | "destructive";

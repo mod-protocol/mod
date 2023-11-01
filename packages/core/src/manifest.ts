@@ -145,6 +145,13 @@ export type ModElement =
       imageSrc: string;
     }
   | {
+      type: "link";
+      label: string;
+      onclick?: ModEvent;
+      variant?: "link" | "primary" | "secondary" | "destructive";
+      url: string;
+    }
+  | {
       type: "button";
       label: string;
       variant?: "primary" | "secondary" | "destructive";
