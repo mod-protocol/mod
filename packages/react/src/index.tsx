@@ -31,6 +31,12 @@ export type Renderers = {
     imageSrc: string;
   }>;
   Text: React.ComponentType<{ label: string }>;
+  Link: React.ComponentType<{
+    label: string;
+    url: string;
+    variant?: "link" | "primary" | "secondary" | "destructive";
+    onClick: () => void;
+  }>;
   Button: React.ComponentType<{
     label: string;
     isLoading: boolean;
@@ -99,6 +105,20 @@ const WrappedTextRenderer = <T extends React.ReactNode>(props: {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
   return <Component {...rest} />;
+};
+
+const WrappedLinkRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Link"];
+  element: Extract<ModElementRef<T>, { type: "link" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, ...rest } = element;
+
+  const onClick = React.useCallback(() => {
+    events.onClick?.();
+  }, [events]);
+
+  return <Component {...rest} onClick={onClick} />;
 };
 
 const WrappedButtonRenderer = <T extends React.ReactNode>(props: {
@@ -460,6 +480,14 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
               <WrappedVideoRenderer
                 key={key}
                 component={renderers["Video"]}
+                element={el}
+              />
+            );
+          case "link":
+            return (
+              <WrappedLinkRenderer
+                key={key}
+                component={renderers["Link"]}
                 element={el}
               />
             );

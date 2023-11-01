@@ -6,6 +6,7 @@ import { HorizontalLayoutRenderer } from "./horizontal-layout";
 import { VerticalLayoutRenderer } from "./vertical-layout";
 import { TabsRenderer } from "./tabs";
 import { InputRenderer } from "./input";
+import { LinkRenderer } from "./link";
 import { ImageGridListRenderer } from "./image-grid-list";
 import { DialogRenderer } from "./dialog";
 import { AlertRenderer } from "./alert";
@@ -16,6 +17,7 @@ import { ImageRenderer } from "./image";
 import { ContainerRenderer } from "./container";
 
 export const renderers: Renderers = {
+  Link: LinkRenderer,
   Container: ContainerRenderer,
   Text: TextRenderer,
   Image: ImageRenderer,
