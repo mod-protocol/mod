@@ -6,19 +6,15 @@ export async function GET(request: NextRequest): Promise<
       message: string;
     }>
   | NextResponse<{
-      data: FarcasterMention[];
+      data: FarcasterMention;
     }>
 > {
-  const q =
-    request.nextUrl.searchParams.get("q") ||
-    // neynar won't give a response if the query is empty, so we fallback to "a"
-    "a";
+  const username = request.nextUrl.searchParams.get("username");
 
   const req = await fetch(
-    `https://api.neynar.com/v2/farcaster/user/search?api_key=${
+    `https://api.neynar.com/v1/farcaster/user-by-username?api_key=${
       process.env.NEYNAR_API_SECRET
-      // TODO: set viewer_fid
-    }&viewer_fid=3&q=${encodeURIComponent(q)}`
+    }&username=${encodeURIComponent(username)}`
   );
 
   if (req.status >= 400) {
@@ -28,15 +24,16 @@ export async function GET(request: NextRequest): Promise<
     );
   }
 
-  const mentionResults = await req.json();
+  const result = await req.json();
+  const user = result.result.user;
 
   return NextResponse.json({
-    data: mentionResults.result.users.map((user) => ({
+    data: {
       fid: user.fid,
       display_name: user.display_name,
       username: user.username,
       avatar_url: user.pfp_url,
-    })),
+    },
   });
 }
 

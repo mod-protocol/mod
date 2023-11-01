@@ -5,8 +5,10 @@ import * as React from "react";
 // Core
 import {
   Channel,
+  formatPlaintextToHubCastMessage,
   getFarcasterChannels,
   getFarcasterMentions,
+  getMentionFidsByUsernames,
 } from "@mod-protocol/farcaster";
 import { CreationMiniApp } from "@mod-protocol/react";
 import { useEditor, EditorContent } from "@mod-protocol/react-editor";
@@ -38,8 +40,9 @@ import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "https://api.modprotocol.org";
 
-const getResults = getFarcasterMentions(API_URL);
+const getMentions = getFarcasterMentions(API_URL);
 const getChannels = getFarcasterChannels(API_URL);
+const getMentionFids = getMentionFidsByUsernames(API_URL);
 const getUrlMetadata = fetchUrlMetadata(API_URL);
 const onError = (err) => console.error(err.message);
 const onSubmit = async ({
@@ -51,11 +54,20 @@ const onSubmit = async ({
   embeds: Embed[];
   channel: Channel;
 }) => {
+  const formattedCast = await formatPlaintextToHubCastMessage({
+    text,
+    parentUrl: channel.parent_url,
+    getMentionFidsByUsernames: getMentionFids,
+  });
   window.alert(
     `This is a demo, and doesn't do anything.\n\nCast text:\n${text}\nEmbeds:\n${embeds
       .map((embed) => (embed as any).url)
       .join(", ")}\nChannel:\n${channel.name}`
   );
+
+  console.log(formattedCast);
+
+  // submit the cast to a hub
 
   return true;
 };
@@ -77,7 +89,7 @@ export default function EditorExample() {
     onSubmit,
     linkClassName: "text-blue-600",
     renderMentionsSuggestionConfig: createRenderMentionsSuggestionConfig({
-      getResults: getResults,
+      getResults: getMentions,
     }),
   });
 

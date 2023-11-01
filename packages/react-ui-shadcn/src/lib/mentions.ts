@@ -1,6 +1,7 @@
 import tippy from "tippy.js";
 import { ReactRenderer } from "@tiptap/react";
-import { MentionList, MentionListItem } from "components/mention-list";
+import { MentionList } from "components/mention-list";
+import { FarcasterMention } from "@mod-protocol/farcaster";
 
 type MentionListRef = {
   onKeyDown: (props: { event: Event }) => boolean;
@@ -9,14 +10,14 @@ type MentionListRef = {
 export const createRenderMentionsSuggestionConfig = ({
   getResults,
 }: {
-  getResults: (query: string) => Promise<Array<MentionListItem | null>>;
+  getResults: (query: string) => Promise<Array<FarcasterMention | null>>;
 }) => ({
   suggestion: {
     items: async ({
       query,
     }: {
       query: string;
-    }): Promise<Array<MentionListItem | null>> => {
+    }): Promise<Array<FarcasterMention | null>> => {
       const data = await getResults(query);
 
       if (!data?.length) {
@@ -54,7 +55,7 @@ export const createRenderMentionsSuggestionConfig = ({
         },
 
         onUpdate(props: any) {
-          reactRenderer.updateProps(props);
+          reactRenderer?.updateProps(props);
 
           if (!props.clientRect) {
             return;
