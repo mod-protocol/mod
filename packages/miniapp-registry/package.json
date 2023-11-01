@@ -5,7 +5,7 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "lint": "eslint \"**/*.ts*\"",
+    "lint": "eslint \"**/*.ts*\" && tsc --noEmit",
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "npm run build -- --watch"
   },
