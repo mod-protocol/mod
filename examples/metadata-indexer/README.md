@@ -7,5 +7,6 @@ This application processes casts on the Farcaster protocol and indexes the metad
 Modify the environment variable of `app` in `docker-compose.yml` then run with Docker Compose.
 
 ```
-docker-compose up -d
+docker-compose up -d postgres
+yarn start
 ```
