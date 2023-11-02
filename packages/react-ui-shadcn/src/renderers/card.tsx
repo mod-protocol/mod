@@ -18,31 +18,35 @@ export const CardRenderer = (
   } = props;
   return (
     <div className="flex flex-col" onClick={onClick}>
-      <AspectRatio ratio={aspectRatio || 1}>
-        <div className="w-full h-full bg-slate-900 relative">
-          <img
-            className="object-cover w-full h-full"
-            alt="Image"
-            src={imageSrc}
-          />
-          {topLeftBadge ? (
-            <CardImageBadge position="topLeft">{topLeftBadge}</CardImageBadge>
-          ) : null}
-          {topRightBadge ? (
-            <CardImageBadge position="topRight">{topRightBadge}</CardImageBadge>
-          ) : null}
-          {bottomLeftBadge ? (
-            <CardImageBadge position="bottomLeft">
-              {bottomLeftBadge}
-            </CardImageBadge>
-          ) : null}
-          {bottomRightBadge ? (
-            <CardImageBadge position="bottomRight">
-              {bottomRightBadge}
-            </CardImageBadge>
-          ) : null}
-        </div>
-      </AspectRatio>
+      {imageSrc ? (
+        <AspectRatio ratio={aspectRatio || 1}>
+          <div className="w-full h-full bg-slate-900 relative">
+            <img
+              className="object-cover w-full h-full"
+              alt="Image"
+              src={imageSrc}
+            />
+            {topLeftBadge ? (
+              <CardImageBadge position="topLeft">{topLeftBadge}</CardImageBadge>
+            ) : null}
+            {topRightBadge ? (
+              <CardImageBadge position="topRight">
+                {topRightBadge}
+              </CardImageBadge>
+            ) : null}
+            {bottomLeftBadge ? (
+              <CardImageBadge position="bottomLeft">
+                {bottomLeftBadge}
+              </CardImageBadge>
+            ) : null}
+            {bottomRightBadge ? (
+              <CardImageBadge position="bottomRight">
+                {bottomRightBadge}
+              </CardImageBadge>
+            ) : null}
+          </div>
+        </AspectRatio>
+      ) : null}
       <div className="p-2">{children}</div>
     </div>
   );

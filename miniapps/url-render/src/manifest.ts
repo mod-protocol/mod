@@ -1,5 +1,6 @@
 import { ModManifest } from "@mod-protocol/core";
-import view from "./view";
+import fullimage from "./fullimage";
+// import smallimage from "./smallimage";
 
 const manifest: ModManifest = {
   slug: "url-render",
@@ -11,17 +12,16 @@ const manifest: ModManifest = {
   contentEntrypoints: [
     {
       if: {
-        // this will always be true
         value: "true",
         match: {
           equals: "true",
         },
       },
-      element: view,
+      element: fullimage,
     },
   ],
   elements: {
-    "#view": view,
+    "#fullimage": fullimage,
   },
 };
 

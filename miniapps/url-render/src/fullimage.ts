@@ -1,6 +1,6 @@
 import { ModElement } from "@mod-protocol/core";
 
-const view: ModElement[] = [
+const fullimage: ModElement[] = [
   {
     type: "card",
     aspectRatio: 16 / 8,
@@ -8,7 +8,7 @@ const view: ModElement[] = [
     onclick: {
       type: "OPENLINK",
       url: "{{embed.url}}",
-      onsuccess: "#view",
+      onsuccess: "#fullimage",
     },
     elements: [
       {
@@ -23,4 +23,4 @@ const view: ModElement[] = [
   },
 ];
 
-export default view;
+export default fullimage;

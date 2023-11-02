@@ -7,7 +7,6 @@ import urlHandlers from "./lib/url-handlers";
 export async function GET(request: NextRequest) {
   try {
     const url = decodeURIComponent(request.nextUrl.searchParams.get("url"));
-
     let urlMetadata: UrlMetadata | null = null;
     for (const { matchers, handler } of urlHandlers) {
       if (matchers.some((matcher) => url.match(matcher))) {

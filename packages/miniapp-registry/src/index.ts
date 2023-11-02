@@ -10,10 +10,10 @@ import UrlRender from "@miniapps/url-render";
 import ImageRender from "@miniapps/image-render";
 
 export const allMiniApps = [
-  ChatGPTMiniText,
   InfuraIPFSUpload,
-  GiphyPicker,
   LivepeerVideo,
+  GiphyPicker,
+  ChatGPTMiniText,
   VideoRender,
   NFTMinter,
   ImageRender,
