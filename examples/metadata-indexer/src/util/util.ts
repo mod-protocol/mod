@@ -78,7 +78,7 @@ export function bytesToHex(
   return `0x${Buffer.from(bytes).toString("hex")}`;
 }
 
-export function normalizeUrl(url: string): string | null {
+export function normalizeUrl(url: string): string {
   try {
     const normalizedUrl = normalizeUrl_(url, {
       forceHttps: true,
@@ -93,5 +93,5 @@ export function normalizeUrl(url: string): string | null {
     }
   }
 
-  return null;
+  return url;
 }

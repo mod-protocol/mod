@@ -1,6 +1,5 @@
 import {
   CamelCasePlugin,
-  ColumnType,
   FileMigrationProvider,
   Generated,
   GeneratedAlways,
@@ -63,8 +62,6 @@ export type NftCollectionRow = {
   createdAt: Generated<Date>;
   updatedAt: Generated<Date>;
   name: string;
-  // contractAddress: string;
-  // chain: string;
   description: string | null;
   creatorAddress: string;
   itemCount: number;
@@ -87,6 +84,8 @@ export type NftMetadataRow = {
 export type CastEmbedUrlRow = {
   castHash: Uint8Array;
   url: string;
+  unnormalizedUrl: string;
+  index: number;
 };
 
 export type UrlMetadataRow = {

@@ -10,14 +10,15 @@ export async function POST(request: NextRequest) {
     // Get casts IDs from request body
     const casts = await request.json();
 
+    // Normalize casts hashes by removing leading 0x
+    const castHashBuffers = casts.map((hash: string) =>
+      Buffer.from(hash.startsWith("0x") ? hash.slice(2) : hash, "hex")
+    );
+
     // Fetch metadata for each cast
     const metadata = await db
       .selectFrom("casts")
-      .where(
-        "casts.hash",
-        "in",
-        casts.map((hash) => Buffer.from(hash, "hex"))
-      )
+      .where("casts.hash", "in", castHashBuffers)
       .fullJoin("cast_embed_urls", "casts.hash", "cast_embed_urls.cast_hash")
       .leftJoin("url_metadata", "url_metadata.url", "cast_embed_urls.url")
       .leftJoin(
@@ -84,26 +85,33 @@ export async function POST(request: NextRequest) {
 
       return {
         castHash: `0x${row.hash.toString("hex").toLowerCase()}`,
-        url: row.url,
+        url: row.unnormalized_url,
+        normalizedUrl: row.url,
+        index: row.index,
         urlMetadata,
       };
     });
 
-    const metadataByCastHash: { [key: string]: UrlMetadata } =
-      rowsFormatted.reduce(
-        (acc, cur) => ({
-          ...acc,
-          [cur.castHash]: {
-            ...(acc[cur.castHash] || {}),
-            [cur.url]: cur.urlMetadata,
-          },
-        }),
-        {}
-      );
+    const metadataByCastHash: {
+      [key: string]: {
+        castHash: string;
+        url: string;
+        normalizedUrl: string;
+        index: number;
+        urlMetadata: UrlMetadata;
+      }[];
+    } = rowsFormatted.reduce((acc, cur) => {
+      return {
+        ...acc,
+        [cur.castHash]: [...(acc[cur.castHash] || []), cur].sort(
+          (a, b) => a.index - b.index
+        ),
+      };
+    }, {});
 
     return NextResponse.json(metadataByCastHash);
   } catch (err) {
-    // console.error(err);
+    console.error(err);
     return NextResponse.json({ message: err.message }, { status: err.status });
   }
 }
