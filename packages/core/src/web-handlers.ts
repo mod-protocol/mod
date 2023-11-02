@@ -20,7 +20,6 @@ export const fetchUrlMetadata = (api_url: string) => {
     const req = await fetch(
       `${api_url}/open-graph?url=${encodeURIComponent(url)}`
     );
-
     const reqJson = await req.json();
 
     if (!req.ok) {

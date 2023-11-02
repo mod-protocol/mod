@@ -85,8 +85,8 @@ export const MentionList = forwardRef<MentionListRef, Props>((props, ref) => {
           !item ? null : (
             <div
               className={cn(
-                "flex flex-row p-2 px-3 cursor-pointer gap-2 items-center hover:bg-slate-50",
-                index === selectedIndex && "bg-slate-50"
+                "flex flex-row p-2 px-3 cursor-pointer gap-2 items-center hover:bg-accent hover:text-accent-foreground",
+                index === selectedIndex && "bg-accent text-accent-foreground"
               )}
               key={item.username}
               onClick={() => selectItem(index)}
@@ -104,7 +104,7 @@ export const MentionList = forwardRef<MentionListRef, Props>((props, ref) => {
               />
               <div>
                 <div className="font-bold text-sm">{item.display_name}</div>
-                <div className="font-bold text-slate-500 text-sm">
+                <div className="font-bold text-muted-foreground text-sm">
                   @{item.username}
                 </div>
               </div>

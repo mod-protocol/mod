@@ -86,7 +86,7 @@ export default function EditorExample() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="p-2 border-slate-200 rounded-md border">
+      <div className="p-2 border border-input rounded-md">
         <EditorContent
           editor={editor}
           autoFocus

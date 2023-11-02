@@ -12,7 +12,7 @@ import { VideoRenderer } from "../renderers/video";
 
 function shorten(str?: string, maxLength = 64) {
   if (!str) return str;
-  if (str.length > 64) return str.slice(0, 61) + "...";
+  if (str.length > maxLength) return str.slice(0, maxLength - 3) + "...";
   return str;
 }
 
@@ -67,7 +67,7 @@ export const EmbedsEditor = (props: {
                 <div className="font-bold">
                   {shorten(embed.metadata?.title)}
                 </div>
-                <div className="text-slate-600">
+                <div className="text-muted-foreground">
                   {embed.metadata?.publisher}
                 </div>
               </div>
@@ -85,7 +85,7 @@ export const EmbedsEditor = (props: {
                     {shorten(embed.metadata?.title)}
                   </div>
                 </div>
-                <div className="text-slate-600">
+                <div className="text-muted-foreground">
                   {embed.metadata?.publisher}
                 </div>
               </div>
