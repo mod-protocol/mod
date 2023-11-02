@@ -14,7 +14,6 @@ export const allMiniApps = [
   InfuraIPFSUpload,
   LivepeerVideo,
   GiphyPicker,
-  ChatGPTMiniText,
   VideoRender,
   NFTMinter,
   ImageRender,
