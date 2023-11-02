@@ -17,7 +17,8 @@ import { Logger } from "pino";
 import { CastEmbedJson, DB } from "./db";
 import { HubSubscriber } from "./hubSubscriber";
 import { IndexerQueue } from "./indexerQueue";
-import { bytesToHex, farcasterTimeToDate, normalizeUrl } from "./util";
+import { bytesToHex, farcasterTimeToDate, normalizeUrl } from "./util/util";
+import { sql } from "kysely";
 
 // If you're hitting out-of-memory errors, try decreasing this to reduce overall
 // memory usage.
@@ -25,7 +26,7 @@ const MAX_PAGE_SIZE = 1_000;
 
 // Max FIDs to fetch in parallel
 const MAX_JOB_CONCURRENCY =
-  Number(process.env["MAX_CONCURRENCY"]) || os.cpus().length;
+  Number(process.env["MAX_CONCURRENCY_HUB"]) || os.cpus().length;
 
 export class HubReplicator {
   private client: HubRpcClient;
@@ -74,6 +75,51 @@ export class HubReplicator {
   public async start() {
     await this.indexerQueue.start();
 
+    // Process live events going forward, starting from the last event we
+    // processed (if there was one).
+    const subscription = await this.db
+      .selectFrom("hubSubscriptions")
+      .where("host", "=", this.hubAddress)
+      .select("lastEventId")
+      .executeTakeFirst();
+
+    const [castCountRow] = await this.db
+      .selectFrom("casts")
+      .select(() => sql`COUNT("casts".id)::integer`.as("count"))
+      .execute();
+    const castCount = castCountRow?.count as number;
+
+    this.log.info(`[Sync] Found ${castCount} casts in the database`);
+
+    let tooFarBehind = false;
+
+    // Hacky way of determining if backfill is required
+    if (castCount < 1e6) {
+      this.log.info(
+        `[Backfill] Continuing backfill since there are only ${castCountRow?.count} casts in the database`
+      );
+      tooFarBehind = true;
+    }
+
+    this.subscriber.start(subscription?.lastEventId);
+
+    if (tooFarBehind) {
+      // Start backfilling all historical data in the background
+      await this.backfill();
+    } else {
+      this.log.info(`[Sync] No backfill required.`);
+    }
+  }
+
+  public stop() {
+    this.subscriber.stop();
+  }
+
+  public destroy() {
+    this.subscriber.destroy();
+  }
+
+  private async backfill() {
     const infoResult = await this.client.getInfo({ dbStats: true });
 
     if (infoResult.isErr() || infoResult.value.dbStats === undefined) {
@@ -88,28 +134,6 @@ export class HubReplicator {
       `[Backfill] Fetching messages from hub ${this.hubAddress} (~${numMessages} messages)`
     );
 
-    // Process live events going forward, starting from the last event we
-    // processed (if there was one).
-    const subscription = await this.db
-      .selectFrom("hubSubscriptions")
-      .where("host", "=", this.hubAddress)
-      .select("lastEventId")
-      .executeTakeFirst();
-    this.subscriber.start(subscription?.lastEventId);
-
-    // Start backfilling all historical data in the background
-    // this.backfill();
-  }
-
-  public stop() {
-    this.subscriber.stop();
-  }
-
-  public destroy() {
-    this.subscriber.destroy();
-  }
-
-  private async backfill() {
     const maxFidResult = await this.client.getFids({
       pageSize: 1,
       reverse: true,
@@ -190,7 +214,6 @@ export class HubReplicator {
     const firstMessage = messages[0]; // All messages will have the same type as the first
 
     if (isCastAddMessage(firstMessage)) {
-      this.log.info(`[Sync] Processing cast ${bytesToHex(firstMessage.hash)}`);
       await this.onCastAdd(messages as CastAddMessage[]);
     } else if (isCastRemoveMessage(firstMessage)) {
       await this.onCastRemove(messages as CastRemoveMessage[]);
@@ -259,14 +282,14 @@ export class HubReplicator {
               };
             })
           )
-          // .onConflict((oc) => oc.columns(["url", "castHash"]).doNothing())
+          .onConflict((oc) => oc.doNothing())
           .execute();
 
-        this.log.info(
-          `[Sync] Indexed ${urls.length} URLs from cast ${bytesToHex(
-            castRow.hash
-          )}`
-        );
+        // this.log.info(
+        //   `[Sync] Indexed ${urls.length} URLs from cast ${bytesToHex(
+        //     castRow.hash
+        //   )}`
+        // );
 
         // Add any new URLs to the indexer queue
         urls.forEach((url) => this.indexerQueue.push(url));
