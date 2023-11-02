@@ -50,11 +50,12 @@ async function fallbackUrlHandler(url: string): Promise<UrlMetadata> {
       },
     }
   );
-  const { data, headers, message } = await response.json();
 
   if (!response.ok) {
-    throw new Error(message);
+    throw new Error(`Failed to fetch ${url} [${response.status}]`);
   }
+
+  const { data, headers } = await response.json();
 
   const urlMetadata: UrlMetadata = {
     image: data.image
