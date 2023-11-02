@@ -5,8 +5,8 @@ import { UrlMetadata } from "@mod-protocol/core";
 import urlHandlers from "./lib/url-handlers";
 
 export async function GET(request: NextRequest) {
+  const url = decodeURIComponent(request.nextUrl.searchParams.get("url"));
   try {
-    const url = decodeURIComponent(request.nextUrl.searchParams.get("url"));
     let urlMetadata: UrlMetadata | null = null;
     for (const { matchers, handler } of urlHandlers) {
       if (matchers.some((matcher) => url.match(matcher))) {
@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(urlMetadata);
   } catch (err) {
+    console.error(`Error fetching metadata for ${url}`);
     console.error(err);
     return NextResponse.json(
       { message: err.message },

@@ -39,5 +39,5 @@
     "swc": true
   },
 
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "jest.config.ts"]
 }

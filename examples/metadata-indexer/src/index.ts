@@ -1,7 +1,7 @@
 import { DB, getDbClient, migrateToLatest, migrationStatus } from "./db";
 import { HubReplicator } from "./hubReplicator";
 import { Logger, log } from "./log";
-import { onTerminate, terminateProcess } from "./util";
+import { onTerminate, terminateProcess } from "./util/util";
 import "dotenv/config";
 
 /**

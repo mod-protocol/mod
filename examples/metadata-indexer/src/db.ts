@@ -126,6 +126,7 @@ export const getDbClient = (connectionString?: string) => {
       cursor: Cursor,
     }),
     plugins: [new CamelCasePlugin()],
+    log: ["error"],
   });
 };
 

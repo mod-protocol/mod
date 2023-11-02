@@ -1,3 +1,5 @@
+// https://github.com/farcasterxyz/hub-monorepo/blob/main/apps/replicator/src/hubSubscriber.ts
+
 import {
   ClientReadableStream,
   HubEvent,
