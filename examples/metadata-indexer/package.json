@@ -15,6 +15,7 @@
     "fastq": "^1.15.0",
     "humanize-duration": "^3.30.0",
     "kysely": "^0.26.3",
+    "mime": "^3.0.0",
     "pg": "^8.11.3",
     "pg-cursor": "^2.10.3",
     "pino": "^8.16.1",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@types/humanize-duration": "^3.27.2",
+    "@types/mime": "^3.0.3",
     "@types/node": "^20.8.8",
     "@types/pg": "^8.10.7",
     "@types/pg-cursor": "^2.7.1",
