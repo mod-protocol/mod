@@ -73,7 +73,9 @@ export class HubReplicator {
   }
 
   public async start() {
-    await this.indexerQueue.start();
+    if (process.env["INDEX_DISABLE"] !== "true") {
+      await this.indexerQueue.start();
+    }
 
     // Process live events going forward, starting from the last event we
     // processed (if there was one).
@@ -292,7 +294,9 @@ export class HubReplicator {
         // );
 
         // Add any new URLs to the indexer queue
-        urls.forEach((url) => this.indexerQueue.push(url));
+        if (process.env["INDEX_DISABLE"] !== "true") {
+          urls.forEach((url) => this.indexerQueue.push(url));
+        }
       }
     }
   }
