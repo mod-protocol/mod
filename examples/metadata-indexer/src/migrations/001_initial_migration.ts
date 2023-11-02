@@ -90,6 +90,12 @@ export const up = async (db: DB) => {
     .execute();
 
   await db.schema
+    .createIndex("nft_collections_id_index")
+    .on("nftCollections")
+    .column("id")
+    .execute();
+
+  await db.schema
     .createTable("nftMetadata")
     // CAIP-19 ID
     .addColumn("id", "text", (col) => col.notNull())
@@ -118,10 +124,13 @@ export const up = async (db: DB) => {
     )
     .addColumn("castHash", "bytea", (col) => col.notNull())
     .addColumn("url", "text", (col) => col.notNull())
+    .addColumn("unnormalizedUrl", "text", (col) => col.notNull())
+    .addColumn("index", "integer", (col) => col.notNull())
     .$call((qb) =>
       qb.addUniqueConstraint("castEmbedUrls_hash_url_unique", [
         "url",
         "castHash",
+        "index",
       ])
     )
     .execute();

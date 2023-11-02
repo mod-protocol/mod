@@ -11,6 +11,8 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 export interface CastEmbedUrls {
   cast_hash: Buffer;
   id: Generated<Int8>;
+  index: number;
+  unnormalized_url: string;
   url: string;
 }
 
@@ -57,7 +59,6 @@ export interface UrlMetadata {
   alt: string | null;
   created_at: Generated<Timestamp>;
   description: string | null;
-  id: Generated<Int8>;
   image_height: number | null;
   image_url: string | null;
   image_width: number | null;

@@ -270,17 +270,21 @@ export class HubReplicator {
         const urlEmbeds = castRow.transformedEmbeds.filter((embed) =>
           Object.hasOwn(embed, "url")
         ) as { url: string }[];
-        const urls = urlEmbeds
-          .map((embed) => normalizeUrl(embed.url))
-          .filter((url) => url !== null) as string[];
+        const urls = urlEmbeds.map((embed, index) => ({
+          normalizedUrl: normalizeUrl(embed.url),
+          url: embed.url,
+          index,
+        }));
 
         await this.db
           .insertInto("castEmbedUrls")
           .values(
-            urls.map((url) => {
+            urls.map(({ url, normalizedUrl, index }) => {
               return {
                 castHash: castRow.hash,
-                url,
+                url: normalizedUrl, // Null values filtered above
+                unnormalizedUrl: url,
+                index,
               };
             })
           )
@@ -295,7 +299,9 @@ export class HubReplicator {
 
         // Add any new URLs to the indexer queue
         if (process.env["INDEX_DISABLE"] !== "true") {
-          urls.forEach((url) => this.indexerQueue.push(url));
+          urls.forEach(({ normalizedUrl }) =>
+            this.indexerQueue.push(normalizedUrl)
+          );
         }
       }
     }
