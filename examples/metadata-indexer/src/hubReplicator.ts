@@ -245,7 +245,9 @@ export class HubReplicator {
         const urlEmbeds = castRow.transformedEmbeds.filter((embed) =>
           Object.hasOwn(embed, "url")
         ) as { url: string }[];
-        const urls = urlEmbeds.map((embed) => normalizeUrl(embed.url));
+        const urls = urlEmbeds
+          .map((embed) => normalizeUrl(embed.url))
+          .filter((url) => url !== null) as string[];
 
         await this.db
           .insertInto("castEmbedUrls")
