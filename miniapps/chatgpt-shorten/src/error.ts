@@ -11,15 +11,11 @@ const error: ModElement[] = [
     onclick: {
       ref: "myChatGPTServerRequest",
       type: "POST",
-      url: "{{api}}/chatgpt",
+      url: "{{api}}/chatgpt-shorten",
       body: {
         json: {
           type: "object",
           value: {
-            prompt: {
-              type: "string",
-              value: "{{refs.prompt.value}}",
-            },
             text: {
               type: "string",
               value: "{{input}}",

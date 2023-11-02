@@ -3,7 +3,7 @@ import { ModElement } from "@mod-protocol/core";
 const loading: ModElement[] = [
   {
     type: "text",
-    label: "Fetching a response...",
+    label: "Shortening the input...",
   },
   {
     type: "circular-progress",
