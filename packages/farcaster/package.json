@@ -15,7 +15,5 @@
     "tsconfig": "*",
     "typescript": "^5.2.2"
   },
-  "dependencies": {
-    "@farcaster/hub-nodejs": "^0.10.10"
-  }
+  "dependencies": {}
 }
