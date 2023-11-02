@@ -12,13 +12,9 @@ export class IndexerQueue {
     private db: DB,
     private log: Logger
   ) {
-    this.indexQueue = fastq.promise(
-      this.worker.bind(this),
-      parseInt(process.env["MAX_CONCURRENCY"] || "1")
-    );
-    this.indexQueue
-      .drained()
-      .then(() => this.log.info(`[URL Indexer] Queue drained`));
+    const workers = parseInt(process.env["MAX_CONCURRENCY_FETCH"] || "1");
+    this.log.info(`[URL Indexer] Creating queue with ${workers} workers`);
+    this.indexQueue = fastq.promise(this.worker.bind(this), workers);
 
     this.startTime = new Date();
   }
@@ -43,7 +39,10 @@ export class IndexerQueue {
       )
       .where("urlMetadata.url", "is", null)
       .select("castEmbedUrls.url")
+      .distinct()
       .execute();
+
+    this.log.info(`[URL Indexer] Found ${urlsToIndex.length} URLs to index`);
 
     urlsToIndex.map((row) => this.indexQueue.push(row));
     this.log.info(
