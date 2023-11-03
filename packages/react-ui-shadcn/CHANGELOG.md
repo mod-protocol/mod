@@ -1,5 +1,11 @@
 # @mod-protocol/react-ui-shadcn
 
+## 0.0.3
+
+### Patch Changes
+
+- 21bedde: fix shadcdn bug
+
 ## 0.0.2
 
 ### Patch Changes
