@@ -1,0 +1,48 @@
+# Metadata Cache
+
+The metadata cache can be used to retrieve Open Graph metadata for embeds in casts, useful for rendering embeds in a cast without having to make a request to each embed URL. 
+
+It makes use of the [Metadata Indexer](https://github.com/mod-protocol/mod/tree/main/examples/metadata-indexer), an open source and self-hostable service that indexes casts, embeds, and their metadata.
+
+## Usage
+
+Fetching metadata from the cache is as simple as making a POST request to the following endpoint with a list of cast hashes in the body.
+
+```bash
+curl --request POST \
+  --url https://api.modprotocol.org/api/cast-embeds-metadata \
+  --header 'Content-Type: application/json' \
+  --data '['\''7dcec6e7dd45c994615dcf81e400e71fbb339943'\'']'
+```
+
+This will return a JSON object with the following structure:
+
+```json
+{
+  "0x1234...abcd": [
+    {
+      "castHash": "0x1234...abcd",
+      "url": "...",
+      "normalizedUrl": "...",
+      "index": 0,
+      "urlMetadata": {
+        "title": "Example Title",
+        "description": "Example Description",
+        "image": "https://example.com/image.png"
+        // ...
+      },
+    }
+  ]
+}
+```
+
+Returned metadata objects conform to the `UrlMetadata` type. This can then be used to render embeds in a cast.
+
+```typescript
+import { UrlMetadata } from "@mod-protocol/core";
+
+cast.embeds.map(embed => {
+  const metadata: UrlMetadata = metadataResponse[cast.hash][embed.url]
+  return <RenderEmbed metadata={metadata} />
+})
+```
