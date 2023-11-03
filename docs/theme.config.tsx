@@ -1,16 +1,26 @@
 import React from "react";
 import { DocsThemeConfig } from "nextra-theme-docs";
 import Image from "next/image";
+import { useTheme } from "nextra-theme-docs";
 
-const config: DocsThemeConfig = {
-  logo: (
+function Logo() {
+  const { theme, systemTheme } = useTheme();
+  return (
     <Image
-      src="/mod-protocol.svg"
+      src={
+        theme === "dark" || systemTheme === "dark"
+          ? "/mod-protocol-white.svg"
+          : "/mod-protocol.svg"
+      }
       alt="Mod protocol"
       width={350}
       height={28.5}
     />
-  ),
+  );
+}
+
+const config: DocsThemeConfig = {
+  logo: Logo,
   project: {
     link: "https://github.com/mod-protocol/mod",
   },
