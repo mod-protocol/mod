@@ -744,18 +744,6 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.47.0.tgz#5478fdf443ff8158f9de171c704ae45308696c7d"
   integrity sha512-P6omY1zv5MItm93kLM8s2vr1HICJH8v0dvddDhysbIuZ+vcjOHg5Zbkf1mTkcmi2JA9oBG2anOkRnW8WJTS8Og==
 
-"@farcaster/core@0.12.10":
-  version "0.12.10"
-  resolved "https://registry.yarnpkg.com/@farcaster/core/-/core-0.12.10.tgz#2268a8eaad2ae4f9497789af566cceb546e91a26"
-  integrity sha512-/mWiJdzuVLrnEXqXNyj0uFMjuGIrNF+F+mHVViWKDpADl6O5L6GrogPwlpKHH5Z+hcPq1nBEmxVpJ3tWYLBe1g==
-  dependencies:
-    "@noble/curves" "^1.0.0"
-    "@noble/hashes" "^1.3.0"
-    ffi-napi "^4.0.3"
-    neverthrow "^6.0.0"
-    ref-napi "^3.0.3"
-    viem "^1.1.4"
-
 "@farcaster/core@0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@farcaster/core/-/core-0.13.0.tgz#0d315e1859269e06f680c94738f0796de26a3617"
@@ -767,16 +755,6 @@
     neverthrow "^6.0.0"
     ref-napi "^3.0.3"
     viem "^1.12.2"
-
-"@farcaster/hub-nodejs@^0.10.10":
-  version "0.10.10"
-  resolved "https://registry.yarnpkg.com/@farcaster/hub-nodejs/-/hub-nodejs-0.10.10.tgz#fead0af97563756996025a1059277b0c03734ba2"
-  integrity sha512-DlXWF0pd3YYiBiRbbm21LYYK84UiToJ/k4VjSZb6t5PUm0axwmHbaBy19W7fZokhcTngqrsmI27mAi63/rQyYQ==
-  dependencies:
-    "@farcaster/core" "0.12.10"
-    "@grpc/grpc-js" "~1.8.21"
-    "@noble/hashes" "^1.3.0"
-    neverthrow "^6.0.0"
 
 "@farcaster/hub-nodejs@^0.10.15":
   version "0.10.16"
@@ -2693,13 +2671,6 @@
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.8.tgz#bb197b9639aa1a04cf464a617fe800cccd92ad5c"
   integrity sha512-d0XxK3YTObnWVp6rZuev3c49+j4Lo8g4L1ZRm9z5L0xpoZycUPshHgczK5gsUMaZOstjVYYi09p5gYvUtfChYw==
-
-"@types/ws@^8.5.5":
-  version "8.5.5"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.5.5.tgz#af587964aa06682702ee6dcbc7be41a80e4b28eb"
-  integrity sha512-lwhs8hktwxSjf9UaZ9tG5M03PGogvFaH8gUgLNbN9HKIg0dvv6q+gkSuJ8HN4/VbyxkuLzCjlN7GquQ0gUJfIg==
-  dependencies:
-    "@types/node" "*"
 
 "@types/yargs-parser@*":
   version "21.0.2"
@@ -6749,11 +6720,6 @@ isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==
-
-isomorphic-ws@5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-5.0.0.tgz#e5529148912ecb9b451b46ed44d53dae1ce04bbf"
-  integrity sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==
 
 isows@1.0.3:
   version "1.0.3"
@@ -11732,21 +11698,6 @@ videojs-vtt.js@0.15.5:
   integrity sha512-yZbBxvA7QMYn15Lr/ZfhhLPrNpI/RmCSCqgIff57GC2gIrV5YfyzLfLyZMj0NnZSAz8syB4N0nHXpZg9MyrMOQ==
   dependencies:
     global "^4.3.1"
-
-viem@^1.1.4:
-  version "1.10.9"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-1.10.9.tgz#9b16ade429b234f7b33a79544badddbb5498b13c"
-  integrity sha512-fhQxnMBFwGbyE/VOfcvcavxAPyqIHSgOB793gQcMPH1B9ahQvjMe3C3icqypC01ACaqpDPgYWGfvF/ExTeIPuA==
-  dependencies:
-    "@adraffy/ens-normalize" "1.9.4"
-    "@noble/curves" "1.2.0"
-    "@noble/hashes" "1.3.2"
-    "@scure/bip32" "1.3.2"
-    "@scure/bip39" "1.2.1"
-    "@types/ws" "^8.5.5"
-    abitype "0.9.8"
-    isomorphic-ws "5.0.0"
-    ws "8.13.0"
 
 viem@^1.12.2:
   version "1.18.1"
