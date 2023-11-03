@@ -1,25 +1,16 @@
 import { ModElement } from "@mod-protocol/core";
 
-const error: ModElement[] = [
+const action: ModElement[] = [
   {
-    type: "text",
-    label: "ERROR: {{refs.myChatGPTServerRequest.error.message}}",
-  },
-  {
-    type: "button",
-    label: "Retry",
-    onclick: {
+    type: "vertical-layout",
+    onload: {
       ref: "myChatGPTServerRequest",
       type: "POST",
-      url: "{{api}}/chatgpt",
+      url: "{{api}}/chatgpt-shorten",
       body: {
         json: {
           type: "object",
           value: {
-            prompt: {
-              type: "string",
-              value: "{{refs.prompt.value}}",
-            },
             text: {
               type: "string",
               value: "{{input}}",
@@ -34,4 +25,4 @@ const error: ModElement[] = [
   },
 ];
 
-export default error;
+export default action;

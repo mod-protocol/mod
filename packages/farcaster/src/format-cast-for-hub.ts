@@ -2,7 +2,6 @@ import {
   StructuredCastMention,
   convertCastPlainTextToStructured,
 } from "./structure-cast";
-import { makeCastAdd } from "@farcaster/hub-nodejs";
 import {
   FARCASTER_MAX_EMBEDS,
   FarcasterEmbed,
@@ -16,6 +15,26 @@ export function stringHashToUint(hash: string): Uint8Array {
 }
 
 type ValidMention = { fid: number; username: string };
+
+type CastAddBody = {
+  /** URLs to be embedded in the cast */
+  embedsDeprecated: string[];
+  /** Fids mentioned in the cast */
+  mentions: number[];
+  /** Parent cast of the cast */
+  parentCastId?: { fid: number; hash: Uint8Array } | undefined;
+  /** Parent URL */
+  parentUrl?: string | undefined;
+  /** Text of the cast */
+  text: string;
+  /** Positions of the mentions in the text */
+  mentionsPositions: number[];
+  /** URLs or cast ids to be embedded in the cast */
+  embeds: Array<{
+    url?: string | undefined;
+    castId?: { fid: number; hash: Uint8Array } | undefined;
+  }>;
+};
 
 /**
  * Formats a cast to be ready for a hub, including validating and calculating `mentions` and `mentionsPositions`
@@ -39,7 +58,7 @@ export async function formatPlaintextToHubCastMessage({
   parentUrl?: string;
   parentCastFid?: number;
   parentCastHash?: string;
-}): Promise<Parameters<typeof makeCastAdd>[0] | false> {
+}): Promise<CastAddBody | false> {
   // Up to 2 embed urls allowed by Farcaster
   if (embeds.length > FARCASTER_MAX_EMBEDS) {
     return false;
@@ -110,7 +129,7 @@ export async function formatPlaintextToHubCastMessage({
     ? stringHashToUint(parentCastHash)
     : false;
 
-  const res: Parameters<typeof makeCastAdd>[0] = {
+  const res: CastAddBody = {
     text: formattedText,
     mentions: mentions,
     embedsDeprecated: [],

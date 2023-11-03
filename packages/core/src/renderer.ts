@@ -132,7 +132,7 @@ export type CreationContext = {
   api: string;
 };
 
-// Render mini apps only are triggered by a single embed right now
+// Render Mini-apps only are triggered by a single embed right now
 export type ContentContext = {
   embed: Embed;
   api: string;

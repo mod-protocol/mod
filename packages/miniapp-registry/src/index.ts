@@ -1,6 +1,6 @@
 import { ModManifest } from "@mod-protocol/core";
 
-import ChatGPTMiniText from "@miniapps/chatgpt";
+import ChatGPT from "@miniapps/chatgpt";
 import InfuraIPFSUpload from "@miniapps/infura-ipfs-upload";
 import GiphyPicker from "@miniapps/giphy-picker";
 import LivepeerVideo from "@miniapps/livepeer-video";
@@ -8,15 +8,17 @@ import VideoRender from "@miniapps/video-render";
 import NFTMinter from "@miniapps/nft-minter";
 import UrlRender from "@miniapps/url-render";
 import ImageRender from "@miniapps/image-render";
+import ChatGPTShorten from "@miniapps/chatgpt-shorten";
 
 export const allMiniApps = [
   InfuraIPFSUpload,
   LivepeerVideo,
   GiphyPicker,
-  ChatGPTMiniText,
   VideoRender,
   NFTMinter,
   ImageRender,
+  ChatGPTShorten,
+  ChatGPT,
 ];
 
 export const creationMiniApps: ModManifest[] = allMiniApps.filter(
