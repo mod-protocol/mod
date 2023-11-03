@@ -30,7 +30,7 @@ const config: DocsThemeConfig = {
           "A protocol and set of open source libraries for decentralized social Mini-apps",
         images: [
           {
-            url: "https://docs.modprotocol.org/og-image.png",
+            url: "https://docs.modprotocol.org/og.png",
             width: 1200,
             height: 630,
             alt: "Mod Protocol Docs",
