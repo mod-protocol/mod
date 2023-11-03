@@ -624,12 +624,6 @@
         "channel_id": "obsidian"
     },
     {
-        "name": "Base",
-        "parent_url": "https://onchainsummer.xyz",
-        "image": "https://warpcast.com/~/channel-images/base.png",
-        "channel_id": "base"
-    },
-    {
         "name": "Green Pill",
         "parent_url": "https://farcaster.group/green-pill",
         "image": "https://warpcast.com/~/channel-images/green-pill.png",
