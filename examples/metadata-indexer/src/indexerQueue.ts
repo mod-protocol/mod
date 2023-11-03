@@ -2,6 +2,7 @@ import fastq, { queueAsPromised } from "fastq";
 import { DB } from "./db";
 import { Logger } from "./log";
 import humanizeDuration from "humanize-duration";
+import { shuffle } from "./util/util";
 
 export class IndexerQueue {
   private indexQueue: queueAsPromised<{ url: string }>;
@@ -44,7 +45,10 @@ export class IndexerQueue {
 
     this.log.info(`[URL Indexer] Found ${urlsToIndex.length} URLs to index`);
 
-    urlsToIndex.map((row) => this.indexQueue.push(row));
+    // Shuffle URLs to avoid overloading a single host
+    const shuffledUrlsToIndex = shuffle(urlsToIndex);
+
+    shuffledUrlsToIndex.map((row) => this.indexQueue.push(row));
     this.log.info(
       `[URL Indexer] Queued ${this.indexQueue.length()} URLs for indexing`
     );
