@@ -9,14 +9,14 @@
     "publish-packages": "turbo run build lint test && changeset version && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "2.26.2",
     "@turbo/gen": "^1.9.7",
     "eslint": "^8.46.0",
     "eslint-config-custom": "*",
     "prettier": "^2.5.1",
     "react": "^18.2.0",
-    "turbo": "^1.10.12",
     "tsup": "^7.2.0",
-    "@changesets/cli": "2.26.2"
+    "turbo": "^1.10.12"
   },
   "name": "mod",
   "license": "MIT",

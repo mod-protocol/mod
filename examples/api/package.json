@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "db-types": "kysely-codegen --out-file src/app/api/cast-embeds-metadata/types/db.d.ts --dialect postgres",
@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mod-protocol/core": "^0.0.1",
+    "@mod-protocol/core": "^0.0.2",
     "chatgpt": "^5.2.5",
     "kysely": "^0.26.3",
     "next": "^13.5.6",

@@ -1,6 +1,6 @@
 {
   "name": "@mod-protocol/react",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -10,7 +10,7 @@
     "dev": "npm run build -- --watch"
   },
   "dependencies": {
-    "@mod-protocol/core": "^0.0.1"
+    "@mod-protocol/core": "^0.0.2"
   },
   "peerDependencies": {
     "react": "^18.2.0",
