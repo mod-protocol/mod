@@ -6,9 +6,9 @@ import { Cast } from "./cast";
 export default function Page() {
   return (
     <div className="flex flex-col">
-      <div className="py-3 bg-slate-100 mb-4 border-b-2">
+      <div className="py-3 bg-accent mb-4 border-b-2">
         <div className="container flex flex-row gap-8">
-          <h1 className="text-2xl">Mod demo</h1>
+          <h1 className="text-2xl text-accent-foreground">Mod demo</h1>
           <a
             href="https://docs.modprotocol.org"
             target="_blank"
