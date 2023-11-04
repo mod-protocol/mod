@@ -1,7 +1,8 @@
 import fastq, { queueAsPromised } from "fastq";
+import humanizeDuration from "humanize-duration";
+import { sql } from "kysely";
 import { DB } from "./db";
 import { Logger } from "./log";
-import humanizeDuration from "humanize-duration";
 import { shuffle } from "./util/util";
 
 export class IndexerQueue {
@@ -33,22 +34,19 @@ export class IndexerQueue {
 
     // select urls from CastEmbedUrl which don't exist on the UrlMetadata table
     this.log.info(`[URL Indexer] Populating index queue...`);
-    const urlsToIndex = await this.db
-      .selectFrom("castEmbedUrls")
-      .leftJoin("urlMetadata", (join) =>
-        join.on("castEmbedUrls.url", "=", "urlMetadata.url")
-      )
-      .where("urlMetadata.url", "is", null)
-      .select("castEmbedUrls.url")
-      .distinct()
-      .execute();
 
-    this.log.info(`[URL Indexer] Found ${urlsToIndex.length} URLs to index`);
+    const { rows: rowsToIndex } = await sql<{ url: string }>`
+    SELECT DISTINCT cast_embed_urls.url
+    FROM cast_embed_urls
+    LEFT JOIN url_metadata ON cast_embed_urls.url = url_metadata.url
+    WHERE url_metadata.url IS NULL; `.execute(this.db);
+
+    this.log.info(`[URL Indexer] Found ${rowsToIndex.length} URLs to index`);
 
     // Shuffle URLs to avoid overloading a single host
-    const shuffledUrlsToIndex = shuffle(urlsToIndex);
+    const shuffledRowsToIndex = shuffle(rowsToIndex);
+    shuffledRowsToIndex.map((row) => this.indexQueue.push(row));
 
-    shuffledUrlsToIndex.map((row) => this.indexQueue.push(row));
     this.log.info(
       `[URL Indexer] Queued ${this.indexQueue.length()} URLs for indexing`
     );

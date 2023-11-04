@@ -140,6 +140,12 @@ export const up = async (db: DB) => {
     .on("castEmbedUrls")
     .column("castHash")
     .execute();
+
+  await db.schema
+    .createIndex("cast_embed_urls_cast_url_index")
+    .on("castEmbedUrls")
+    .column("url")
+    .execute();
 };
 
 export const down = async (db: DB) => {
