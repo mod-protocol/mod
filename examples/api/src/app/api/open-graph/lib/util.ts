@@ -85,10 +85,10 @@ export async function fetchNFTMetadata({
   );
 
   if (tokenResponse.ok) {
-    const { nft } = await tokenResponse.json();
-    tokenData = nft;
+    const responseJson = await tokenResponse.json();
+    tokenData = responseJson.nft || responseJson; // OS API can return the token data directly or in a "nft" field
     collectionSlug = tokenData.collection;
-    tokenStandard = tokenData.token_standard;
+    tokenStandard = tokenData.contract_standard || tokenData.token_standard; // OS API uses both contract_standard and token_standard
     if (tokenData.owners?.length > 0)
       tokenOwnerAddress = tokenData.owners[0].address;
   } else if (!collectionSlug) {
@@ -167,8 +167,8 @@ export async function fetchNFTMetadata({
     owner: ownerFcUser,
     collection: {
       id: collectionCaip19Uri,
-      chain: collectionData.contracts[0].chain,
-      contractAddress: collectionData.contracts[0].address,
+      chain: chain,
+      contractAddress: contractAddress,
       creatorAddress: collectionData.owner,
       name: collectionData.name,
       description: collectionData.description,
