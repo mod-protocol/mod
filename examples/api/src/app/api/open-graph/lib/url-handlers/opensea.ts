@@ -35,7 +35,10 @@ async function handleOpenSeaUrl(url: string): Promise<UrlMetadata | null> {
 
   // If asset url (e.g. https://opensea.io/assets/base/0xbfdb5d8d1856b8617f1881fd718580256fa8cf35/13354)
   else if (url.match(/https:\/\/opensea\.io\/assets\/.*/)) {
-    const [, , , , chain, contractAddress, tokenId] = url.split("/");
+    const [chain, contractAddress, tokenId] = new URL(url).pathname
+      .toLowerCase()
+      .split("/")
+      .slice(2);
 
     const nftMetadata = await fetchNFTMetadata({
       contractAddress,
