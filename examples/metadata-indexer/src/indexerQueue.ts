@@ -76,14 +76,17 @@ export class IndexerQueue {
 
     this.log.info(`[URL Indexer] Fetching ${queryUrl}...`);
 
-    const response = await fetch(queryUrl);
+    let response: Response;
+    try {
+      response = await fetch(queryUrl);
+    } catch (error) {
+      this.log.error(`[URL Indexer] Failed to fetch ${queryUrl}`);
+      this.log.error(error);
+      return;
+    }
 
     if (!response.ok) {
-      this.log.error(
-        `[URL Indexer] Failed to fetch ${queryUrl}: ${JSON.stringify(
-          await response.text()
-        )}`
-      );
+      this.log.error(`[URL Indexer] Response not ok. [${response.status}]`);
       return;
     }
 
