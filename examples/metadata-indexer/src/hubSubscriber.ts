@@ -75,6 +75,8 @@ export class HubSubscriber extends TypedEmitter<HubEvents> {
           this.log.info("HubSubscriber stream closed");
           this.stopped = true;
           this.stream = null;
+          // Kill the process if the stream closes
+          process.exit(1);
         });
 
         void this.processStream(stream);

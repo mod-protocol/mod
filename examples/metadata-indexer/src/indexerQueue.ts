@@ -5,8 +5,13 @@ import { DB } from "./db";
 import { Logger } from "./log";
 import { shuffle } from "./util/util";
 
+type Job = {
+  url: string;
+  retries?: number;
+};
+
 export class IndexerQueue {
-  private indexQueue: queueAsPromised<{ url: string }>;
+  private indexQueue: queueAsPromised<Job>;
   private startTime: Date | undefined;
   private jobsCompleted = 0;
 
@@ -52,7 +57,7 @@ export class IndexerQueue {
     );
   }
 
-  private async worker({ url }: { url: string }): Promise<void> {
+  private async worker({ url, retries = 0 }: Job): Promise<void> {
     this.log.info(`[URL Indexer] Indexing ${url}...`);
     // Check if URL has already been indexed
     const alreadyIndexed = await this.db
@@ -86,14 +91,25 @@ export class IndexerQueue {
     }
 
     if (!response.ok) {
-      this.log.error(`[URL Indexer] Response not ok. [${response.status}]`);
+      this.log.error(
+        `[URL Indexer] Response not ok [${response.status}] ${queryUrl}`
+      );
+      if (response.status === 400 && retries === 0) {
+        // Retry 400 errors
+        this.log.info(`[URL Indexer] Queueing retry for ${url}...`);
+        this.indexQueue.push({ url, retries: retries + 1 });
+      }
       return;
     }
 
     const result = await response.json(); // TODO: as UrlMetadata
     this.indexMetadata(url, result);
 
-    this.log.info(`[URL Indexer] Indexed ${url}: ${JSON.stringify(result)}`);
+    this.log.info(
+      `[URL Indexer] Indexed ${url} ${
+        retries > 0 ? `${retries} retries` : ""
+      }: ${JSON.stringify(result)}`
+    );
 
     this.logProgress();
   }
