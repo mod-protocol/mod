@@ -1,7 +1,8 @@
 export const dynamic = "force-dynamic";
+// export const runtime = "edge";
 
 import { NextResponse, NextRequest } from "next/server";
-import { NFTMetadata, UrlMetadata } from "@mod-protocol/core";
+// import { NFTMetadata, UrlMetadata } from "@mod-protocol/core";
 import { db } from "./lib/db";
 import { chainById } from "./lib/chain-index";
 
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
       .execute();
 
     const rowsFormatted = metadata.map((row) => {
-      let nftMetadata: NFTMetadata | undefined;
+      let nftMetadata: any | undefined;
 
       if (row.nft_collection_id) {
         const [, , prefixAndChainId, prefixAndContractAddress, tokenId] =
@@ -66,7 +67,7 @@ export async function POST(request: NextRequest) {
         };
       }
 
-      const urlMetadata: UrlMetadata = {
+      const urlMetadata: any = {
         image: row.image_url
           ? {
               url: row.image_url,
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
         url: string;
         normalizedUrl: string;
         index: number;
-        urlMetadata: UrlMetadata;
+        urlMetadata: any;
       }[];
     } = rowsFormatted.reduce((acc, cur) => {
       return {
