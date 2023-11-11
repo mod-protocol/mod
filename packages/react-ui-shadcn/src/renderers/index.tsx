@@ -15,8 +15,10 @@ import { CardRenderer } from "./card";
 import { AvatarRenderer } from "./avatar";
 import { ImageRenderer } from "./image";
 import { ContainerRenderer } from "./container";
+import { SelectRenderer } from "./select";
 
 export const renderers: Renderers = {
+  Select: SelectRenderer,
   Link: LinkRenderer,
   Container: ContainerRenderer,
   Text: TextRenderer,

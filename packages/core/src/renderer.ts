@@ -67,6 +67,15 @@ export type ModElementRef<T> =
       elements?: T[];
     }
   | {
+      type: "select";
+      isClearable: boolean;
+      placeholder?: string;
+      options: Array<{ label: string; value: any }>;
+      events: {
+        onChange: (input: string) => void;
+      };
+    }
+  | {
       type: "input";
       isClearable: boolean;
       placeholder?: string;
@@ -1053,6 +1062,30 @@ export class Renderer {
                 onLoad: () => {
                   if (el.onload) {
                     this.stepIntoOrTriggerAction(el.onload);
+                  }
+                },
+              },
+            },
+            key
+          );
+        }
+        case "select": {
+          return fn(
+            {
+              type: "select",
+              isClearable: el.clearable || false,
+              // perhaps this.replaceInlineContext?
+              placeholder: el.placeholder,
+              // perhaps map this.replaceInlineContext over labels?
+              options: el.options,
+              events: {
+                onChange: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
                   }
                 },
               },
