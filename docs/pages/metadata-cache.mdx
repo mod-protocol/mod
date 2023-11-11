@@ -1,6 +1,8 @@
+import { Tabs } from "nextra/components";
+
 # Metadata Cache
 
-The metadata cache can be used to retrieve Open Graph metadata for embeds in casts, useful for rendering embeds in a cast without having to make a request to each embed URL. 
+The metadata cache can be used to retrieve Open Graph metadata for embeds in casts, useful for rendering embeds in a cast without having to make a request to each embed URL.
 
 It makes use of the [Metadata Indexer](https://github.com/mod-protocol/mod/tree/main/examples/metadata-indexer), an open source and self-hostable service that indexes casts, embeds, and their metadata.
 
@@ -8,12 +10,40 @@ It makes use of the [Metadata Indexer](https://github.com/mod-protocol/mod/tree/
 
 Fetching metadata from the cache is as simple as making a POST request to the following endpoint with a list of cast hashes in the body.
 
-```bash
-curl --request POST \
-  --url https://api.modprotocol.org/api/cast-embeds-metadata \
-  --header 'Content-Type: application/json' \
-  --data '["0x15f0c75fd1735789b52c708f858816d149910c1d","0x1af019b5ad82f159efa3f2c51b4d4653604180d4"]'
-```
+<Tabs items={["Shell", "JS (fetch)", "Node.js v18+ (fetch)"]}>
+  <Tabs.Tab>
+    ```bash
+    curl --request POST \
+    --url https://api.modprotocol.org/api/cast-embeds-metadata \
+    --header 'Content-Type: application/json' \
+    --data '["0x15f0c75fd1735789b52c708f858816d149910c1d","0x1af019b5ad82f159efa3f2c51b4d4653604180d4"]'
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```js
+    const request = await fetch("https://api.modprotocol.org/api/cast-embeds-metadata", {
+      body: JSON.stringify(["0x15f0c75fd1735789b52c708f858816d149910c1d","0x1af019b5ad82f159efa3f2c51b4d4653604180d4"]),
+      method: 'POST',
+      headers: {
+        'Content-Type': "application/json"
+      }
+    });
+    const metadata = await request.json();
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```js
+    const request = await fetch("https://api.modprotocol.org/api/cast-embeds-metadata", {
+      body: JSON.stringify(["0x15f0c75fd1735789b52c708f858816d149910c1d","0x1af019b5ad82f159efa3f2c51b4d4653604180d4"]),
+      method: 'POST',
+      headers: {
+        'Content-Type': "application/json"
+      }
+    });
+    const metadata = await request.json();
+    ```
+  </Tabs.Tab>
+</Tabs>
 
 This will return a JSON object with the following structure:
 
@@ -30,7 +60,7 @@ This will return a JSON object with the following structure:
         "description": "Example Description",
         "image": "https://example.com/image.png"
         // ...
-      },
+      }
     }
   ]
 }
