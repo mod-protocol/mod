@@ -6,6 +6,7 @@ async function handleZoraCollectUrl(url: string): Promise<UrlMetadata | null> {
   const parsedUrl = new URL(url);
   const pathname = parsedUrl.pathname;
   const pathParts = pathname.split("/");
+  const tokenId = pathParts[3];
   const chainAndContractAddress = pathParts[2].toLowerCase();
   let [chain, contractAddress] = chainAndContractAddress.split(":");
 
@@ -22,6 +23,7 @@ async function handleZoraCollectUrl(url: string): Promise<UrlMetadata | null> {
 
   const nftMetadata = await fetchNFTMetadata({
     contractAddress,
+    tokenId,
     chain,
     mintUrl: url,
   });
