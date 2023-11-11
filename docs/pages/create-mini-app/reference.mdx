@@ -74,6 +74,15 @@ export type ModElement =
     }
   | {
       ref?: string;
+      type: "select";
+      options: Array<{ label: string; value: any }>;
+      placeholder?: string;
+      clearable?: boolean;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
+    }
+  | {
+      ref?: string;
       type: "input";
       placeholder?: string;
       clearable?: boolean;

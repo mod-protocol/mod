@@ -188,8 +188,16 @@ export type ModElement =
       onload?: ModEvent;
     }
   | {
+      type: "select";
+      options: Array<{ label: string; value: any }>;
       ref?: string;
+      placeholder?: string;
+      clearable?: boolean;
+      onchange?: ModEvent;
+    }
+  | {
       type: "input";
+      ref?: string;
       placeholder?: string;
       clearable?: boolean;
       onchange?: ModEvent;
@@ -200,16 +208,16 @@ export type ModElement =
       videoSrc: string;
     }
   | {
-      ref?: string;
       type: "tabs";
+      ref?: string;
       values: string[];
       names: string[];
       onload?: ModEvent;
       onchange?: ModEvent;
     }
   | ({
-      ref?: string;
       type: "image-grid-list";
+      ref?: string;
       onload?: ModEvent;
       onpick?: ModEvent;
     } & (

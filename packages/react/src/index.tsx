@@ -175,6 +175,23 @@ const WrappedVerticalLayoutRenderer = <T extends React.ReactNode>(props: {
   return <Component {...rest}>{elements}</Component>;
 };
 
+const WrappedSelectRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Select"];
+  element: Extract<ModElementRef<T>, { type: "select" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, ...rest } = element;
+
+  const onChange = React.useCallback(
+    (input: string) => {
+      events.onChange(input);
+    },
+    [events]
+  );
+
+  return <Component {...rest} onChange={onChange} />;
+};
+
 const WrappedInputRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Input"];
   element: Extract<ModElementRef<T>, { type: "input" }>;
@@ -534,6 +551,14 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
               <WrappedVerticalLayoutRenderer
                 key={key}
                 component={renderers["VerticalLayout"]}
+                element={el}
+              />
+            );
+          case "select":
+            return (
+              <WrappedSelectRenderer
+                key={key}
+                component={renderers["Select"]}
                 element={el}
               />
             );
