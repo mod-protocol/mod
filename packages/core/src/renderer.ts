@@ -399,7 +399,37 @@ export class Renderer {
     promise: Promise<any>;
     ref: ModAction;
   } | null = null;
-  private refs: Record<string, any> = {};
+  private refs: Record<string, any> = {
+    // mintTx: {
+    //   hash: "0x3b0801f89481830aa9e49999356125482a85e41d353a7d09d9257185020a40cd",
+    // },
+    // txDataRequest: {
+    //   response: {
+    //     data: {
+    //       status: "incomplete",
+    //       orderIds: ["mint:0x22be0b70893648875d862b4473057e1e82a812a6"],
+    //       data: {
+    //         from: "0x8d25687829d6b85d9e0020b8c89e3ca24de20a89",
+    //         to: "0x22be0b70893648875d862b4473057e1e82a812a6",
+    //         data: "0x9dbb844d00000000000000000000000004e2516a2c207e84a1839755675dfd8ef6302f0a0000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000a00000000000000000000000008d25687829d6b85d9e0020b8c89e3ca24de20a8900000000000000000000000000000000000000000000000000000000000000200000000000000000000000008d25687829d6b85d9e0020b8c89e3ca24de20a891d4da48b00000000",
+    //         value: "0x02c2ad68fd9000",
+    //       },
+    //       check: {
+    //         endpoint: "/execute/status/v1",
+    //         method: "POST",
+    //         body: {
+    //           kind: "transaction",
+    //         },
+    //       },
+    //       chainId: "7777777",
+    //       explorer: {
+    //         name: "Explorer",
+    //         url: "https://explorer.zora.energy",
+    //       },
+    //     },
+    //   },
+    // },
+  };
   private context: Readonly<ContextType>;
   private manifestContext: Record<string, any> = {};
   private readonly manifest: ModManifest;
