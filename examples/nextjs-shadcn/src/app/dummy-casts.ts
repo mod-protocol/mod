@@ -119,4 +119,50 @@ export const dummyCastData: Array<{
       },
     ],
   },
+  {
+    avatar_url:
+      "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
+    display_name: "David Furlong",
+    username: "df",
+    timestamp: "2023-08-17 09:16:52.293739",
+    text: "I just minted this straight from my feed",
+    embeds: [
+      {
+        url: "https://zora.co/collect/zora:0x787c6366341fbb8a7bfff1064009bce60796338f/61",
+        status: "loaded",
+        metadata: {
+          image: {
+            url: "https://ipfs.io/ipfs/bafkreibyyf6rd5w3l3gxksy2narahb2yj3a2b4nngkqfvwpc3hkaj3daae",
+          },
+          alt: "Hyperbrand: Opepen",
+          description: "a collection expressing Opepen as a hyperbrand",
+          title: "Hyperbrand: Opepen",
+          publisher: "boop",
+          logo: {
+            url: "https://i.imgur.com/Cus7QVM.png",
+          },
+          nft: {
+            mediaUrl:
+              "https://ipfs.io/ipfs/bafkreifass5p37alcfqz5vn5b5lrgpfvxq7lkvpz45ovwa354jogttwr5u",
+            tokenId: "61",
+            collection: {
+              chain: "zora",
+              contractAddress: "0x787c6366341fbb8a7bfff1064009bce60796338f",
+              creatorAddress: "0x5adf1c982bde935ce98a07e115ff8d09254ecb1b",
+              description: "a collection expressing Opepen as a hyperbrand",
+              id: "chain://eip155:7777777/erc1155:0x787c6366341fbb8a7bfff1064009bce60796338f",
+              imageUrl:
+                "https://ipfs.io/ipfs/bafkreibyyf6rd5w3l3gxksy2narahb2yj3a2b4nngkqfvwpc3hkaj3daae",
+              itemCount: 53,
+              mintUrl:
+                "https://mint.fun/zora/0x787c6366341fbb8a7bfff1064009bce60796338f",
+              name: "Hyperbrand: Opepen",
+              openSeaUrl: "https://opensea.io/collection/hyperbrand-opepen",
+              ownerCount: 22,
+            },
+          },
+        },
+      },
+    ],
+  },
 ];

@@ -8,19 +8,20 @@ import {
   canRenderEntrypointWithContext,
 } from "@mod-protocol/core";
 
-import { RenderMiniApp, Renderers } from ".";
+import { ResolverTypes, RenderMiniApp, Renderers } from ".";
 
-type Props = {
-  api: string;
-  embed: Embed;
+type Props = ContentContext & {
   renderers: Renderers;
   /** is used as a fallback when all other contentMiniApps fail to match the content type */
   defaultContentMiniApp: ModManifest;
   contentMiniApps: ModManifest[];
+  resolvers?: ResolverTypes;
 };
 
 export function RenderEmbed(props: Props) {
-  let matchingMiniapps = [{ embed: props.embed, api: props.api }].flatMap<{
+  let matchingMiniapps = [
+    { embed: props.embed, api: props.api, user: props.user },
+  ].flatMap<{
     context: ContentContext;
     manifest: ModManifest;
   }>((context) => {
@@ -64,6 +65,7 @@ export function RenderEmbed(props: Props) {
     ? matchingMiniapps.map((miniapp, index) => (
         <RenderMiniApp
           {...miniapp.context}
+          {...props.resolvers}
           key={index}
           variant="content"
           manifest={miniapp.manifest}

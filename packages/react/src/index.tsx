@@ -13,6 +13,7 @@ import {
   AddEmbedActionResolver,
   ContentContext,
   CreationContext,
+  SendEthTransactionActionResolver,
 } from "@mod-protocol/core";
 import actionResolverHttp from "./action-resolver-http";
 import actionResolverOpenFile from "./action-resolver-open-file";
@@ -20,6 +21,7 @@ import actionResolverOpenLink from "./action-resolver-open-link";
 import actionResolverSetInput from "./action-resolver-set-input";
 import actionResolverAddEmbed from "./action-resolver-add-embed";
 import actionResolverExit from "./action-resolver-exit";
+import actionResolverSendEthTransaction from "./action-resolver-send-eth-transaction";
 export * from "./render-embed";
 
 export type Renderers = {
@@ -315,15 +317,19 @@ const useForceRerender = () => {
   }, []);
 };
 
-type Props = {
-  manifest: ModManifest;
-  renderers: Renderers;
+export type ResolverTypes = {
   onHttpAction?: HttpActionResolver;
   onOpenFileAction?: OpenFileActionResolver;
   onSetInputAction?: SetInputActionResolver;
   onAddEmbedAction?: AddEmbedActionResolver;
   onOpenLinkAction?: OpenLinkActionResolver;
+  onSendEthTransactionAction?: SendEthTransactionActionResolver;
   onExitAction?: ExitActionResolver;
+};
+
+type Props = ResolverTypes & {
+  manifest: ModManifest;
+  renderers: Renderers;
 };
 
 export const CreationMiniApp = (
@@ -337,6 +343,7 @@ export const CreationMiniApp = (
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
+    onSendEthTransactionAction = actionResolverSendEthTransaction,
     onExitAction = actionResolverExit,
   } = props;
 
@@ -360,6 +367,7 @@ export const CreationMiniApp = (
         onSetInputAction,
         onAddEmbedAction,
         onOpenLinkAction,
+        onSendEthTransactionAction,
         onExitAction,
       })
   );
@@ -382,14 +390,15 @@ export const RenderMiniApp = (
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
+    onSendEthTransactionAction = actionResolverSendEthTransaction,
     onExitAction = actionResolverExit,
   } = props;
 
   const forceRerender = useForceRerender();
 
   const context = React.useMemo<ContentContext>(
-    () => ({ embed: props.embed, api: props.api }),
-    [props.embed, props.api]
+    () => ({ embed: props.embed, api: props.api, user: props.user }),
+    [props.embed, props.api, props.user]
   );
 
   const [renderer] = React.useState<Renderer>(
@@ -404,6 +413,7 @@ export const RenderMiniApp = (
         onSetInputAction,
         onAddEmbedAction,
         onOpenLinkAction,
+        onSendEthTransactionAction,
         onExitAction,
       })
   );
@@ -430,6 +440,7 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
+    onSendEthTransactionAction = actionResolverSendEthTransaction,
     onExitAction = actionResolverExit,
   } = props;
 
@@ -450,6 +461,9 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
   React.useEffect(() => {
     renderer.setOpenLinkActionResolver(onOpenLinkAction);
   }, [onOpenLinkAction, renderer]);
+  React.useEffect(() => {
+    renderer.setSendEthTransactionActionResolver(onSendEthTransactionAction);
+  }, [onSendEthTransactionAction, renderer]);
   React.useEffect(() => {
     renderer.setExitActionResolver(onExitAction);
   }, [onExitAction, renderer]);
