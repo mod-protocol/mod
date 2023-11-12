@@ -18,6 +18,7 @@ export type ModManifest = {
   creationEntrypoints?: ModElement[];
   contentEntrypoints?: ModConditionalElement[];
   elements?: Record<string, ModElement[]>;
+  permissions?: string[];
 };
 
 export type ModEvent =
@@ -116,6 +117,19 @@ type OpenLinkAction = BaseAction & {
   url: string;
 };
 
+export type EthTransactionData = {
+  to: string;
+  from: string;
+  data?: string;
+  value?: string;
+};
+
+type SendEthTransactionAction = BaseAction & {
+  type: "SENDETHTRANSACTION";
+  chainId: string;
+  txData: EthTransactionData;
+};
+
 type SetInputAction = BaseAction & {
   type: "SETINPUT";
   value: string;
@@ -131,6 +145,7 @@ export type ModAction =
   | AddEmbedAction
   | SetInputAction
   | OpenLinkAction
+  | SendEthTransactionAction
   | ExitAction;
 
 type ElementOrConditionalFlow = ModElement | ConditionalFlow<ModElement>;

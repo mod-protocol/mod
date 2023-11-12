@@ -11,6 +11,7 @@ import {
   JsonType,
   Op,
   ConditionalFlow,
+  EthTransactionData,
 } from "./manifest";
 import { Embed } from "./embeds";
 
@@ -134,6 +135,11 @@ export type CreationContext = {
 
 // Render Mini-apps only are triggered by a single embed right now
 export type ContentContext = {
+  user?: {
+    wallet?: {
+      address: string;
+    };
+  };
   embed: Embed;
   api: string;
 };
@@ -226,6 +232,22 @@ export interface OpenLinkActionResolver {
   (
     init: OpenLinkActionResolverInit,
     events: OpenLinkActionResolverEvents
+  ): void;
+}
+
+export type SendEthTransactionActionResolverInit = {
+  data: EthTransactionData;
+  chainId: string;
+};
+export type SendEthTransactionActionResolverEvents = {
+  onSuccess: (txHash: string) => void;
+  onError(error: { message: string }): void;
+};
+
+export interface SendEthTransactionActionResolver {
+  (
+    init: SendEthTransactionActionResolverInit,
+    events: SendEthTransactionActionResolverEvents
   ): void;
 }
 
@@ -347,6 +369,7 @@ export type RendererOptions = {
   onSetInputAction: SetInputActionResolver;
   onAddEmbedAction: AddEmbedActionResolver;
   onOpenLinkAction: OpenLinkActionResolver;
+  onSendEthTransactionAction: SendEthTransactionActionResolver;
   onExitAction: ExitActionResolver;
 } & (
   | {
@@ -366,7 +389,37 @@ export class Renderer {
     promise: Promise<any>;
     ref: ModAction;
   } | null = null;
-  private refs: Record<string, any> = {};
+  private refs: Record<string, any> = {
+    // mintTx: {
+    //   hash: "0x3b0801f89481830aa9e49999356125482a85e41d353a7d09d9257185020a40cd",
+    // },
+    // txDataRequest: {
+    //   response: {
+    //     data: {
+    //       status: "incomplete",
+    //       orderIds: ["mint:0x22be0b70893648875d862b4473057e1e82a812a6"],
+    //       data: {
+    //         from: "0x8d25687829d6b85d9e0020b8c89e3ca24de20a89",
+    //         to: "0x22be0b70893648875d862b4473057e1e82a812a6",
+    //         data: "0x9dbb844d00000000000000000000000004e2516a2c207e84a1839755675dfd8ef6302f0a0000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000a00000000000000000000000008d25687829d6b85d9e0020b8c89e3ca24de20a8900000000000000000000000000000000000000000000000000000000000000200000000000000000000000008d25687829d6b85d9e0020b8c89e3ca24de20a891d4da48b00000000",
+    //         value: "0x02c2ad68fd9000",
+    //       },
+    //       check: {
+    //         endpoint: "/execute/status/v1",
+    //         method: "POST",
+    //         body: {
+    //           kind: "transaction",
+    //         },
+    //       },
+    //       chainId: "7777777",
+    //       explorer: {
+    //         name: "Explorer",
+    //         url: "https://explorer.zora.energy",
+    //       },
+    //     },
+    //   },
+    // },
+  };
   private context: Readonly<ContextType>;
   private manifestContext: Record<string, any> = {};
   private readonly manifest: ModManifest;
@@ -376,6 +429,7 @@ export class Renderer {
   private onSetInputAction: SetInputActionResolver;
   private onAddEmbedAction: AddEmbedActionResolver;
   private onOpenLinkAction: OpenLinkActionResolver;
+  private onSendEthTransactionAction: SendEthTransactionActionResolver;
   private onExitAction: ExitActionResolver;
 
   constructor(options: RendererOptions) {
@@ -387,6 +441,7 @@ export class Renderer {
     this.onSetInputAction = options.onSetInputAction;
     this.onAddEmbedAction = options.onAddEmbedAction;
     this.onOpenLinkAction = options.onOpenLinkAction;
+    this.onSendEthTransactionAction = options.onSendEthTransactionAction;
     this.onExitAction = options.onExitAction;
 
     if (options.variant === "creation") {
@@ -425,6 +480,12 @@ export class Renderer {
 
   setAddEmbedActionResolver(resolver: AddEmbedActionResolver) {
     this.onAddEmbedAction = resolver;
+  }
+
+  setSendEthTransactionActionResolver(
+    resolver: SendEthTransactionActionResolver
+  ) {
+    this.onSendEthTransactionAction = resolver;
   }
 
   setExitActionResolver(resolver: ExitActionResolver) {
@@ -745,6 +806,68 @@ export class Renderer {
           promise,
           ref: action,
         };
+        break;
+      }
+      case "SENDETHTRANSACTION": {
+        const promise = new Promise<void>((resolve) => {
+          setTimeout(() => {
+            this.onSendEthTransactionAction(
+              {
+                data: {
+                  from: this.replaceInlineContext(action.txData.from),
+                  to: this.replaceInlineContext(action.txData.to),
+                  value: this.replaceInlineContext(action.txData.value || "0"),
+                  data: this.replaceInlineContext(action.txData.data || ""),
+                },
+                chainId: this.replaceInlineContext(action.chainId),
+              },
+              {
+                onSuccess: (txHash) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, { hash: txHash });
+                  }
+
+                  if (action.onsuccess) {
+                    this.stepIntoOrTriggerAction(action.onsuccess);
+                  }
+                },
+                onError: (error) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, { error });
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.onerror) {
+                    this.stepIntoOrTriggerAction(action.onerror);
+                  }
+
+                  this.onTreeChange();
+                },
+              }
+            );
+          }, 1);
+        });
+
+        this.asyncAction = {
+          promise,
+          ref: action,
+        };
+
         break;
       }
       case "EXIT": {
