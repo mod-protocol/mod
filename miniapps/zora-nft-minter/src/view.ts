@@ -6,10 +6,6 @@ const view: ModElement[] = [
     imageSrc: "{{embed.metadata.image.url}}",
     aspectRatio: 16 / 11,
     topLeftBadge: "@{{embed.metadata.nft.collection.creator.username}}",
-    onclick: {
-      type: "OPENLINK",
-      url: "{{embed.url}}",
-    },
     elements: [
       {
         type: "horizontal-layout",

@@ -1,6 +1,11 @@
 "use client";
 
-import { ContextType, Embed } from "@mod-protocol/core";
+import {
+  ContextType,
+  Embed,
+  SendEthTransactionActionResolverEvents,
+  SendEthTransactionActionResolverInit,
+} from "@mod-protocol/core";
 import {
   contentMiniApps,
   defaultContentMiniApp,
@@ -20,7 +25,14 @@ export function Embeds(props: { embeds: Array<Embed> }) {
 
   const onSendEthTransactionAction = useMemo(
     () =>
-      async ({ data, chainId }, { onConfirmed, onError, onSubmitted }) => {
+      async (
+        { data, chainId }: SendEthTransactionActionResolverInit,
+        {
+          onConfirmed,
+          onError,
+          onSubmitted,
+        }: SendEthTransactionActionResolverEvents
+      ) => {
         try {
           const parsedChainId = parseInt(chainId);
 
