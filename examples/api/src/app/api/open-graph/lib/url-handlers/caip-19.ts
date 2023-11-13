@@ -34,6 +34,7 @@ async function handleCaip19Url(url: string): Promise<UrlMetadata | null> {
   const mintUrl = `https://mint.fun/${chain}/${contractAddress}`;
 
   const nftMetadata = await fetchNFTMetadata({
+    tokenId,
     contractAddress,
     chain,
     mintUrl,
