@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@mod-protocol/core": "^0.0.2",
+    "@reservoir0x/reservoir-sdk": "^1.8.5",
     "@vercel/postgres-kysely": "^0.6.0",
     "chatgpt": "^5.2.5",
     "kysely": "^0.26.3",

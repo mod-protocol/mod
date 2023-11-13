@@ -23,7 +23,6 @@ async function handleOpenSeaUrl(url: string): Promise<UrlMetadata | null> {
     const { contracts } = await collectionResponse.json();
 
     const nftMetadata = await fetchNFTMetadata({
-      openSeaSlug: slug,
       contractAddress: contracts[0].address,
       chain: contracts[0].chain,
     });

@@ -31,6 +31,7 @@
     "OPENSEA_API_KEY",
     "MICROLINK_API_KEY",
     "DATABASE_URL",
-    "NODE_ENV"
+    "NODE_ENV",
+    "RESERVOIR_API_KEY"
   ]
 }

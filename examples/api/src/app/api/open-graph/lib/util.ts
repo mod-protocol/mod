@@ -1,4 +1,5 @@
 import { FarcasterUser, NFTMetadata, UrlMetadata } from "@mod-protocol/core";
+import { reservoirChains } from "@reservoir0x/reservoir-sdk";
 import { chainByName } from "./chains/chain-index";
 
 async function fetchUserData(address: string): Promise<FarcasterUser | null> {
@@ -47,7 +48,6 @@ export function toUrlMetadata(nftMetadata: NFTMetadata): UrlMetadata {
         }
       : undefined,
     nft: nftMetadata,
-    mimeType: null,
   };
 }
 
@@ -56,110 +56,70 @@ export async function fetchNFTMetadata({
   tokenId,
   chain,
   mintUrl,
-  openSeaSlug,
 }: {
   contractAddress: string;
   chain: string;
   tokenId?: string;
   mintUrl?: string;
-  openSeaSlug?: string;
 }): Promise<NFTMetadata | null> {
-  const authOptions = {
-    headers: {
-      "x-api-key": process.env.OPENSEA_API_KEY,
-    },
-  };
-
-  chain = chain.toLowerCase();
-
-  let tokenData: any = {};
-  let collectionSlug: string | undefined = openSeaSlug;
-  let tokenStandard = "erc721";
-  let tokenOwnerAddress: string | undefined;
-
-  const tokenResponse = await fetch(
-    `https://api.opensea.io/api/v2/chain/${chain}/contract/${contractAddress}/nfts/${
-      tokenId || 1
-    }`,
-    authOptions
+  const searchParams = new URLSearchParams(
+    tokenId
+      ? {
+          tokens: `${contractAddress}:${tokenId}`,
+        }
+      : {
+          collection: contractAddress,
+        }
   );
 
-  if (tokenResponse.ok) {
-    const responseJson = await tokenResponse.json();
-    tokenData = responseJson.nft || responseJson; // OS API can return the token data directly or in a "nft" field
-    collectionSlug = tokenData.collection;
-    tokenStandard = tokenData.contract_standard || tokenData.token_standard; // OS API uses both contract_standard and token_standard
-    if (tokenData.owners?.length > 0)
-      tokenOwnerAddress = tokenData.owners[0].address;
-  } else if (!collectionSlug) {
-    const contractResponse = await fetch(
-      `https://api.opensea.io/api/v2/chain/${chain}/contract/${contractAddress}`,
-      authOptions
-    );
-
-    if (!contractResponse.ok) {
-      // console.error(
-      //   `Error fetching contract ${contractAddress}`,
-      //   await contractResponse.text()
-      // );
-      return null;
-    }
-
-    const { collection } = await contractResponse.json();
-    collectionSlug = collection;
-  }
-
-  const collectionResponse = await fetch(
-    `https://api.opensea.io/api/v2/collections/${collectionSlug}`,
-    authOptions
+  const viemChain = chainByName[chain];
+  const reservoirChain = [...Object.values(reservoirChains)].find(
+    (chain) => chain.id === viemChain.id
   );
 
-  if (!collectionResponse.ok) {
-    if (collectionResponse.status === 429) {
-      // console.log(`Rate limited, waiting 1 second...`);
-      // Wait 1 second and try again
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      return fetchNFTMetadata({
-        contractAddress,
-        tokenId,
-        chain,
-        mintUrl,
-        openSeaSlug,
-      });
+  const reservoirResponse = await fetch(
+    `${reservoirChain.baseApiUrl}/tokens/v6?${searchParams.toString()}`,
+    {
+      headers: {
+        "x-api-key": process.env.RESERVOIR_API_KEY,
+      },
     }
+  );
 
+  if (!reservoirResponse.ok) {
     // console.error(
-    //   `Error fetching collection ${collectionSlug}`,
-    //   collectionResponse.status,
-    //   await collectionResponse.text()
+    //   `Error fetching token ${contractAddress}:${tokenId}`,
+    //   await reservoirResponse.text()
     // );
     return null;
   }
 
-  const collectionData = await collectionResponse.json();
+  const reservoirData = await reservoirResponse.json();
+  const tokenData = reservoirData.tokens[0].token;
+  const collectionData = tokenData.collection;
 
   const collectionStatsResponse = await fetch(
-    `https://api.opensea.io/api/v1/collection/${collectionSlug}/stats`,
-    authOptions
+    `https://api.opensea.io/api/v1/collection/${collectionData.slug}/stats`,
+    {
+      headers: {
+        "x-api-key": process.env.OPENSEA_API_KEY,
+      },
+    }
   );
   // Collection stats should exist if the collection exists
   const collectionStats = await collectionStatsResponse.json();
 
-  const creatorFcUser = await fetchUserData(collectionData.owner);
-  const ownerFcUser =
-    tokenId && tokenOwnerAddress
-      ? await fetchUserData(tokenOwnerAddress || "")
-      : null;
+  const creatorFcUser = await fetchUserData(collectionData.creator);
+  const ownerFcUser = await fetchUserData(tokenData.owner);
 
-  // If the tokenId was specified, use the token image, otherwise use the collection image and
-  // fallback to the first token in the collection's image if collection image is not available.
   const image = tokenId
-    ? tokenData.image_url
-    : collectionData.image_url
-    ? collectionData.image_url
-    : tokenData.image_url;
+    ? tokenData.image
+    : collectionData.image
+    ? collectionData.image
+    : tokenData.image;
 
-  const collectionCaip19Uri = `chain://eip155:${chainByName[chain].id}/${tokenStandard}:${contractAddress}`;
+  const collectionCaip19Uri = `chain://eip155:${tokenData.chainId}/${tokenData.kind}:${contractAddress}`;
+  const openseaUrl = `https://opensea.io/collection/${collectionData.slug}`;
 
   const nftMetadata: NFTMetadata = {
     mediaUrl: image,
@@ -168,15 +128,15 @@ export async function fetchNFTMetadata({
     collection: {
       id: collectionCaip19Uri,
       chain: chain,
-      contractAddress: contractAddress,
-      creatorAddress: collectionData.owner,
+      contractAddress: collectionData.id,
+      creatorAddress: collectionData.creator,
       name: collectionData.name,
       description: collectionData.description,
-      itemCount: collectionStats.stats.count,
-      ownerCount: collectionStats.stats.num_owners,
-      imageUrl: image,
-      mintUrl: mintUrl || collectionData.opensea_url,
-      openSeaUrl: collectionData.opensea_url,
+      itemCount: collectionData.tokenCount,
+      ownerCount: collectionStats?.stats?.num_owners || 0,
+      imageUrl: collectionData.image,
+      mintUrl: mintUrl || openseaUrl,
+      openSeaUrl: openseaUrl,
       creator: creatorFcUser,
     },
   };
