@@ -84,9 +84,7 @@ export async function POST(request: NextRequest) {
     });
 
     const metadataByUrl: {
-      [key: string]: {
-        urlMetadata: UrlMetadata;
-      }[];
+      [key: string]: UrlMetadata;
     } = rowsFormatted.reduce((acc, cur) => {
       return {
         ...acc,

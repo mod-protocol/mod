@@ -17,7 +17,7 @@ export const SelectRenderer = (
   const [value, setValue] = React.useState<string>("");
   const selectRef = React.useRef<HTMLSelectElement | null>(null);
   return (
-    <div className="w-full flex flex-row items-center border rounded-md border-input">
+    <div className="w-full flex flex-row items-center rounded-md flex-grow">
       <Select
         onValueChange={(value: string) => {
           onChange(value);

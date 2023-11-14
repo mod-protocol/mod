@@ -32,6 +32,12 @@ export type Renderers = {
   Image: React.ComponentType<{
     imageSrc: string;
   }>;
+  Select: React.ComponentType<{
+    isClearable: boolean;
+    placeholder?: string;
+    options: Array<{ value: any; label: string }>;
+    onChange: (value: string) => void;
+  }>;
   Text: React.ComponentType<{ label: string }>;
   Link: React.ComponentType<{
     label: string;

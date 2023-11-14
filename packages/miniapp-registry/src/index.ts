@@ -9,6 +9,8 @@ import NFTMinter from "@miniapps/nft-minter";
 import UrlRender from "@miniapps/url-render";
 import ImageRender from "@miniapps/image-render";
 import ChatGPTShorten from "@miniapps/chatgpt-shorten";
+import LitProtocol from "@miniapps/lit-protocol";
+import LitProtocolRenderer from "@miniapps/lit-protocol-renderer";
 
 export const allMiniApps = [
   InfuraIPFSUpload,
@@ -19,6 +21,8 @@ export const allMiniApps = [
   ImageRender,
   ChatGPTShorten,
   ChatGPT,
+  LitProtocol,
+  LitProtocolRenderer,
 ];
 
 export const creationMiniApps: ModManifest[] = allMiniApps.filter(
