@@ -240,7 +240,8 @@ export type SendEthTransactionActionResolverInit = {
   chainId: string;
 };
 export type SendEthTransactionActionResolverEvents = {
-  onSuccess: (txHash: string) => void;
+  onSubmitted: (txHash: string) => void;
+  onConfirmed: (txHash: string, isSuccess: boolean) => void;
   onError(error: { message: string }): void;
 };
 
@@ -822,7 +823,23 @@ export class Renderer {
                 chainId: this.replaceInlineContext(action.chainId),
               },
               {
-                onSuccess: (txHash) => {
+                onSubmitted: (txHash) => {
+                  resolve();
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, {
+                      hash: txHash,
+                      status: "submitted",
+                    });
+                  }
+
+                  if (action.onsubmitted) {
+                    this.stepIntoOrTriggerAction(action.onsubmitted);
+                  }
+
+                  this.onTreeChange();
+                },
+                onConfirmed: (txHash, isSuccess) => {
                   resolve();
 
                   if (this.asyncAction?.promise !== promise) {
@@ -832,12 +849,18 @@ export class Renderer {
                   this.asyncAction = null;
 
                   if (action.ref) {
-                    set(this.refs, action.ref, { hash: txHash });
+                    set(this.refs, action.ref, {
+                      hash: txHash,
+                      isSuccess,
+                      status: "confirmed",
+                    });
                   }
 
-                  if (action.onsuccess) {
-                    this.stepIntoOrTriggerAction(action.onsuccess);
+                  if (action.onconfirmed) {
+                    this.stepIntoOrTriggerAction(action.onconfirmed);
                   }
+
+                  this.onTreeChange();
                 },
                 onError: (error) => {
                   resolve();

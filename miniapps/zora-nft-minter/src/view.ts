@@ -6,6 +6,10 @@ const view: ModElement[] = [
     imageSrc: "{{embed.metadata.image.url}}",
     aspectRatio: 16 / 11,
     topLeftBadge: "@{{embed.metadata.nft.collection.creator.username}}",
+    onclick: {
+      type: "OPENLINK",
+      url: "{{embed.url}}",
+    },
     elements: [
       {
         type: "horizontal-layout",
@@ -37,10 +41,45 @@ const view: ModElement[] = [
                 },
               },
               then: {
-                type: "link",
-                label:
-                  "View on {{refs.txDataRequest.response.data.explorer.name}}",
-                url: "{{refs.txDataRequest.response.data.explorer.url}}/tx/{{refs.mintTx.hash}}",
+                if: {
+                  value: "{{refs.mintTx.isSuccess}}",
+                  match: {
+                    equals: "true",
+                  },
+                },
+                then: {
+                  type: "link",
+                  label: "View NFT",
+                  url: "{{refs.txDataRequest.response.data.explorer.url}}/tx/{{refs.mintTx.hash}}",
+                },
+                else: {
+                  if: {
+                    value: "{{refs.mintTx.isSuccess}}",
+                    match: {
+                      equals: "false",
+                    },
+                  },
+                  then: {
+                    type: "link",
+                    label: "Failed",
+                    variant: "link",
+                    url: "{{refs.txDataRequest.response.data.explorer.url}}/tx/{{refs.mintTx.hash}}",
+                  },
+                  else: {
+                    type: "horizontal-layout",
+                    elements: [
+                      {
+                        type: "link",
+                        label: "Confirming...",
+                        variant: "link",
+                        url: "{{refs.txDataRequest.response.data.explorer.url}}/tx/{{refs.mintTx.hash}}",
+                      },
+                      {
+                        type: "circular-progress",
+                      },
+                    ],
+                  },
+                },
               },
               else: {
                 type: "button",

@@ -128,6 +128,8 @@ type SendEthTransactionAction = BaseAction & {
   type: "SENDETHTRANSACTION";
   chainId: string;
   txData: EthTransactionData;
+  onsubmitted?: ModEvent;
+  onconfirmed?: ModEvent;
 };
 
 type SetInputAction = BaseAction & {

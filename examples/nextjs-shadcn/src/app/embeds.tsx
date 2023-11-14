@@ -7,7 +7,11 @@ import {
 } from "@mod-protocol/miniapp-registry";
 import { RenderEmbed } from "@mod-protocol/react";
 import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
-import { sendTransaction, switchNetwork } from "@wagmi/core";
+import {
+  sendTransaction,
+  switchNetwork,
+  waitForTransaction,
+} from "@wagmi/core";
 import { useAccount } from "wagmi";
 
 export function Embeds(props: { embeds: Array<Embed> }) {
@@ -31,16 +35,28 @@ export function Embeds(props: { embeds: Array<Embed> }) {
           resolvers={{
             onSendEthTransactionAction: async (
               { data, chainId },
-              { onSuccess, onError }
+              { onConfirmed, onError, onSubmitted }
             ) => {
               try {
-                await switchNetwork({ chainId: parseInt(chainId) });
+                const parsedChainId = parseInt(chainId);
 
+                // Switch chains if the user is not on the right one
+                await switchNetwork({ chainId: parsedChainId });
+
+                // Send the transaction
                 const { hash } = await sendTransaction({
                   ...data,
-                  chainId: parseInt(chainId),
+                  chainId: parsedChainId,
                 });
-                onSuccess(hash);
+                onSubmitted(hash);
+
+                // Wait for the transaction to be confirmed
+                const { status } = await waitForTransaction({
+                  hash,
+                  chainId: parsedChainId,
+                });
+
+                onConfirmed(hash, status === "success");
               } catch (e) {
                 onError(e);
               }
