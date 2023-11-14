@@ -12,7 +12,7 @@ export const LinkRenderer = (
       href={url}
       onClick={(e) => {
         // prevent an anchor inside a parent with an onclick also triggering the parent onclick
-        e.preventDefault();
+        e.stopPropagation();
         return onClick();
       }}
       target="_blank"

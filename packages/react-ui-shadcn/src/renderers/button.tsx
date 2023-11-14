@@ -11,7 +11,11 @@ export const ButtonRenderer = (
     <Button
       variant={variant}
       disabled={isDisabled || isLoading}
-      onClick={onClick}
+      onClick={(e) => {
+        // prevent an anchor inside a parent with an onclick also triggering the parent onclick
+        e.stopPropagation();
+        return onClick();
+      }}
     >
       {isLoading ? <CircularProgress size="sm" /> : label}
     </Button>
