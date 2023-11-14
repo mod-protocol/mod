@@ -1,9 +1,16 @@
 export const dynamic = "force-dynamic";
 
 import { NextResponse, NextRequest } from "next/server";
-import { NFTMetadata, UrlMetadata } from "@mod-protocol/core";
+import { Embed, NFTMetadata, UrlMetadata } from "@mod-protocol/core";
 import { db } from "./lib/db";
 import { chainById } from "./lib/chain-index";
+
+type EmbedWithCastHash = Embed & {
+  castHash: string;
+  url: string;
+  normalizedUrl: string;
+  index: number;
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,7 +41,7 @@ export async function POST(request: NextRequest) {
       .selectAll()
       .execute();
 
-    const rowsFormatted = metadata.map((row) => {
+    const rowsFormatted: EmbedWithCastHash[] = metadata.map((row) => {
       let nftMetadata: NFTMetadata | undefined;
 
       if (row.nft_collection_id) {
@@ -88,18 +95,13 @@ export async function POST(request: NextRequest) {
         url: row.unnormalized_url,
         normalizedUrl: row.url,
         index: row.index,
-        urlMetadata,
+        metadata: urlMetadata,
+        status: "loaded",
       };
     });
 
     const metadataByCastHash: {
-      [key: string]: {
-        castHash: string;
-        url: string;
-        normalizedUrl: string;
-        index: number;
-        urlMetadata: UrlMetadata;
-      }[];
+      [key: string]: EmbedWithCastHash[];
     } = rowsFormatted.reduce((acc, cur) => {
       return {
         ...acc,
@@ -111,7 +113,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(metadataByCastHash);
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     return NextResponse.json({ message: err.message }, { status: err.status });
   }
 }

@@ -55,7 +55,7 @@ This will return a JSON object with the following structure:
       "url": "...",
       "normalizedUrl": "...",
       "index": 0,
-      "urlMetadata": {
+      "metadata": {
         "title": "Example Title",
         "description": "Example Description",
         "image": "https://example.com/image.png"
@@ -71,8 +71,8 @@ Returned metadata objects conform to the `UrlMetadata` type. This can then be us
 ```typescript
 import { UrlMetadata } from "@mod-protocol/core";
 
-cast.embeds.map(embed => {
-  const metadata: UrlMetadata = metadataResponse[cast.hash][embed.url]
-  return <RenderEmbed metadata={metadata} />
+cast.embeds.map((embed, index) => {
+  const embedData: UrlMetadata = metadataResponse[cast.hash][index]
+  return <RenderEmbed embed={embedData} />
 })
 ```
