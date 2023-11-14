@@ -46,19 +46,35 @@ const action: ModElement[] = [
       },
       {
         type: "button",
+        label: "Sign",
+        onclick: {
+          type: "web3.eth.personal.sign",
+          ref: "authSig",
+          data: {
+            domain: "localhost",
+            address: "https://localhost/login",
+            statement:
+              "You are signing a message to prove you own this account",
+            uri: origin,
+            version: "1",
+            chainId: "1",
+          },
+        },
+      },
+      {
+        type: "button",
         label: "Publish",
         onclick: {
           type: "POST",
           ref: "encryption",
-          url: "{{api}}/lit-protocol/encrypt",
+          url: "{{api}}/lit-protocol",
           body: {
             json: {
               type: "object",
               value: {
                 authSig: {
                   type: "string",
-                  // FIXME
-                  value: "{{user.wallet.signature}}",
+                  value: "{{refs.authSig}}",
                 },
                 messageToEncrypt: {
                   type: "string",

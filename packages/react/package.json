@@ -10,7 +10,7 @@
     "dev": "npm run build -- --watch"
   },
   "dependencies": {
-    "@mod-protocol/core": "^0.0.2"
+    "@mod-protocol/core": "*"
   },
   "peerDependencies": {
     "react": "^18.2.0",

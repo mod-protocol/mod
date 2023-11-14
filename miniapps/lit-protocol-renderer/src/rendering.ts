@@ -14,7 +14,7 @@ const rendering = [
         onload: {
           ref: "decryption-request",
           type: "POST",
-          url: "{{api}}/lit-protocol/decrypt",
+          url: "{{api}}/lit-protocol-renderer",
           onsuccess: "#success",
           onerror: "#error",
           onloading: "#loading",
