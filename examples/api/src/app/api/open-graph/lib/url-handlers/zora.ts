@@ -34,7 +34,7 @@ async function handleZoraCollectUrl(url: string): Promise<UrlMetadata | null> {
 }
 
 const handler: UrlHandler = {
-  matchers: ["https://zora.co/collect/.*"],
+  matchers: [/https:\/\/zora\.co\/collect\/([^\/]+):([^\/]+)\/(\d+)/],
   handler: handleZoraCollectUrl,
 };
 
