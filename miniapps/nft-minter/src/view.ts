@@ -3,7 +3,7 @@ import { ModElement } from "@mod-protocol/core";
 const view: ModElement[] = [
   {
     type: "card",
-    imageSrc: "{{embed.metadata.nft.mediaUrl}}",
+    imageSrc: "{{embed.metadata.image.url}}",
     aspectRatio: 16 / 11,
     topLeftBadge: "@{{embed.metadata.nft.collection.creator.username}}",
     onclick: {
