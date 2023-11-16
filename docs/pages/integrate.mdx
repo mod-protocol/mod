@@ -167,7 +167,57 @@ export function FarcasterEmbeds(props: { embeds: Array<Embed> }) {
   return (
     <div>
       {props.embeds.map((embed, i) => (
-        <RenderEmbed embed={embed} key={i} renderers={renderers} />
+        <RenderEmbed 
+          key={i} 
+          renderers={renderers} 
+          
+          // Required context
+          embed={embed} 
+          api={"https://api.modprotocol.org/api"}
+          
+          // Optional context
+          user={
+            id: "3",                // Current user's FID
+            wallet: {
+              address: "0x1234...", // Current user's wallet address
+            }
+          }
+          
+          // Action resolvers
+          resolvers={{
+            // Handle send transaction e.g. on click of a mint button
+            // This example uses wagmi
+            onSendEthTransactionAction: async (
+              { data, chainId },
+              { onConfirmed, onError, onSubmitted }
+            ) => {
+              try {
+                const parsedChainId = parseInt(chainId);
+
+                // Switch chains if the user is not on the right one
+                await switchNetwork({ chainId: parsedChainId });
+
+                // Send the transaction
+                const { hash } = await sendTransaction({
+                  ...data,
+                  chainId: parsedChainId,
+                });
+                onSubmitted(hash);
+
+                // Wait for the transaction to be confirmed
+                const { status } = await waitForTransaction({
+                  hash,
+                  chainId: parsedChainId,
+                });
+
+                onConfirmed(hash, status === "success");
+              } catch (e) {
+                onError(e);
+              }
+            },
+          }}
+
+         />
       ))}
     </div>
   );
