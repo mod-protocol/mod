@@ -1,0 +1,10 @@
+{
+  "name": "@miniapps/zora-create",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "private": true,
+  "version": "0.0.2",
+  "dependencies": {
+    "@mod-protocol/core": "^0.0.2"
+  }
+}
