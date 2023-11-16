@@ -220,7 +220,9 @@ export type OpenFileActionResolverInit = {
 };
 export type OpenFileActionResolverEvents = {
   onAbort: () => void;
-  onSuccess: (files: { name: string; mimeType: string; blob: any }[]) => void;
+  onSuccess: (
+    files: { name: string; mimeType: string; blob: any; base64: string }[]
+  ) => void;
   onError: (error: { message: string }) => void;
 };
 export interface OpenFileActionResolver {
