@@ -16,16 +16,19 @@
     "@mod-protocol/core": "^0.1.1",
     "@reservoir0x/reservoir-sdk": "^1.8.4",
     "@vercel/postgres-kysely": "^0.6.0",
+    "@zoralabs/premint-sdk": "0.0.2-premint-api.1",
     "chatgpt": "^5.2.5",
     "cheerio": "^1.0.0-rc.12",
     "kysely": "^0.26.3",
     "next": "^13.5.6",
     "open-graph-scraper": "^6.3.2",
+    "nft.storage": "^7.1.1",
     "pg": "^8.11.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "siwe": "^1.1.6",
-    "uint8arrays": "^3.0.0"
+    "uint8arrays": "^3.0.0",
+    "viem": "^1.19.1"
   },
   "devDependencies": {
     "@types/node": "^17.0.12",
