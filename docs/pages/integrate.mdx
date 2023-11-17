@@ -171,17 +171,18 @@ export function FarcasterEmbeds(props: { embeds: Array<Embed> }) {
           key={i} 
           renderers={renderers} 
           
-          // Required context
+          /* Required context */ 
           embed={embed} 
-          api={"https://api.modprotocol.org/api"}
+          // See `examples/api` for self-hosting instructions
+          api={"https://api.modprotocol.org/api"} 
           
-          // Optional context
-          user={
+          /* Optional context */ 
+          user={{
             id: "3",                // Current user's FID
             wallet: {
               address: "0x1234...", // Current user's wallet address
             }
-          }
+          }}
           
           // Action resolvers
           resolvers={{
@@ -216,7 +217,6 @@ export function FarcasterEmbeds(props: { embeds: Array<Embed> }) {
               }
             },
           }}
-
          />
       ))}
     </div>
