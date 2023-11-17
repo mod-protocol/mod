@@ -38,12 +38,19 @@ const ethSearchParams = ethDataSelectors.map(
   }
 );
 
-async function fallbackUrlHandler(url: string): Promise<UrlMetadata> {
+async function fallbackUrlHandler(
+  url: string,
+  { nftMetadata }: { nftMetadata?: boolean } = { nftMetadata: true }
+): Promise<UrlMetadata> {
+  let metadataUrl = `https://pro.microlink.io/?url=${encodeURIComponent(url)}`;
+
+  if (nftMetadata) {
+    metadataUrl += `&${ethSearchParams.join("&")}`;
+  }
+
   const response = await fetch(
     // To self host, use https://github.com/microlinkhq/metascraper
-    `https://pro.microlink.io/?url=${encodeURIComponent(
-      url
-    )}&${ethSearchParams.join("&")}`,
+    `${metadataUrl}`,
     {
       headers: {
         "x-api-key": process.env.MICROLINK_API_KEY,
