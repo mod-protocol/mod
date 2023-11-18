@@ -38,11 +38,18 @@ const ethSearchParams = ethDataSelectors.map(
   }
 );
 
-async function fallbackUrlHandler(
+async function metascraperHandler(
   url: string,
   { nftMetadata }: { nftMetadata?: boolean } = { nftMetadata: true }
 ): Promise<UrlMetadata> {
-  let metadataUrl = `https://pro.microlink.io/?url=${encodeURIComponent(url)}`;
+  const searchParams = new URLSearchParams({
+    url,
+    userAgent: "bot",
+    "headers.accept": "text/html",
+  });
+
+  // Using the hosted metascraper service, but can be self hosted (https://metascraper.js.org)
+  let metadataUrl = `https://pro.microlink.io/?${searchParams.toString()}`;
 
   if (nftMetadata) {
     metadataUrl += `&${ethSearchParams.join("&")}`;
@@ -50,7 +57,7 @@ async function fallbackUrlHandler(
 
   const response = await fetch(
     // To self host, use https://github.com/microlinkhq/metascraper
-    `${metadataUrl}`,
+    metadataUrl,
     {
       headers: {
         "x-api-key": process.env.MICROLINK_API_KEY,
@@ -59,10 +66,16 @@ async function fallbackUrlHandler(
   );
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch ${url} [${response.status}]`);
+    console.error(`[Metascraper] Fetch failed for ${url} [${response.status}]`);
+    return null;
   }
 
-  const { data, headers } = await response.json();
+  const { data, headers, statusCode } = await response.json();
+
+  if (statusCode !== 200) {
+    console.error(`[Metascraper] Failed to scrape ${url} [${statusCode}]`);
+    return null;
+  }
 
   const urlMetadata: UrlMetadata = {
     image: data.image
@@ -133,8 +146,9 @@ async function fallbackUrlHandler(
 }
 
 const handler: UrlHandler = {
+  name: "Metascraper",
   matchers: [".*"],
-  handler: fallbackUrlHandler,
+  handler: metascraperHandler,
 };
 
 export default handler;

@@ -15,6 +15,7 @@
     "chatgpt": "^5.2.5",
     "kysely": "^0.26.3",
     "next": "^13.5.6",
+    "open-graph-scraper": "^6.3.2",
     "pg": "^8.11.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

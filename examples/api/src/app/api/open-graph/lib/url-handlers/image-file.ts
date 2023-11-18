@@ -32,6 +32,7 @@ async function handleImageFileUrl(url: string): Promise<UrlMetadata | null> {
 }
 
 const handler: UrlHandler = {
+  name: "Image File",
   matchers: [/\.((jpg|jpeg|png|gif|bmp|webp|tiff|svg))(?=\?|$)/i],
   handler: handleImageFileUrl,
 };
