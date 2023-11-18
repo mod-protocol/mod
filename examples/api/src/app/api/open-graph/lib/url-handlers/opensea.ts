@@ -53,6 +53,7 @@ async function handleOpenSeaUrl(url: string): Promise<UrlMetadata | null> {
 }
 
 const urlHandler: UrlHandler = {
+  name: "OpenSea",
   matchers: [
     "https://opensea.io/assets/.*",
     "https://opensea.io/collection/.*",

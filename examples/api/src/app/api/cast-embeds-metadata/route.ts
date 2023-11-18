@@ -12,6 +12,68 @@ type EmbedWithCastHash = Embed & {
   index: number;
 };
 
+function formatRow(row): EmbedWithCastHash {
+  let urlMetadata: UrlMetadata | undefined;
+  let nftMetadata: NFTMetadata | undefined;
+
+  if (row.nft_collection_id) {
+    const [, , prefixAndChainId, prefixAndContractAddress, tokenId] =
+      row.nft_collection_id.split("/");
+
+    const [, chainId] = prefixAndChainId.split(":");
+    const [, contractAddress] = prefixAndContractAddress.split(":");
+
+    const chain = chainById[chainId];
+
+    nftMetadata = {
+      mediaUrl: row.nft_media_url || undefined,
+      tokenId: row.nft_token_id || undefined,
+      collection: {
+        chain: chain.network,
+        contractAddress,
+        creatorAddress: row.collection_creator_address,
+        description: row.collection_description,
+        id: row.nft_collection_id,
+        imageUrl: row.collection_image_url,
+        itemCount: row.collection_item_count,
+        mintUrl: row.collection_mint_url,
+        name: row.collection_name,
+        openSeaUrl: row.collection_open_sea_url || undefined,
+        ownerCount: row.collection_owner_count || undefined,
+        creator: undefined, // TODO: Look up farcaster user by FID
+      },
+    };
+  }
+
+  if (row.url) {
+    urlMetadata = {
+      image: row.url_image_url
+        ? {
+            url: row.url_image_url,
+            height: row.url_image_height || undefined,
+            width: row.url_image_width || undefined,
+          }
+        : undefined,
+      alt: row.url_alt || undefined,
+      description: row.url_description || undefined,
+      title: row.url_title || undefined,
+      publisher: row.url_publisher || undefined,
+      logo: row.url_logo_url ? { url: row.url_logo_url } : undefined,
+      mimeType: row.url_mime_type || undefined,
+      nft: nftMetadata,
+    };
+  }
+
+  return {
+    castHash: `0x${row.hash.toString("hex").toLowerCase()}`,
+    url: row.unnormalized_url,
+    normalizedUrl: row.url,
+    index: row.index,
+    metadata: urlMetadata,
+    status: "loaded",
+  };
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Get casts IDs from request body
@@ -23,7 +85,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Fetch metadata for each cast
-    const metadata = await db
+    const rows = await db
       .selectFrom("casts")
       .where("casts.hash", "in", castHashBuffers)
       .fullJoin("cast_embed_urls", "casts.hash", "cast_embed_urls.cast_hash")
@@ -76,77 +138,19 @@ export async function POST(request: NextRequest) {
       ])
       .execute();
 
-    const rowsFormatted: EmbedWithCastHash[] = metadata.map((row) => {
-      let nftMetadata: NFTMetadata | undefined;
-
-      if (row.nft_collection_id) {
-        const [, , prefixAndChainId, prefixAndContractAddress, tokenId] =
-          row.nft_collection_id.split("/");
-
-        const [, chainId] = prefixAndChainId.split(":");
-        const [, contractAddress] = prefixAndContractAddress.split(":");
-
-        const chain = chainById[chainId];
-
-        nftMetadata = {
-          mediaUrl: row.nft_media_url || undefined,
-          tokenId: row.nft_token_id || undefined,
-          collection: {
-            chain: chain.network,
-            contractAddress,
-            creatorAddress: row.collection_creator_address,
-            description: row.collection_description,
-            id: row.nft_collection_id,
-            imageUrl: row.collection_image_url,
-            itemCount: row.collection_item_count,
-            mintUrl: row.collection_mint_url,
-            name: row.collection_name,
-            openSeaUrl: row.collection_open_sea_url || undefined,
-            ownerCount: row.collection_owner_count || undefined,
-            creator: undefined, // TODO: Look up farcaster user by FID
-          },
+    const groupedRows: { [key: string]: typeof rows } = rows.reduce(
+      (acc, cur) => {
+        const castHash = `0x${cur.hash.toString("hex").toLowerCase()}`;
+        return {
+          ...acc,
+          // If url is null, then there are no embeds for this cast
+          [castHash]: cur.url ? [...(acc[castHash] || []), formatRow(cur)] : [],
         };
-      }
+      },
+      {}
+    );
 
-      const urlMetadata: UrlMetadata = {
-        image: row.url_image_url
-          ? {
-              url: row.url_image_url,
-              height: row.url_image_height || undefined,
-              width: row.url_image_width || undefined,
-            }
-          : undefined,
-        alt: row.url_alt || undefined,
-        description: row.url_description || undefined,
-        title: row.url_title || undefined,
-        publisher: row.url_publisher || undefined,
-        logo: row.url_logo_url ? { url: row.url_logo_url } : undefined,
-        mimeType: row.url_mime_type || undefined,
-        nft: nftMetadata,
-      };
-
-      return {
-        castHash: `0x${row.hash.toString("hex").toLowerCase()}`,
-        url: row.unnormalized_url,
-        normalizedUrl: row.url,
-        index: row.index,
-        metadata: urlMetadata,
-        status: "loaded",
-      };
-    });
-
-    const metadataByCastHash: {
-      [key: string]: EmbedWithCastHash[];
-    } = rowsFormatted.reduce((acc, cur) => {
-      return {
-        ...acc,
-        [cur.castHash]: [...(acc[cur.castHash] || []), cur].sort(
-          (a, b) => a.index - b.index
-        ),
-      };
-    }, {});
-
-    return NextResponse.json(metadataByCastHash);
+    return NextResponse.json(groupedRows);
   } catch (err) {
     // console.error(err);
     return NextResponse.json({ message: err.message }, { status: err.status });

@@ -46,6 +46,7 @@ async function handleCaip19Url(url: string): Promise<UrlMetadata | null> {
 }
 
 const urlHandler: UrlHandler = {
+  name: "CAIP-19",
   matchers: ["^chain://"],
   handler: handleCaip19Url,
 };
