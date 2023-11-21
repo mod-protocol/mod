@@ -5,7 +5,9 @@ import { chainById } from "../chains/chain-index";
 import { fetchNFTMetadata } from "../util";
 
 async function localFetchHandler(url: string): Promise<UrlMetadata> {
-  const userAgent = "bot";
+  // A versatile user agent for which most sites will return opengraph data
+  const userAgent =
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/601.2.4 (KHTML, like Gecko) Version/9.0.1 Safari/601.2.4 facebookexternalhit/1.1 Facebot Twitterbot/1.0 ModBot";
   const response = await fetch(url, {
     headers: { "user-agent": userAgent, Accept: "text/html" },
   });
@@ -39,7 +41,10 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
   });
 
   let nftMetadata: NFTMetadata | undefined;
-  if (data["customMetaTags"]["ethNftContractAddress"]) {
+  if (
+    data["customMetaTags"] &&
+    data["customMetaTags"]["ethNftContractAddress"]
+  ) {
     const {
       ethNftContractAddress,
       ethNftChain,
