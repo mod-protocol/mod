@@ -1,4 +1,4 @@
-import { UrlMetadata } from "@mod-protocol/core";
+import { NFTMetadata, UrlMetadata } from "@mod-protocol/core";
 import { UrlHandler } from "../../types/url-handler";
 import { fetchNFTMetadata, toUrlMetadata } from "../util";
 
@@ -35,16 +35,28 @@ async function handleOpenSeaUrl(url: string): Promise<UrlMetadata | null> {
 
   // If asset url (e.g. https://opensea.io/assets/base/0xbfdb5d8d1856b8617f1881fd718580256fa8cf35/13354)
   else if (url.match(/https:\/\/opensea\.io\/assets\/.*/)) {
-    const [chain, contractAddress, tokenId] = new URL(url).pathname
-      .toLowerCase()
-      .split("/")
-      .slice(2);
+    const pathArgs = new URL(url).pathname.toLowerCase().split("/").slice(2);
 
-    const nftMetadata = await fetchNFTMetadata({
-      contractAddress,
-      tokenId,
-      chain,
-    });
+    let nftMetadata: NFTMetadata | null = null;
+
+    if (pathArgs.length === 2) {
+      // If there are only 2 items means there is no chain specified
+      nftMetadata = await fetchNFTMetadata({
+        chain: "ethereum",
+        contractAddress: pathArgs[0],
+        tokenId: pathArgs[1],
+      });
+    } else {
+      nftMetadata = await fetchNFTMetadata({
+        chain: pathArgs[0],
+        contractAddress: pathArgs[1],
+        tokenId: pathArgs[2],
+      });
+    }
+
+    if (!nftMetadata) {
+      return null;
+    }
 
     const urlMetadata: UrlMetadata = toUrlMetadata(nftMetadata);
 
