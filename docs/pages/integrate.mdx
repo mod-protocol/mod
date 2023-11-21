@@ -159,65 +159,85 @@ export default function EditorExample() {
 ```tsx
 "use client";
 
-import { renderers } from "@mod-protocol/react-ui-shadcn";
+import { ContextType, Embed } from "@mod-protocol/core";
+import {
+  contentMiniApps,
+  defaultContentMiniApp,
+} from "@mod-protocol/miniapp-registry";
 import { RenderEmbed } from "@mod-protocol/react";
-import { Embed } from "@mod-protocol/core";
+import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
+import {
+  sendTransaction,
+  switchNetwork,
+  waitForTransaction,
+} from "@wagmi/core";
+import { useMemo } from "react";
+import { useAccount } from "wagmi";
 
-export function FarcasterEmbeds(props: { embeds: Array<Embed> }) {
+export function Embeds(props: { embeds: Array<Embed> }) {
+  const { address } = useAccount();
+
+  // Handle send transaction e.g. on click of a mint button
+  // This example uses wagmi
+  const onSendEthTransactionAction = useMemo(
+    () =>
+      async ({ data, chainId }, { onConfirmed, onError, onSubmitted }) => {
+        try {
+          const parsedChainId = parseInt(chainId);
+
+          // Switch chains if the user is not on the right one
+          await switchNetwork({ chainId: parsedChainId });
+
+          // Send the transaction
+          const { hash } = await sendTransaction({
+            ...data,
+            chainId: parsedChainId,
+          });
+          onSubmitted(hash);
+
+          // Wait for the transaction to be confirmed
+          const { status } = await waitForTransaction({
+            hash,
+            chainId: parsedChainId,
+          });
+
+          onConfirmed(hash, status === "success");
+        } catch (e) {
+          onError(e);
+        }
+      },
+    []
+  );
+
+  const context = useMemo<Omit<ContextType, "embed">>(() => {
+    return {
+      /* Required context */
+      api: process.env.NEXT_PUBLIC_API_URL,
+
+      /* Optional context */
+      user: {
+        id: "3",                // Current user's FID
+        wallet: {
+          address: "0x1234...", // Current user's wallet address
+        }
+      },
+    };
+  }, [address]);
+
   return (
     <div>
       {props.embeds.map((embed, i) => (
-        <RenderEmbed 
-          key={i} 
-          renderers={renderers} 
-          
-          /* Required context */ 
-          embed={embed} 
-          // See `examples/api` for self-hosting instructions
-          api={"https://api.modprotocol.org/api"} 
-          
-          /* Optional context */ 
-          user={{
-            id: "3",                // Current user's FID
-            wallet: {
-              address: "0x1234...", // Current user's wallet address
-            }
-          }}
-          
-          // Action resolvers
+        <RenderEmbed
+          embed={embed}
+          {...context}
+          key={i}
+          renderers={renderers}
+          defaultContentMiniApp={defaultContentMiniApp}
+          contentMiniApps={contentMiniApps}
           resolvers={{
-            // Handle send transaction e.g. on click of a mint button
-            // This example uses wagmi
-            onSendEthTransactionAction: async (
-              { data, chainId },
-              { onConfirmed, onError, onSubmitted }
-            ) => {
-              try {
-                const parsedChainId = parseInt(chainId);
-
-                // Switch chains if the user is not on the right one
-                await switchNetwork({ chainId: parsedChainId });
-
-                // Send the transaction
-                const { hash } = await sendTransaction({
-                  ...data,
-                  chainId: parsedChainId,
-                });
-                onSubmitted(hash);
-
-                // Wait for the transaction to be confirmed
-                const { status } = await waitForTransaction({
-                  hash,
-                  chainId: parsedChainId,
-                });
-
-                onConfirmed(hash, status === "success");
-              } catch (e) {
-                onError(e);
-              }
-            },
+            onSendEthTransactionAction,
           }}
-         />
+        />
       ))}
     </div>
   );
