@@ -24,16 +24,16 @@ const action: ModElement[] = [
             value: "polygon",
             label: "Polygon",
           },
-          {
-            value: "avalanche",
-            label: "Avalanche",
-          },
+          // {
+          //   value: "avalanche",
+          //   label: "Avalanche",
+          // },
         ],
         ref: "chain",
         placeholder: "Chain",
       },
       {
-        // future: CONTRACT AUTOCOMPLETE is better UX
+        // FIXME: CONTRACT AUTOCOMPLETE is better UX
         type: "input",
         clearable: true,
         ref: "contract",
@@ -43,23 +43,6 @@ const action: ModElement[] = [
         type: "input",
         ref: "tokens",
         placeholder: "How many tokens does the wallet need to own?",
-      },
-      {
-        type: "button",
-        label: "Sign",
-        onclick: {
-          type: "web3.eth.personal.sign",
-          ref: "authSig",
-          data: {
-            domain: "localhost",
-            address: "https://localhost/login",
-            statement:
-              "You are signing a message to prove you own this account",
-            uri: origin,
-            version: "1",
-            chainId: "1",
-          },
-        },
       },
       {
         type: "button",
@@ -73,8 +56,21 @@ const action: ModElement[] = [
               type: "object",
               value: {
                 authSig: {
-                  type: "string",
-                  value: "{{refs.authSig}}",
+                  type: "object",
+                  value: {
+                    sig: {
+                      type: "string",
+                      value: "{{refs.authSig.signature}}",
+                    },
+                    signedMessage: {
+                      type: "string",
+                      value: "{{refs.authSig.signedMessage}}",
+                    },
+                    address: {
+                      type: "string",
+                      value: "{{refs.authSig.address}}",
+                    },
+                  },
                 },
                 messageToEncrypt: {
                   type: "string",

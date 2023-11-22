@@ -73,12 +73,19 @@ export async function POST(request: NextRequest) {
   // 4. Decrypt data
   const decryptedString = await decryptData({
     ciphertext: cipherTextRetrieved,
-    authSig,
+    authSig: { ...authSig, derivedVia: "web3.eth.personal.sign" },
     dataToEncryptHash: dataToEncryptHashRetrieved,
     accessControlConditions,
   });
+
+  console.log(decryptedString);
 
   return NextResponse.json({
     decryptedString,
   });
 }
+
+// needed for preflight requests to succeed
+export const OPTIONS = async (request: NextRequest) => {
+  return NextResponse.json({});
+};

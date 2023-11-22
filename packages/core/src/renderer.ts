@@ -12,6 +12,7 @@ import {
   Op,
   ConditionalFlow,
   EthTransactionData,
+  EthPersonalSignData,
 } from "./manifest";
 import { Embed } from "./embeds";
 
@@ -137,6 +138,11 @@ export type ModElementRef<T> =
 
 export type CreationContext = {
   input: any;
+  user?: {
+    wallet?: {
+      address: string;
+    };
+  };
   embeds: Embed[];
   /** The url of the api hosting the mini-app backends. (including /api) **/
   api: string;
@@ -241,6 +247,26 @@ export interface OpenLinkActionResolver {
   (
     init: OpenLinkActionResolverInit,
     events: OpenLinkActionResolverEvents
+  ): void;
+}
+
+export type EthPersonalSignActionResolverInit = {
+  data: EthPersonalSignData;
+};
+
+export type EthPersonalSignActionResolverEvents = {
+  onSuccess: (data: {
+    signature: string;
+    signedMessage: string;
+    address: string;
+  }) => void;
+  onError(error: { message: string }): void;
+};
+
+export interface EthPersonalSignActionResolver {
+  (
+    init: EthPersonalSignActionResolverInit,
+    events: EthPersonalSignActionResolverEvents
   ): void;
 }
 
@@ -379,6 +405,7 @@ export type RendererOptions = {
   onSetInputAction: SetInputActionResolver;
   onAddEmbedAction: AddEmbedActionResolver;
   onOpenLinkAction: OpenLinkActionResolver;
+  onEthPersonalSignAction: EthPersonalSignActionResolver;
   onSendEthTransactionAction: SendEthTransactionActionResolver;
   onExitAction: ExitActionResolver;
 } & (
@@ -440,6 +467,7 @@ export class Renderer {
   private onAddEmbedAction: AddEmbedActionResolver;
   private onOpenLinkAction: OpenLinkActionResolver;
   private onSendEthTransactionAction: SendEthTransactionActionResolver;
+  private onEthPersonalSignAction: EthPersonalSignActionResolver;
   private onExitAction: ExitActionResolver;
 
   constructor(options: RendererOptions) {
@@ -451,6 +479,7 @@ export class Renderer {
     this.onSetInputAction = options.onSetInputAction;
     this.onAddEmbedAction = options.onAddEmbedAction;
     this.onOpenLinkAction = options.onOpenLinkAction;
+    this.onEthPersonalSignAction = options.onEthPersonalSignAction;
     this.onSendEthTransactionAction = options.onSendEthTransactionAction;
     this.onExitAction = options.onExitAction;
 
@@ -490,6 +519,10 @@ export class Renderer {
 
   setAddEmbedActionResolver(resolver: AddEmbedActionResolver) {
     this.onAddEmbedAction = resolver;
+  }
+
+  setEthPersonalSignActionResolver(resolver: EthPersonalSignActionResolver) {
+    this.onEthPersonalSignAction = resolver;
   }
 
   setSendEthTransactionActionResolver(
@@ -816,6 +849,73 @@ export class Renderer {
           promise,
           ref: action,
         };
+        break;
+      }
+      case "web3.eth.personal.sign": {
+        const promise = new Promise<void>((resolve) => {
+          setTimeout(() => {
+            this.onEthPersonalSignAction(
+              {
+                data: {
+                  domain: this.replaceInlineContext(action.data.domain),
+                  address: this.replaceInlineContext(action.data.address),
+                  statement: this.replaceInlineContext(action.data.statement),
+                  uri: this.replaceInlineContext(action.data.uri),
+                  version: this.replaceInlineContext(action.data.version),
+                  chainId: this.replaceInlineContext(action.data.chainId),
+                },
+              },
+              {
+                onSuccess: ({ signature, signedMessage, address }) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, {
+                      signature,
+                      signedMessage,
+                      address,
+                    });
+                  }
+
+                  if (action.onsuccess) {
+                    this.stepIntoOrTriggerAction(action.onsuccess);
+                  }
+                },
+                onError: (error) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, { error });
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.onerror) {
+                    this.stepIntoOrTriggerAction(action.onerror);
+                  }
+
+                  this.onTreeChange();
+                },
+              }
+            );
+          }, 1);
+        });
+
+        this.asyncAction = {
+          promise,
+          ref: action,
+        };
+
         break;
       }
       case "SENDETHTRANSACTION": {
