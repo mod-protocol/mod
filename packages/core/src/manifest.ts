@@ -1,3 +1,5 @@
+import type { JSONSchema7 } from "json-schema";
+
 type ModConditionalElement = {
   element: ModElement[];
   if: ValueOp;
@@ -15,10 +17,12 @@ export type ModManifest = {
   /** A valid url pointing to an image file, it should be a square */
   logo: string;
   version: string;
+  modelDefinitions?: Record<string, JSONSchema7>;
   creationEntrypoints?: ModElement[];
   contentEntrypoints?: ModConditionalElement[];
   elements?: Record<string, ModElement[]>;
-  permissions?: string[];
+  // perhaps data.user.wallet.address is better.
+  permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign">;
 };
 
 export type ModEvent =
@@ -117,11 +121,25 @@ type OpenLinkAction = BaseAction & {
   url: string;
 };
 
+export type EthPersonalSignData = {
+  domain: string;
+  address: string;
+  statement: string;
+  uri: string;
+  version: string;
+  chainId: string;
+};
+
 export type EthTransactionData = {
   to: string;
   from: string;
   data?: string;
   value?: string;
+};
+
+type EthPersonalSignAction = BaseAction & {
+  type: "web3.eth.personal.sign";
+  data: EthPersonalSignData;
 };
 
 type SendEthTransactionAction = BaseAction & {
@@ -147,6 +165,7 @@ export type ModAction =
   | AddEmbedAction
   | SetInputAction
   | OpenLinkAction
+  | EthPersonalSignAction
   | SendEthTransactionAction
   | ExitAction;
 

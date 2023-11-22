@@ -55,6 +55,8 @@ export type UrlMetadata = {
     width?: number;
     height?: number;
   };
+  // A schema.org definition
+  "json-ld"?: object;
   description?: string;
   alt?: string;
   title?: string;

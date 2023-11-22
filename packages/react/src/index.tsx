@@ -13,6 +13,7 @@ import {
   AddEmbedActionResolver,
   ContentContext,
   CreationContext,
+  EthPersonalSignActionResolver,
   SendEthTransactionActionResolver,
 } from "@mod-protocol/core";
 import actionResolverHttp from "./action-resolver-http";
@@ -20,6 +21,7 @@ import actionResolverOpenFile from "./action-resolver-open-file";
 import actionResolverOpenLink from "./action-resolver-open-link";
 import actionResolverSetInput from "./action-resolver-set-input";
 import actionResolverAddEmbed from "./action-resolver-add-embed";
+import actionResolverEthPersonalSign from "./action-resolver-eth-personal-sign";
 import actionResolverExit from "./action-resolver-exit";
 import actionResolverSendEthTransaction from "./action-resolver-send-eth-transaction";
 export * from "./render-embed";
@@ -346,6 +348,7 @@ export type ResolverTypes = {
   onSetInputAction?: SetInputActionResolver;
   onAddEmbedAction?: AddEmbedActionResolver;
   onOpenLinkAction?: OpenLinkActionResolver;
+  onEthPersonalSignAction?: EthPersonalSignActionResolver;
   onSendEthTransactionAction?: SendEthTransactionActionResolver;
   onExitAction?: ExitActionResolver;
 };
@@ -367,6 +370,7 @@ export const CreationMiniApp = (
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
+    onEthPersonalSignAction = actionResolverEthPersonalSign,
     onExitAction = actionResolverExit,
   } = props;
 
@@ -374,8 +378,8 @@ export const CreationMiniApp = (
 
   const input = variant === "creation" ? props.input : "";
   const context = React.useMemo<CreationContext>(
-    () => ({ input, embeds: props.embeds, api: props.api }),
-    [input, props.api, props.embeds]
+    () => ({ input, embeds: props.embeds, api: props.api, user: props.user }),
+    [input, props.api, props.embeds, props.user]
   );
 
   const [renderer] = React.useState<Renderer>(
@@ -390,6 +394,7 @@ export const CreationMiniApp = (
         onSetInputAction,
         onAddEmbedAction,
         onOpenLinkAction,
+        onEthPersonalSignAction,
         onSendEthTransactionAction,
         onExitAction,
       })
@@ -413,6 +418,7 @@ export const RenderMiniApp = (
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
+    onEthPersonalSignAction = actionResolverEthPersonalSign,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
     onExitAction = actionResolverExit,
   } = props;
@@ -436,6 +442,7 @@ export const RenderMiniApp = (
         onSetInputAction,
         onAddEmbedAction,
         onOpenLinkAction,
+        onEthPersonalSignAction,
         onSendEthTransactionAction,
         onExitAction,
       })
@@ -463,6 +470,7 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
+    onEthPersonalSignAction = actionResolverEthPersonalSign,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
     onExitAction = actionResolverExit,
   } = props;
@@ -484,6 +492,9 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
   React.useEffect(() => {
     renderer.setOpenLinkActionResolver(onOpenLinkAction);
   }, [onOpenLinkAction, renderer]);
+  React.useEffect(() => {
+    renderer.setEthPersonalSignActionResolver(onEthPersonalSignAction);
+  }, [onEthPersonalSignAction, renderer]);
   React.useEffect(() => {
     renderer.setSendEthTransactionActionResolver(onSendEthTransactionAction);
   }, [onSendEthTransactionAction, renderer]);
