@@ -1,7 +1,6 @@
 import { ModElement } from "@mod-protocol/core";
 
 const error: ModElement[] = [
-  // FIXME
   {
     type: "text",
     label: "Failed to decrypt",
@@ -12,8 +11,10 @@ const error: ModElement[] = [
     label: "Get a token",
     onclick: {
       type: "OPENLINK",
-      // fixme
-      url: "https://mint.fun/{{embed.metadata.modmodel.chain}}/{{embed.metadata.modmodel.tokenId}}",
+      url: "https://mint.fun/{{embed.metadata.json-ld.WebPage[0].mod:model.payload.accessControlConditions[0].chain}}/{{embed.metadata.json-ld.WebPage[0].mod:model.payload.accessControlConditions[0].contractAddress}}",
+      onsuccess: "#error",
+      onerror: "#error",
+      onloading: "#error",
     },
   },
 ];

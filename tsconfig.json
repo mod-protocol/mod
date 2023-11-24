@@ -9,10 +9,11 @@
     "esModuleInterop": true,
     "preserveSymlinks": true,
     "incremental": true,
+    "declarationMap": true,
     "paths": {
       "@miniapps/*": [
         "./miniapps/*"
-      ]
+      ],
     },
     "jsx": "react-jsx",
     "module": "ESNext",

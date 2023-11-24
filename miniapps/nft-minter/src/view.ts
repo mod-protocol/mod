@@ -6,7 +6,7 @@ const view: ModElement[] = [
     imageSrc: "{{embed.metadata.image.url}}",
     aspectRatio: 16 / 11,
     // fixme: may be undefined, in that case dont render.
-    topLeftBadge: "@{{embed.metadata.nft.collection.creator.username}}",
+    topLeftBadge: "{{embed.metadata.nft.collection.creator.username}}",
     onclick: {
       type: "OPENLINK",
       url: "{{embed.metadata.nft.collection.openSeaUrl}}",

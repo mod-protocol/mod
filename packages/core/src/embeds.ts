@@ -16,7 +16,8 @@ export function isVideoEmbed(embed: Embed) {
 export function hasFullSizedImage(embed: Embed) {
   return (
     embed.metadata?.image?.url &&
-    embed.metadata?.image.width !== embed.metadata.image.height
+    (embed.metadata?.image.width !== embed.metadata.image.height ||
+      (!embed.metadata?.image.width && !embed.metadata.image.height))
   );
 }
 
@@ -56,8 +57,8 @@ export type UrlMetadata = {
     width?: number;
     height?: number;
   };
-  // A schema.org definition
-  "json-ld"?: object;
+  // map of schema.org types to arrays of schema.org definitions
+  "json-ld"?: Record<string, object[]>;
   description?: string;
   alt?: string;
   title?: string;

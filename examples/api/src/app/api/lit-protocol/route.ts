@@ -25,17 +25,18 @@ function getAccessControlConditions({
   chain,
   contract,
   tokens,
+  standardContractType,
 }: {
   chain: string;
   contract: string;
   tokens: string;
+  standardContractType: "ERC721" | "ERC1155";
 }): AccessControlConditions {
   return [
     {
       conditionType: "evmBasic" as const,
       contractAddress: getAddress(contract),
-      // FIXME: 20, 1155 or 721
-      standardContractType: "ERC721",
+      standardContractType: standardContractType,
       chain: chain,
       method: "balanceOf",
       parameters: [":userAddress"],
@@ -51,12 +52,14 @@ async function encryptData({
   dataToEncrypt,
   authSig,
   chain,
+  standardContractType,
   contract,
   tokens,
 }: {
   dataToEncrypt: string;
   authSig: AuthSig;
   chain: string;
+  standardContractType: "ERC721" | "ERC1155";
   contract: string;
   tokens: string;
 }) {
@@ -64,6 +67,7 @@ async function encryptData({
     getAccessControlConditions({
       chain,
       contract,
+      standardContractType,
       tokens,
     });
   const litNodeClient = await getLitNodeClient();
@@ -145,6 +149,7 @@ export async function POST(request: NextRequest) {
       // await signAuthMessage();
       authSig,
       messageToEncrypt,
+      standardContractType = "ERC721",
       chain = "ethereum",
       // https://developer.litprotocol.com/v3/sdk/access-control/evm/basic-examples#must-be-a-member-of-a-dao-molochdaov21-also-supports-daohaus
       // https://lit-share-modal-v3-playground.netlify.app/
@@ -159,6 +164,7 @@ export async function POST(request: NextRequest) {
         chain,
         tokens,
         contract,
+        standardContractType,
         authSig: { ...authSig, derivedVia: "web3.eth.personal.sign" },
         dataToEncrypt: messageToEncrypt,
       });

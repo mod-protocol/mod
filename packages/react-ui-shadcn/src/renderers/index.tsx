@@ -16,10 +16,14 @@ import { AvatarRenderer } from "./avatar";
 import { ImageRenderer } from "./image";
 import { ContainerRenderer } from "./container";
 import { SelectRenderer } from "./select";
+import { TextareaRenderer } from "./textarea";
+import { ComboboxRenderer } from "./combobox";
 
 export const renderers: Renderers = {
   Select: SelectRenderer,
   Link: LinkRenderer,
+  Combobox: ComboboxRenderer,
+  Textarea: TextareaRenderer,
   Container: ContainerRenderer,
   Text: TextRenderer,
   Image: ImageRenderer,

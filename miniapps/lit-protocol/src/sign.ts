@@ -17,14 +17,9 @@ const action: ModElement[] = [
           type: "web3.eth.personal.sign",
           ref: "authSig",
           data: {
-            // FIXME domain
-            domain: "localhost:3000",
-            address: "{{user.wallet.address}}",
-            statement:
-              "You are signing a message to prove you own this account",
-            uri: "http://localhost:3000",
+            statement: "",
             version: "1",
-            // FIXME: test this works with non ethereum chain
+            // FIXME
             chainId: "1",
           },
         },

@@ -3,6 +3,7 @@ import ogs from "open-graph-scraper";
 import { UrlHandler } from "../../types/url-handler";
 import { chainById } from "../chains/chain-index";
 import { fetchNFTMetadata } from "../util";
+import * as cheerio from "cheerio";
 
 async function localFetchHandler(url: string): Promise<UrlMetadata> {
   // A versatile user agent for which most sites will return opengraph data
@@ -13,6 +14,21 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
   });
 
   const html = await response.text();
+
+  const $ = cheerio.load(html, { decodeEntities: false, xmlMode: true }, false);
+  const jsonLdScripts = $('script[type="application/ld+json"]');
+
+  const linkedData = jsonLdScripts
+    .map((i, el) => {
+      try {
+        const html = $(el).text();
+        return JSON.parse(html);
+      } catch (e) {
+        console.error("Error parsing JSON-LD:", e);
+        return null;
+      }
+    })
+    .get();
 
   const { result: data } = await ogs({
     html,
@@ -76,6 +92,16 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
     });
   }
 
+  const groupLinkedDataByType: Record<string, object[]> = linkedData.reduce(
+    (prev, next) => {
+      return {
+        ...prev,
+        [next["@type"]]: [...(prev[next["@type"]] ?? []), next],
+      };
+    },
+    {}
+  );
+
   const urlMetadata: UrlMetadata = {
     title: data.ogTitle,
     description: data.ogDescription || data.twitterDescription,
@@ -85,6 +111,7 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
           url: data.ogLogo,
         }
       : undefined,
+    "json-ld": groupLinkedDataByType,
     publisher: data.ogSiteName,
     mimeType: response["headers"]["content-type"],
     nft: nftMetadata,

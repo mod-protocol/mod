@@ -5,7 +5,7 @@ const view: ModElement[] = [
     type: "card",
     imageSrc: "{{embed.metadata.image.url}}",
     aspectRatio: 16 / 11,
-    topLeftBadge: "@{{embed.metadata.nft.collection.creator.username}}",
+    topLeftBadge: "{{embed.metadata.nft.collection.creator.username}}",
     elements: [
       {
         type: "horizontal-layout",

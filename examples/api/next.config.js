@@ -5,6 +5,7 @@ module.exports = {
     // Fixes https://discord.com/channels/896185694857343026/1174716239508156496
     "@lit-protocol/bls-sdk",
   ],
+
   // experimental: {
   //   esmExternals: "loose",
   // },
