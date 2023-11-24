@@ -13,11 +13,18 @@ const fullimage: ModElement[] = [
     elements: [
       {
         type: "text",
-        label: "{{embed.metadata.title}}",
+        label: "{{embed.metadata.publisher}}",
+        variant: "secondary",
       },
       {
         type: "text",
-        label: "{{embed.metadata.publisher}}",
+        label: "{{embed.metadata.title}}",
+        variant: "regular",
+      },
+      {
+        type: "text",
+        label: "{{embed.metadata.description}}",
+        variant: "secondary",
       },
     ],
   },

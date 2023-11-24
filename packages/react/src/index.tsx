@@ -46,7 +46,10 @@ export type Renderers = {
     onChange: (value: string) => void;
     onPick: (value: any) => void;
   }>;
-  Text: React.ComponentType<{ label: string }>;
+  Text: React.ComponentType<{
+    label: string;
+    variant?: "bold" | "regular" | "secondary";
+  }>;
   Link: React.ComponentType<{
     label: string;
     url: string;

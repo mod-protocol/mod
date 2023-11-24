@@ -181,6 +181,7 @@ export type ModElement =
   | {
       type: "text";
       label: string;
+      variant?: "bold" | "secondary" | "regular";
     }
   | {
       type: "image";

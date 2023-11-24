@@ -21,6 +21,7 @@ export type ModElementRef<T> =
   | {
       type: "text";
       label: string;
+      variant?: "bold" | "secondary" | "regular";
       events?: undefined;
     }
   | {
@@ -1114,6 +1115,7 @@ export class Renderer {
             {
               type: "text",
               label: this.replaceInlineContext(el.label),
+              variant: el.variant,
             },
             key
           );
