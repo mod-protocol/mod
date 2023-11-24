@@ -21,11 +21,6 @@ export const CardRenderer = (
       {imageSrc ? (
         <AspectRatio ratio={aspectRatio || 1}>
           <div className="w-full h-full bg-slate-900 relative">
-            <img
-              className="object-cover w-full h-full"
-              alt="Image"
-              src={imageSrc}
-            />
             {topLeftBadge ? (
               <CardImageBadge position="topLeft">{topLeftBadge}</CardImageBadge>
             ) : null}
@@ -44,6 +39,11 @@ export const CardRenderer = (
                 {bottomRightBadge}
               </CardImageBadge>
             ) : null}
+            <img
+              className="object-cover w-full h-full"
+              alt="Image"
+              src={imageSrc}
+            />
           </div>
         </AspectRatio>
       ) : null}
