@@ -1,4 +1,10 @@
-export type { ModElement, ModAction, ModManifest, ModEvent } from "./manifest";
+export type {
+  ModElement,
+  ModAction,
+  ModManifest,
+  ModEvent,
+  ModConditionalElement,
+} from "./manifest";
 export type {
   ModElementRef,
   HttpActionResolver,

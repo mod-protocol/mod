@@ -16,7 +16,6 @@ import { useEditor, EditorContent } from "@mod-protocol/react-editor";
 import { creationMiniApps } from "@mod-protocol/miniapp-registry";
 import {
   Embed,
-  EthPersonalSignActionResolverEvents,
   EthPersonalSignActionResolverInit,
   ModManifest,
   fetchUrlMetadata,
@@ -110,19 +109,22 @@ export default function EditorExample() {
   const getAuthSig = React.useCallback(
     async (
       {
-        data: { domain, address, statement, uri, version, chainId },
+        data: { statement, version, chainId },
       }: EthPersonalSignActionResolverInit,
       { onSuccess, onError }
     ): Promise<void> => {
+      if (!checksummedAddress) {
+        window.alert("please connect your wallet");
+        return;
+      }
       try {
         const siweMessage = new SiweMessage({
-          domain,
-          address: address,
+          domain: process.env.NEXT_PUBLIC_HOST,
+          address: checksummedAddress,
           statement,
-          uri,
+          uri: process.env.NEXT_PUBLIC_URL,
           version,
           chainId: Number(chainId),
-          // nonce: "22342342342342342334",
         });
         const messageToSign = siweMessage.prepareMessage();
 
@@ -132,15 +134,16 @@ export default function EditorExample() {
           signature,
           // derivedVia: "web3.eth.personal.sign",
           signedMessage: messageToSign,
-          address: address,
+          address: checksummedAddress,
         };
 
         onSuccess(authSig);
       } catch (err) {
+        console.error(err);
         onError(err);
       }
     },
-    [signMessageAsync]
+    [signMessageAsync, checksummedAddress]
   );
 
   const [currentMiniapp, setCurrentMiniapp] =

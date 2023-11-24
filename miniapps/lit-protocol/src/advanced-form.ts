@@ -5,23 +5,49 @@ const action: ModElement[] = [
     type: "vertical-layout",
     elements: [
       {
-        type: "textarea",
+        type: "input",
         ref: "plaintext",
         placeholder: "Content to token gate",
       },
       {
-        type: "combobox",
-        onload: {
-          ref: "getOptions",
-          type: "GET",
-          onsuccess: "#action",
-          onerror: "#error",
-          url: "{{api}}/lit-protocol/search-nfts?wallet_address={{user.wallet.address}}&q={{refs.contract.value}}",
-        },
+        type: "select",
+        options: [
+          {
+            value: "ethereum",
+            label: "Ethereum",
+          },
+          {
+            value: "optimism",
+            label: "Optimism",
+          },
+          {
+            value: "polygon",
+            label: "Polygon",
+          },
+        ],
+        ref: "chain",
+        placeholder: "Chain",
+      },
+      {
+        type: "select",
+        options: [
+          {
+            value: "ERC721",
+            label: "ERC721",
+          },
+          {
+            value: "ERC1155",
+            label: "ERC1155",
+          },
+        ],
+        ref: "standardContractType",
+        placeholder: "Contract type",
+      },
+      {
+        type: "input",
+        isClearable: true,
         ref: "contract",
-        valueRef: "selectedContract",
-        optionsRef: "refs.getOptions.response.data",
-        placeholder: "Pick token to gate by",
+        placeholder: "Contract address",
       },
       {
         type: "button",
@@ -53,7 +79,7 @@ const action: ModElement[] = [
                 },
                 standardContractType: {
                   type: "string",
-                  value: "{{refs.selectedContract.value.contract_type}}",
+                  value: "{{refs.standardContractType.value}}",
                 },
                 messageToEncrypt: {
                   type: "string",
@@ -61,7 +87,7 @@ const action: ModElement[] = [
                 },
                 chain: {
                   type: "string",
-                  value: "{{refs.selectedContract.value.chain}}",
+                  value: "{{refs.chain.value}}",
                 },
                 tokens: {
                   type: "string",
@@ -69,7 +95,7 @@ const action: ModElement[] = [
                 },
                 contract: {
                   type: "string",
-                  value: "{{refs.selectedContract.value.contract_address}}",
+                  value: "{{refs.contract.value}}",
                 },
               },
             },
@@ -84,14 +110,11 @@ const action: ModElement[] = [
             },
           },
           onloading: "#loading",
-          onerror: "#error",
+          onerror: {
+            // fixme: show error
+            type: "EXIT",
+          },
         },
-      },
-      {
-        type: "button",
-        variant: "secondary",
-        label: "Manual entry",
-        onclick: "#advanced-form",
       },
     ],
   },

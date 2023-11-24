@@ -40,6 +40,12 @@ export type Renderers = {
     options: Array<{ value: any; label: string }>;
     onChange: (value: string) => void;
   }>;
+  Combobox: React.ComponentType<{
+    placeholder?: string;
+    options: Array<{ value: any; label: string }> | null;
+    onChange: (value: string) => void;
+    onPick: (value: any) => void;
+  }>;
   Text: React.ComponentType<{ label: string }>;
   Link: React.ComponentType<{
     label: string;
@@ -50,6 +56,7 @@ export type Renderers = {
   Button: React.ComponentType<{
     label: string;
     isLoading: boolean;
+    loadingLabel?: string;
     variant?: "primary" | "secondary" | "destructive";
     isDisabled: boolean;
     onClick: () => void;
@@ -59,6 +66,11 @@ export type Renderers = {
   VerticalLayout: React.ComponentType<{ children: React.ReactNode }>;
   Input: React.ComponentType<{
     isClearable: boolean;
+    placeholder?: string;
+    onChange: (value: string) => void;
+    onSubmit: (value: string) => void;
+  }>;
+  Textarea: React.ComponentType<{
     placeholder?: string;
     onChange: (value: string) => void;
     onSubmit: (value: string) => void;
@@ -203,6 +215,64 @@ const WrappedSelectRenderer = <T extends React.ReactNode>(props: {
 const WrappedInputRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Input"];
   element: Extract<ModElementRef<T>, { type: "input" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, ...rest } = element;
+
+  const onChange = React.useCallback(
+    (input: string) => {
+      events.onChange(input);
+    },
+    [events]
+  );
+  const onSubmit = React.useCallback(
+    (input: string) => {
+      events.onSubmit(input);
+    },
+    [events]
+  );
+
+  return <Component {...rest} onChange={onChange} onSubmit={onSubmit} />;
+};
+
+const WrappedComboboxRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Combobox"];
+  element: Extract<ModElementRef<T>, { type: "combobox" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, options, ...rest } = element;
+
+  const onChange = React.useCallback(
+    (input: string) => {
+      events.onChange(input);
+    },
+    [events]
+  );
+
+  React.useEffect(() => {
+    events.onLoad();
+  }, []);
+
+  const onPick = React.useCallback(
+    (value: string) => {
+      events.onPick(value);
+    },
+    [events]
+  );
+
+  return (
+    <Component
+      {...rest}
+      onChange={onChange}
+      options={options}
+      onPick={onPick}
+    />
+  );
+};
+
+const WrappedTextareaRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Textarea"];
+  element: Extract<ModElementRef<T>, { type: "textarea" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -568,6 +638,22 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
               <WrappedVerticalLayoutRenderer
                 key={key}
                 component={renderers["VerticalLayout"]}
+                element={el}
+              />
+            );
+          case "combobox":
+            return (
+              <WrappedComboboxRenderer
+                key={key}
+                component={renderers["Combobox"]}
+                element={el}
+              />
+            );
+          case "textarea":
+            return (
+              <WrappedTextareaRenderer
+                key={key}
+                component={renderers["Textarea"]}
                 element={el}
               />
             );

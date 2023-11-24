@@ -1,6 +1,6 @@
 import type { JSONSchema7 } from "json-schema";
 
-type ModConditionalElement = {
+export type ModConditionalElement = {
   element: ModElement[];
   if: ValueOp;
 };
@@ -81,9 +81,10 @@ type HTTPBody =
       formData: Record<string, FormDataType>;
     };
 
-type HTTPAction = BaseAction & { url: string } & (
+export type HTTPAction = BaseAction & { url: string } & (
     | {
         type: "GET";
+        searchParams?: Record<string, string>;
       }
     | {
         type: "POST";
@@ -122,10 +123,10 @@ type OpenLinkAction = BaseAction & {
 };
 
 export type EthPersonalSignData = {
-  domain: string;
-  address: string;
+  // domain: string;
+  // address: string;
   statement: string;
-  uri: string;
+  // uri: string;
   version: string;
   chainId: string;
 };
@@ -190,6 +191,7 @@ export type ModElement =
   | {
       type: "button";
       label: string;
+      loadingLabel?: string;
       variant?: "primary" | "secondary" | "destructive";
       onclick: ModEvent;
     }
@@ -207,18 +209,25 @@ export type ModElement =
       onload?: ModEvent;
     }
   | {
+      type: "textarea";
+      ref?: string;
+      placeholder?: string;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
+    }
+  | {
       type: "select";
       options: Array<{ label: string; value: any }>;
       ref?: string;
       placeholder?: string;
-      clearable?: boolean;
+      isClearable?: boolean;
       onchange?: ModEvent;
     }
   | {
       type: "input";
       ref?: string;
       placeholder?: string;
-      clearable?: boolean;
+      isClearable?: boolean;
       onchange?: ModEvent;
       onsubmit?: ModEvent;
     }
@@ -232,6 +241,17 @@ export type ModElement =
       values: string[];
       names: string[];
       onload?: ModEvent;
+      onchange?: ModEvent;
+    }
+  | {
+      type: "combobox";
+      ref?: string;
+      isClearable?: boolean;
+      placeholder?: string;
+      optionsRef?: string;
+      valueRef?: string;
+      onload?: ModEvent;
+      onpick?: ModEvent;
       onchange?: ModEvent;
     }
   | ({

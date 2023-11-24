@@ -1,24 +1,41 @@
-const rendering = [
+import { ModConditionalElement } from "@mod-protocol/core";
+
+const rendering: ModConditionalElement[] = [
   {
     if: {
-      // FIXME:
-      value: "{{embed.metadata.nft.collection.name}}",
+      value: "{{embed.metadata.json-ld.WebPage[0].mod:model.@type}}",
       match: {
-        equals: "1234",
+        equals: "schema.modprotocol.org/lit-protocol/0.0.1/EncryptedData",
       },
     },
     element: [
       {
-        type: "vertical-layout",
-        elements: [],
-        onload: {
-          ref: "decryption-request",
-          type: "POST",
-          url: "{{api}}/lit-protocol-renderer",
-          onsuccess: "#success",
-          onerror: "#error",
-          onloading: "#loading",
-        },
+        type: "card",
+        aspectRatio: 1200 / 630,
+        imageSrc: "{{embed.metadata.image.url}}",
+        elements: [
+          {
+            type: "button",
+            loadingLabel: "Sign the message",
+            label: "Sign to decrypt the secret message",
+            onclick: {
+              onsuccess: "#decrypt",
+              onerror: "#error",
+              type: "web3.eth.personal.sign",
+              ref: "authSig",
+              data: {
+                // domain: "localhost:3000",
+                // address: "{{user.wallet.address}}",
+                statement:
+                  "You are signing a message to prove you own this account",
+                // uri: "http://localhost:3000",
+                version: "1",
+                // FIXME
+                chainId: "1",
+              },
+            },
+          },
+        ],
       },
     ],
   },

@@ -3,6 +3,7 @@ import loading from "./loading";
 import rendering from "./rendering";
 import error from "./error";
 import success from "./success";
+import decrypt from "./decrypt";
 
 const manifest: ModManifest = {
   slug: "lit-protocol-renderer",
@@ -14,6 +15,7 @@ const manifest: ModManifest = {
   contentEntrypoints: rendering,
   elements: {
     "#loading": loading,
+    "#decrypt": decrypt,
     "#error": error,
     "#success": success,
   },

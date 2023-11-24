@@ -13,6 +13,7 @@ import {
   ConditionalFlow,
   EthTransactionData,
   EthPersonalSignData,
+  HTTPAction,
 } from "./manifest";
 import { Embed } from "./embeds";
 
@@ -42,6 +43,7 @@ export type ModElementRef<T> =
   | {
       type: "button";
       label: string;
+      loadingLabel?: string;
       variant?: "primary" | "secondary" | "destructive";
       isLoading: boolean;
       isDisabled: boolean;
@@ -66,6 +68,25 @@ export type ModElementRef<T> =
         onLoad: () => void;
       };
       elements?: T[];
+    }
+  | {
+      type: "combobox";
+      isClearable?: boolean;
+      placeholder?: string;
+      options: Array<{ label: string; value: any }> | null;
+      events: {
+        onLoad: () => void;
+        onChange: (input: string) => void;
+        onPick: (newValue: any) => void;
+      };
+    }
+  | {
+      type: "textarea";
+      placeholder?: string;
+      events: {
+        onChange: (input: string) => void;
+        onSubmit: (input: string) => void;
+      };
     }
   | {
       type: "select";
@@ -550,7 +571,59 @@ export class Renderer {
       refs: this.refs,
     });
   }
+  private constructHttpAction(action: HTTPAction) {
+    const url = new URL(this.replaceInlineContext(action.url));
+    // set query params
+    if (action.type === "GET" && action.searchParams) {
+      Object.entries(action.searchParams).forEach(([key, value]) => {
+        url.searchParams.set(key, this.replaceInlineContext(value));
+      });
+    }
+    let options: HttpActionResolverInit = {
+      url: url.toString(),
+      method: action.type,
+    };
+    if (
+      (action.type === "POST" ||
+        action.type === "PUT" ||
+        action.type === "PATCH") &&
+      action.body
+    ) {
+      if ("json" in action.body) {
+        const interpretJson = (json: JsonType): any => {
+          if (json.type === "object") {
+            return mapValues(json.value, (val) => interpretJson(val));
+          }
+          if (json.type === "array") {
+            return json.value.map((val) => interpretJson(val));
+          }
+          if (json.type === "string") {
+            return this.replaceInlineContext(json.value);
+          }
+          return json.value;
+        };
+        options.body = JSON.stringify(interpretJson(action.body.json));
+        options.headers = {
+          "content-type": "application/json",
+        };
+      } else {
+        const formData = new FormData();
 
+        for (const name in action.body.formData) {
+          const l = action.body.formData[name];
+
+          if (l.type === "string") {
+            formData.append(name, this.replaceInlineContext(l.value));
+          } else {
+            formData.append(name, get({ refs: this.refs }, l.value));
+          }
+        }
+
+        options.body = formData;
+      }
+    }
+    return options;
+  }
   private executeAction(action: ModAction) {
     switch (action.type) {
       case "GET":
@@ -558,49 +631,7 @@ export class Renderer {
       case "PUT":
       case "PATCH":
       case "DELETE": {
-        let options: HttpActionResolverInit = {
-          url: this.replaceInlineContext(action.url),
-          method: action.type,
-        };
-        if (
-          (action.type === "POST" ||
-            action.type === "PUT" ||
-            action.type === "PATCH") &&
-          action.body
-        ) {
-          if ("json" in action.body) {
-            const interpretJson = (json: JsonType): any => {
-              if (json.type === "object") {
-                return mapValues(json.value, (val) => interpretJson(val));
-              }
-              if (json.type === "array") {
-                return json.value.map((val) => interpretJson(val));
-              }
-              if (json.type === "string") {
-                return this.replaceInlineContext(json.value);
-              }
-              return json.value;
-            };
-            options.body = JSON.stringify(interpretJson(action.body.json));
-            options.headers = {
-              "content-type": "application/json",
-            };
-          } else {
-            const formData = new FormData();
-
-            for (const name in action.body.formData) {
-              const l = action.body.formData[name];
-
-              if (l.type === "string") {
-                formData.append(name, this.replaceInlineContext(l.value));
-              } else {
-                formData.append(name, get({ refs: this.refs }, l.value));
-              }
-            }
-
-            options.body = formData;
-          }
-        }
+        const options = this.constructHttpAction(action);
 
         if (action.ref) {
           set(this.refs, action.ref, { progress: 0 });
@@ -615,7 +646,6 @@ export class Renderer {
                 if (this.asyncAction?.promise !== promise) {
                   return;
                 }
-                // CODE GOES HERE
               },
               onSuccess: (response) => {
                 resolve();
@@ -857,10 +887,10 @@ export class Renderer {
             this.onEthPersonalSignAction(
               {
                 data: {
-                  domain: this.replaceInlineContext(action.data.domain),
-                  address: this.replaceInlineContext(action.data.address),
+                  // domain: this.replaceInlineContext(action.data.domain),
+                  // address: this.replaceInlineContext(action.data.address),
                   statement: this.replaceInlineContext(action.data.statement),
-                  uri: this.replaceInlineContext(action.data.uri),
+                  // uri: this.replaceInlineContext(action.data.uri),
                   version: this.replaceInlineContext(action.data.version),
                   chainId: this.replaceInlineContext(action.data.chainId),
                 },
@@ -1140,6 +1170,7 @@ export class Renderer {
           return fn(
             {
               type: "button",
+              loadingLabel: this.replaceInlineContext(el.loadingLabel ?? ""),
               label: this.replaceInlineContext(el.label),
               isLoading: this.asyncAction?.ref === el.onclick,
               isDisabled: Boolean(this.asyncAction),
@@ -1203,7 +1234,7 @@ export class Renderer {
           return fn(
             {
               type: "select",
-              isClearable: el.clearable || false,
+              isClearable: el.isClearable || false,
               // perhaps this.replaceInlineContext?
               placeholder: el.placeholder,
               // perhaps map this.replaceInlineContext over labels?
@@ -1223,11 +1254,79 @@ export class Renderer {
             key
           );
         }
+        case "textarea": {
+          return fn(
+            {
+              type: "textarea",
+              placeholder: el.placeholder,
+              events: {
+                onChange: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
+                  }
+                },
+                onSubmit: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
+                  }
+                },
+              },
+            },
+            key
+          );
+        }
+        case "combobox": {
+          const resolvedResults: Array<{ label: string; value: any }> | null =
+            isString(el.optionsRef)
+              ? get({ refs: this.refs }, el.optionsRef, null)
+              : null;
+          return fn(
+            {
+              type: "combobox",
+              isClearable: el.isClearable,
+              placeholder: this.replaceInlineContext(el.placeholder ?? ""),
+              options: resolvedResults,
+              events: {
+                onLoad: () => {
+                  if (el.onload) {
+                    this.stepIntoOrTriggerAction(el.onload);
+                  }
+                },
+                onChange: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
+                  }
+                },
+                onPick: (value: any) => {
+                  if (el.valueRef) {
+                    set(this.refs, el.valueRef, { value });
+                  }
+                  if (el.onpick) {
+                    this.stepIntoOrTriggerAction(el.onpick);
+                  }
+                },
+              },
+            },
+            key
+          );
+        }
         case "input": {
           return fn(
             {
               type: "input",
-              isClearable: el.clearable || false,
+              isClearable: el.isClearable || false,
               placeholder: el.placeholder,
               events: {
                 onChange: (value: string) => {

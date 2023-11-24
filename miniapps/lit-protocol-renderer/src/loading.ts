@@ -3,7 +3,7 @@ import { ModElement } from "@mod-protocol/core";
 const loading: ModElement[] = [
   {
     type: "text",
-    label: "Encrypting",
+    label: "Decrypting",
   },
   {
     type: "circular-progress",

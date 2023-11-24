@@ -1,6 +1,7 @@
 module.exports = {
   reactStrictMode: true,
   transpilePackages: ["@mod-protocol/react"],
+
   images: {
     domains: [
       "*.i.imgur.com",

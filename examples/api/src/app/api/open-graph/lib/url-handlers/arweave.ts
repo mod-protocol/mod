@@ -21,12 +21,12 @@ async function handleArweave(url: string): Promise<UrlMetadata | null> {
       const body = await arweaveData.json();
 
       // Check for schema
-      if (body["@type"] === "Mod")
+      if (body["@type"] === "WebPage")
         return {
           image: {
             url: body.image,
           },
-          "json-ld": body,
+          "json-ld": { WebPage: [body] },
           description: body.description,
           alt: body.name,
           title: body.name,
@@ -35,7 +35,9 @@ async function handleArweave(url: string): Promise<UrlMetadata | null> {
           },
           mimeType: "application/json",
         };
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+    }
   }
   // TODO: handle html
 
@@ -43,6 +45,7 @@ async function handleArweave(url: string): Promise<UrlMetadata | null> {
 }
 
 const urlHandler: UrlHandler = {
+  name: "Arweave",
   matchers: ["arweave:7wIU:*"],
   handler: handleArweave,
 };

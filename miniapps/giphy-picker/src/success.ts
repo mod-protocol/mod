@@ -22,7 +22,7 @@ const success: ModElement[] = [
         ref: "myInput",
         type: "input",
         placeholder: "Search",
-        clearable: true,
+        isClearable: true,
         onchange: {
           ref: "mySearchQueryRequest",
           type: "GET",

@@ -3,6 +3,7 @@ import action from "./action";
 import loading from "./loading";
 import error from "./error";
 import sign from "./sign";
+import advancedForm from "./advanced-form";
 
 const manifest: ModManifest = {
   slug: "lit-protocol",
@@ -53,6 +54,7 @@ const manifest: ModManifest = {
     "#error": error,
     "#action": action,
     "#loading": loading,
+    "#advanced-form": advancedForm,
   },
 };
 

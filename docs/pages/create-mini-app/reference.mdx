@@ -77,7 +77,25 @@ export type ModElement =
       type: "select";
       options: Array<{ label: string; value: any }>;
       placeholder?: string;
-      clearable?: boolean;
+      isClearable?: boolean;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
+    }
+  | {
+      type: "combobox";
+      ref?: string;
+      isClearable?: boolean;
+      placeholder?: string;
+      optionsRef?: string;
+      valueRef?: string;
+      onload?: ModEvent;
+      onpick?: ModEvent;
+      onchange?: ModEvent;
+    }
+  | {
+      ref?: string;
+      type: "textarea";
+      placeholder?: string;
       onchange?: ModEvent;
       onsubmit?: ModEvent;
     }
@@ -85,7 +103,7 @@ export type ModElement =
       ref?: string;
       type: "input";
       placeholder?: string;
-      clearable?: boolean;
+      isClearable?: boolean;
       onchange?: ModEvent;
       onsubmit?: ModEvent;
     }
