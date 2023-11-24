@@ -41,7 +41,7 @@ function formatRow(row): EmbedWithCastHash {
         name: row.collection_name,
         openSeaUrl: row.collection_open_sea_url || undefined,
         ownerCount: row.collection_owner_count || undefined,
-        creator: undefined, // TODO: Look up farcaster user by FID
+        creator: row.collection_creator_fid || undefined,
       },
     };
   }
@@ -132,6 +132,7 @@ export async function POST(request: NextRequest) {
         "nft_collections.name as collection_name",
         "nft_collections.open_sea_url as collection_open_sea_url",
         "nft_collections.owner_count as collection_owner_count",
+        "nft_collections.creator_fid as collection_creator_fid",
 
         // NFT metadata
         "nft_metadata.token_id as nft_token_id",

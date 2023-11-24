@@ -31,7 +31,7 @@ export type FarcasterUser = {
 };
 
 export type NFTMetadata = {
-  owner?: FarcasterUser;
+  owner?: FarcasterUser | string; // Resolved user or FID
   tokenId?: string;
   mediaUrl?: string;
   mintUrl?: string;
@@ -47,7 +47,7 @@ export type NFTMetadata = {
     description?: string;
     imageUrl?: string;
     openSeaUrl?: string;
-    creator?: FarcasterUser;
+    creator?: FarcasterUser | string; // Resolved user or FID
   };
 };
 

@@ -35,15 +35,21 @@ async function fetchUserData(address: string): Promise<FarcasterUser | null> {
 }
 
 export function toUrlMetadata(nftMetadata: NFTMetadata): UrlMetadata {
+  // If the creator is an object, it's a FarcasterUser
+  const creator =
+    typeof nftMetadata?.collection?.creator === "object"
+      ? (nftMetadata?.collection?.creator as FarcasterUser)
+      : null;
+
   return {
     image: nftMetadata.mediaUrl ? { url: nftMetadata.mediaUrl } : undefined,
     description: nftMetadata.collection.description,
     alt: nftMetadata.collection.name,
     title: nftMetadata.collection.name,
-    publisher: nftMetadata.collection.creator?.displayName,
-    logo: nftMetadata.collection.creator
+    publisher: creator?.displayName,
+    logo: creator
       ? {
-          url: nftMetadata.collection.creator.pfp.url,
+          url: creator.pfp.url,
         }
       : undefined,
     nft: nftMetadata,
