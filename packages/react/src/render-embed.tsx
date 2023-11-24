@@ -1,14 +1,12 @@
 "use client";
 
-import React from "react";
 import {
-  RichEmbedContext,
-  Embed,
   ModManifest,
+  RichEmbedContext,
   canRenderEntrypointWithContext,
 } from "@mod-protocol/core";
 
-import { ResolverTypes, RenderMod, Renderers } from ".";
+import { RenderMod, Renderers, ResolverTypes } from ".";
 
 type Props = RichEmbedContext & {
   renderers: Renderers;
@@ -61,16 +59,15 @@ export function RichEmbed(props: Props) {
     return getMatchingMods([props.defaultRichEmbedMod]);
   });
 
-  return matchingMods.length
-    ? matchingMods.map((mod, index) => (
-        <RenderMod
-          {...mod.context}
-          {...props.resolvers}
-          key={index}
-          variant="richEmbed"
-          manifest={mod.manifest}
-          renderers={props.renderers}
-        />
-      ))
-    : null;
+  const miniapp = matchingMods[0];
+
+  return miniapp ? (
+    <RenderMod
+      {...miniapp.context}
+      {...props.resolvers}
+      variant="richEmbed"
+      manifest={miniapp.manifest}
+      renderers={props.renderers}
+    />
+  ) : null;
 }
