@@ -9,14 +9,12 @@ import NFTMinter from "@miniapps/nft-minter";
 import UrlRender from "@miniapps/url-render";
 import ImageRender from "@miniapps/image-render";
 import ChatGPTShorten from "@miniapps/chatgpt-shorten";
-import ZoraNftMinter from "@miniapps/zora-nft-minter";
 
 export const allMiniApps = [
   InfuraIPFSUpload,
   LivepeerVideo,
   GiphyPicker,
   VideoRender,
-  ZoraNftMinter,
   NFTMinter,
   ImageRender,
   ChatGPTShorten,
