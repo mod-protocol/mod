@@ -28,6 +28,7 @@ function formatRow(row): EmbedWithCastHash {
     nftMetadata = {
       mediaUrl: row.nft_media_url || undefined,
       tokenId: row.nft_token_id || undefined,
+      mintUrl: row.nft_mint_url || row.collection_mint_url || undefined,
       collection: {
         chain: chain.network,
         contractAddress,
@@ -135,6 +136,7 @@ export async function POST(request: NextRequest) {
         // NFT metadata
         "nft_metadata.token_id as nft_token_id",
         "nft_metadata.media_url as nft_media_url",
+        "nft_metadata.mint_url as nft_mint_url",
       ])
       .execute();
 

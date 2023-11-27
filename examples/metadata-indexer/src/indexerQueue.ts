@@ -177,6 +177,7 @@ export class IndexerQueue {
           tokenId: result.nft.tokenId,
           mediaUrl: result.nft.mediaUrl,
           nftCollectionId: nftCollectionId,
+          mintUrl: result.nft.mintUrl,
         })
         .onConflict((oc) => oc.columns(["id"]).doNothing())
         .execute();

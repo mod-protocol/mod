@@ -107,7 +107,7 @@ const view: ModElement[] = [
               label: "Mint",
               onclick: {
                 type: "OPENLINK",
-                url: "{{embed.metadata.nft.collection.mintUrl}}",
+                url: "{{embed.metadata.nft.mintUrl}}",
               },
             },
           },

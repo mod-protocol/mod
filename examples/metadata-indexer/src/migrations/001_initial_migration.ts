@@ -77,7 +77,7 @@ export const up = async (db: DB) => {
     .addColumn("creatorAddress", "text", (col) => col.notNull())
     .addColumn("itemCount", "integer", (col) => col.notNull())
     .addColumn("ownerCount", "integer", (col) => col.notNull())
-    .addColumn("mintUrl", "text", (col) => col.notNull())
+    .addColumn("mintUrl", "text")
     .addColumn("description", "text")
     .addColumn("imageUrl", "text")
     .addColumn("openSeaUrl", "text")
@@ -108,6 +108,7 @@ export const up = async (db: DB) => {
     .addColumn("tokenId", "text", (col) => col.notNull())
     .addColumn("mediaUrl", "text", (col) => col)
     .addColumn("nftCollectionId", "text", (col) => col.notNull())
+    .addColumn("mintUrl", "text")
     .$call((qb) => qb.addPrimaryKeyConstraint("nftMetadata_pkey", ["id"]))
     .execute();
 

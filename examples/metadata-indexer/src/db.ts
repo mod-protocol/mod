@@ -67,7 +67,7 @@ export type NftCollectionRow = {
   itemCount: number;
   ownerCount: number;
   imageUrl: string | null;
-  mintUrl: string;
+  mintUrl: string | null;
   openSeaUrl: string | null;
   creatorFid: Fid | null;
 };
@@ -78,6 +78,7 @@ export type NftMetadataRow = {
   updatedAt: Generated<Date>;
   tokenId: string;
   mediaUrl: string | null;
+  mintUrl: string | null; // Overrides collection mintUrl
   nftCollectionId: string;
 };
 
