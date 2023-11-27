@@ -1235,10 +1235,20 @@ export class Renderer {
             {
               type: "select",
               isClearable: el.isClearable || false,
-              // perhaps this.replaceInlineContext?
-              placeholder: el.placeholder,
-              // perhaps map this.replaceInlineContext over labels?
-              options: el.options,
+              placeholder: el.placeholder
+                ? this.replaceInlineContext(el.placeholder)
+                : el.placeholder,
+              options: el.options.map(
+                (
+                  option
+                ): {
+                  label: string;
+                  value: any;
+                } => ({
+                  value: option.value,
+                  label: this.replaceInlineContext(option.label),
+                })
+              ),
               events: {
                 onChange: (value: string) => {
                   if (el.ref) {

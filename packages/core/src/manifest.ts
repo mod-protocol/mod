@@ -123,10 +123,7 @@ type OpenLinkAction = BaseAction & {
 };
 
 export type EthPersonalSignData = {
-  // domain: string;
-  // address: string;
   statement: string;
-  // uri: string;
   version: string;
   chainId: string;
 };
