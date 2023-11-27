@@ -103,7 +103,15 @@ export class IndexerQueue {
     }
 
     const result = await response.json(); // TODO: as UrlMetadata
-    this.indexMetadata(url, result);
+    try {
+      await this.indexMetadata(url, result);
+    } catch (error) {
+      this.log.error(
+        `[URL Indexer] An error occurred when trying to index ${url}`
+      );
+      this.log.error(error);
+      return;
+    }
 
     this.log.info(
       `[URL Indexer] Indexed ${url} ${
