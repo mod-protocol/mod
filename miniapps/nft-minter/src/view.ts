@@ -24,9 +24,24 @@ const view: ModElement[] = [
             label: "{{embed.metadata.nft.collection.name}}",
           },
           {
-            type: "link",
-            label: "Mint",
-            url: "{{embed.metadata.nft.collection.mintUrl}}",
+            if: {
+              value: "{{embed.metadata.nft.mintUrl}}",
+              match: {
+                NOT: {
+                  equals: "",
+                },
+              },
+            },
+            then: {
+              type: "link",
+              label: "Mint",
+              url: "{{embed.metadata.nft.mintUrl}}",
+            },
+            else: {
+              type: "link",
+              label: "View collection",
+              url: "{{embed.metadata.nft.collection.openSeaUrl}}",
+            },
           },
         ],
       },

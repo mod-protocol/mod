@@ -165,6 +165,8 @@ export async function fetchNFTMetadata({
     mediaUrl: image,
     tokenId: tokenId,
     owner: ownerFcUser,
+    // If this is a link to a token and it is part of an ERC1155 collection, include the mint url in token metadata
+    mintUrl: tokenId && tokenStandard === "erc1155" ? mintUrl : undefined,
     collection: {
       id: collectionCaip19Uri,
       chain: chain,
@@ -175,7 +177,8 @@ export async function fetchNFTMetadata({
       itemCount: collectionStats.stats.count,
       ownerCount: collectionStats.stats.num_owners,
       imageUrl: image,
-      mintUrl: mintUrl || collectionData.opensea_url,
+      // Always include the mint url if it was specified
+      mintUrl: mintUrl,
       openSeaUrl: collectionData.opensea_url,
       creator: creatorFcUser,
     },

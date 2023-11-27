@@ -33,6 +33,7 @@ export type NFTMetadata = {
   owner?: FarcasterUser;
   tokenId?: string;
   mediaUrl?: string;
+  mintUrl?: string;
   collection: {
     id: string;
     name: string;
@@ -41,7 +42,7 @@ export type NFTMetadata = {
     creatorAddress: string;
     itemCount: number;
     ownerCount: number;
-    mintUrl: string;
+    mintUrl?: string;
     description?: string;
     imageUrl?: string;
     openSeaUrl?: string;

@@ -39,7 +39,7 @@ export interface NftCollections {
   id: string;
   image_url: string | null;
   item_count: number;
-  mint_url: string;
+  mint_url: string | null;
   name: string;
   open_sea_url: string | null;
   owner_count: number;
@@ -50,6 +50,7 @@ export interface NftMetadata {
   created_at: Generated<Timestamp>;
   id: string;
   media_url: string | null;
+  mint_url: string | null;
   nft_collection_id: string;
   token_id: string;
   updated_at: Generated<Timestamp>;
