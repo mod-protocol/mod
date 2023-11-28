@@ -17,7 +17,13 @@ export const CardRenderer = (
     onClick,
   } = props;
   return (
-    <div className="flex flex-col -m-2" onClick={onClick}>
+    <div
+      className="flex flex-col"
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+    >
       {imageSrc ? (
         <AspectRatio ratio={aspectRatio || 1}>
           <div className="w-full h-full bg-slate-900 relative">
