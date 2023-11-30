@@ -72,6 +72,7 @@ export function useEditor({
   linkClassName,
   renderMentionsSuggestionConfig,
   maxEmbeds = FARCASTER_MAX_EMBEDS,
+  editorOptions,
 }: useEditorParameter): useEditorReturn {
   const [embeds, setEmbeds] = useState<Embed[]>([]);
 
@@ -184,8 +185,15 @@ export function useEditor({
         placeholderText,
         onAddLink,
         renderMentionsSuggestionConfig,
+        editorOptions,
       }),
-    [linkClassName, placeholderText, renderMentionsSuggestionConfig, onAddLink]
+    [
+      linkClassName,
+      placeholderText,
+      renderMentionsSuggestionConfig,
+      onAddLink,
+      editorOptions,
+    ]
   );
   const editor: Editor | null = useTipTapEditor(editorConfig);
   useEffect(() => {
