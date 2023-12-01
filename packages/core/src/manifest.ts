@@ -16,12 +16,20 @@ export type ModManifest = {
   custodyAddress: string;
   /** A valid url pointing to an image file, it should be a square */
   logo: string;
+  /** should be the same as the package version */
   version: string;
+  /**
+   * A Map of unique ids to json-schema.org definitions. Used to define a new standard data model for use in this or other Mini-apps.
+   * Most useful when used in conjunction with json-ld that utilizes these data models
+   */
   modelDefinitions?: Record<string, JSONSchema7>;
+  /** Interface this Mini-app exposes, if any, for Content Creation */
   creationEntrypoints?: ModElement[];
+  /** Interface this Mini-app exposes, if any, for Content Rendering */
   contentEntrypoints?: ModConditionalElement[];
+  /** A definition map of reusable elements, using their id as the key */
   elements?: Record<string, ModElement[]>;
-  // perhaps data.user.wallet.address is better.
+  /** Permissions requested by the Mini-app */
   permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign">;
 };
 
