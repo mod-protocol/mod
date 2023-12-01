@@ -9,8 +9,6 @@ import NFTMinter from "@miniapps/nft-minter";
 import UrlRender from "@miniapps/url-render";
 import ImageRender from "@miniapps/image-render";
 import ChatGPTShorten from "@miniapps/chatgpt-shorten";
-// import LitProtocol from "@miniapps/lit-protocol";
-// import LitProtocolRenderer from "@miniapps/lit-protocol-renderer";
 import ZoraNftMinter from "@miniapps/zora-nft-minter";
 
 export const allMiniApps = [
@@ -23,8 +21,6 @@ export const allMiniApps = [
   ImageRender,
   ChatGPTShorten,
   ChatGPT,
-  // LitProtocol,
-  // LitProtocolRenderer,
 ];
 
 export const creationMiniApps: ModManifest[] = allMiniApps.filter(
