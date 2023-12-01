@@ -5,6 +5,17 @@ import { chainById } from "../chains/chain-index";
 import { fetchNFTMetadata } from "../util";
 import * as cheerio from "cheerio";
 
+export function groupLinkedDataByType<T = any>(
+  linkedData: T[]
+): Record<string, T[]> {
+  return linkedData.reduce((prev, next): Record<string, T[]> => {
+    return {
+      ...prev,
+      [next["@type"]]: [...(prev[next["@type"]] ?? []), next],
+    };
+  }, {});
+}
+
 async function localFetchHandler(url: string): Promise<UrlMetadata> {
   // A versatile user agent for which most sites will return opengraph data
   const userAgent =
@@ -92,16 +103,6 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
     });
   }
 
-  const groupLinkedDataByType: Record<string, object[]> = linkedData.reduce(
-    (prev, next) => {
-      return {
-        ...prev,
-        [next["@type"]]: [...(prev[next["@type"]] ?? []), next],
-      };
-    },
-    {}
-  );
-
   const urlMetadata: UrlMetadata = {
     title: data.ogTitle,
     description: data.ogDescription || data.twitterDescription,
@@ -111,7 +112,7 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
           url: data.ogLogo,
         }
       : undefined,
-    "json-ld": groupLinkedDataByType,
+    "json-ld": groupLinkedDataByType(linkedData),
     publisher: data.ogSiteName,
     mimeType: response["headers"]["content-type"],
     nft: nftMetadata,
