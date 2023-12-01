@@ -2,6 +2,7 @@ import { UrlMetadata } from "@mod-protocol/core";
 import { UrlHandler } from "../../types/url-handler";
 import { chainById } from "../chains/chain-index";
 import { fetchNFTMetadata } from "../util";
+import { groupLinkedDataByType } from "./local-fetch";
 
 const ethDataSelectors: {
   selectorAll: string;
@@ -20,6 +21,12 @@ const ethDataSelectors: {
     contentAttr: "content",
   },
 ];
+
+const jsonLdDataSelector = new URLSearchParams({
+  "data.json-ld.selectorAll": 'script[type="application/ld+json"]',
+  "data.json-ld.attr": "text",
+  "data.json-ld.type": "string",
+}).toString();
 
 // Open Graph NFT extension
 // https://warpcast.notion.site/NFT-extended-open-graph-5a64ca22d2374f99832bc4b91c386c46
@@ -55,6 +62,8 @@ async function metascraperHandler(
     metadataUrl += `&${ethSearchParams.join("&")}`;
   }
 
+  metadataUrl += `&${jsonLdDataSelector}`;
+
   const response = await fetch(
     // To self host, use https://github.com/microlinkhq/metascraper
     metadataUrl,
@@ -77,6 +86,28 @@ async function metascraperHandler(
     return null;
   }
 
+  let formattedJsonLd = [];
+  if (data["jsonLd"]) {
+    if (Array.isArray(data["jsonLd"])) {
+      formattedJsonLd = data["jsonLd"]
+        .map((el) => {
+          try {
+            return JSON.parse(el);
+          } catch (err) {
+            console.error(err);
+            return false;
+          }
+        })
+        .filter((truthy) => truthy);
+    } else {
+      try {
+        formattedJsonLd = [JSON.parse(data["jsonLd"])];
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+
   const urlMetadata: UrlMetadata = {
     image: data.image
       ? {
@@ -87,6 +118,9 @@ async function metascraperHandler(
       : undefined,
     description: data.description,
     alt: data.alt,
+    "json-ld": formattedJsonLd
+      ? groupLinkedDataByType(formattedJsonLd)
+      : undefined,
     title: data.title,
     publisher: data.publisher,
     logo: data.logo
