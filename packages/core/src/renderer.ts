@@ -12,6 +12,8 @@ import {
   Op,
   ConditionalFlow,
   EthTransactionData,
+  EthPersonalSignData,
+  HTTPAction,
 } from "./manifest";
 import { Embed } from "./embeds";
 
@@ -41,6 +43,7 @@ export type ModElementRef<T> =
   | {
       type: "button";
       label: string;
+      loadingLabel?: string;
       variant?: "primary" | "secondary" | "destructive";
       isLoading: boolean;
       isDisabled: boolean;
@@ -65,6 +68,34 @@ export type ModElementRef<T> =
         onLoad: () => void;
       };
       elements?: T[];
+    }
+  | {
+      type: "combobox";
+      isClearable?: boolean;
+      placeholder?: string;
+      options: Array<{ label: string; value: any }> | null;
+      events: {
+        onLoad: () => void;
+        onChange: (input: string) => void;
+        onPick: (newValue: any) => void;
+      };
+    }
+  | {
+      type: "textarea";
+      placeholder?: string;
+      events: {
+        onChange: (input: string) => void;
+        onSubmit: (input: string) => void;
+      };
+    }
+  | {
+      type: "select";
+      isClearable: boolean;
+      placeholder?: string;
+      options: Array<{ label: string; value: any }>;
+      events: {
+        onChange: (input: string) => void;
+      };
     }
   | {
       type: "input";
@@ -128,6 +159,11 @@ export type ModElementRef<T> =
 
 export type CreationContext = {
   input: any;
+  user?: {
+    wallet?: {
+      address: string;
+    };
+  };
   embeds: Embed[];
   /** The url of the api hosting the mini-app backends. (including /api) **/
   api: string;
@@ -232,6 +268,26 @@ export interface OpenLinkActionResolver {
   (
     init: OpenLinkActionResolverInit,
     events: OpenLinkActionResolverEvents
+  ): void;
+}
+
+export type EthPersonalSignActionResolverInit = {
+  data: EthPersonalSignData;
+};
+
+export type EthPersonalSignActionResolverEvents = {
+  onSuccess: (data: {
+    signature: string;
+    signedMessage: string;
+    address: string;
+  }) => void;
+  onError(error: { message: string }): void;
+};
+
+export interface EthPersonalSignActionResolver {
+  (
+    init: EthPersonalSignActionResolverInit,
+    events: EthPersonalSignActionResolverEvents
   ): void;
 }
 
@@ -370,6 +426,7 @@ export type RendererOptions = {
   onSetInputAction: SetInputActionResolver;
   onAddEmbedAction: AddEmbedActionResolver;
   onOpenLinkAction: OpenLinkActionResolver;
+  onEthPersonalSignAction: EthPersonalSignActionResolver;
   onSendEthTransactionAction: SendEthTransactionActionResolver;
   onExitAction: ExitActionResolver;
 } & (
@@ -390,7 +447,37 @@ export class Renderer {
     promise: Promise<any>;
     ref: ModAction;
   } | null = null;
-  private refs: Record<string, any> = {};
+  private refs: Record<string, any> = {
+    // mintTx: {
+    //   hash: "0x3b0801f89481830aa9e49999356125482a85e41d353a7d09d9257185020a40cd",
+    // },
+    // txDataRequest: {
+    //   response: {
+    //     data: {
+    //       status: "incomplete",
+    //       orderIds: ["mint:0x22be0b70893648875d862b4473057e1e82a812a6"],
+    //       data: {
+    //         from: "0x8d25687829d6b85d9e0020b8c89e3ca24de20a89",
+    //         to: "0x22be0b70893648875d862b4473057e1e82a812a6",
+    //         data: "0x9dbb844d00000000000000000000000004e2516a2c207e84a1839755675dfd8ef6302f0a0000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000a00000000000000000000000008d25687829d6b85d9e0020b8c89e3ca24de20a8900000000000000000000000000000000000000000000000000000000000000200000000000000000000000008d25687829d6b85d9e0020b8c89e3ca24de20a891d4da48b00000000",
+    //         value: "0x02c2ad68fd9000",
+    //       },
+    //       check: {
+    //         endpoint: "/execute/status/v1",
+    //         method: "POST",
+    //         body: {
+    //           kind: "transaction",
+    //         },
+    //       },
+    //       chainId: "7777777",
+    //       explorer: {
+    //         name: "Explorer",
+    //         url: "https://explorer.zora.energy",
+    //       },
+    //     },
+    //   },
+    // },
+  };
   private context: Readonly<ContextType>;
   private manifestContext: Record<string, any> = {};
   private readonly manifest: ModManifest;
@@ -401,6 +488,7 @@ export class Renderer {
   private onAddEmbedAction: AddEmbedActionResolver;
   private onOpenLinkAction: OpenLinkActionResolver;
   private onSendEthTransactionAction: SendEthTransactionActionResolver;
+  private onEthPersonalSignAction: EthPersonalSignActionResolver;
   private onExitAction: ExitActionResolver;
 
   constructor(options: RendererOptions) {
@@ -412,6 +500,7 @@ export class Renderer {
     this.onSetInputAction = options.onSetInputAction;
     this.onAddEmbedAction = options.onAddEmbedAction;
     this.onOpenLinkAction = options.onOpenLinkAction;
+    this.onEthPersonalSignAction = options.onEthPersonalSignAction;
     this.onSendEthTransactionAction = options.onSendEthTransactionAction;
     this.onExitAction = options.onExitAction;
 
@@ -453,6 +542,10 @@ export class Renderer {
     this.onAddEmbedAction = resolver;
   }
 
+  setEthPersonalSignActionResolver(resolver: EthPersonalSignActionResolver) {
+    this.onEthPersonalSignAction = resolver;
+  }
+
   setSendEthTransactionActionResolver(
     resolver: SendEthTransactionActionResolver
   ) {
@@ -478,7 +571,59 @@ export class Renderer {
       refs: this.refs,
     });
   }
+  private constructHttpAction(action: HTTPAction) {
+    const url = new URL(this.replaceInlineContext(action.url));
+    // set query params
+    if (action.type === "GET" && action.searchParams) {
+      Object.entries(action.searchParams).forEach(([key, value]) => {
+        url.searchParams.set(key, this.replaceInlineContext(value));
+      });
+    }
+    let options: HttpActionResolverInit = {
+      url: url.toString(),
+      method: action.type,
+    };
+    if (
+      (action.type === "POST" ||
+        action.type === "PUT" ||
+        action.type === "PATCH") &&
+      action.body
+    ) {
+      if ("json" in action.body) {
+        const interpretJson = (json: JsonType): any => {
+          if (json.type === "object") {
+            return mapValues(json.value, (val) => interpretJson(val));
+          }
+          if (json.type === "array") {
+            return json.value.map((val) => interpretJson(val));
+          }
+          if (json.type === "string") {
+            return this.replaceInlineContext(json.value);
+          }
+          return json.value;
+        };
+        options.body = JSON.stringify(interpretJson(action.body.json));
+        options.headers = {
+          "content-type": "application/json",
+        };
+      } else {
+        const formData = new FormData();
 
+        for (const name in action.body.formData) {
+          const l = action.body.formData[name];
+
+          if (l.type === "string") {
+            formData.append(name, this.replaceInlineContext(l.value));
+          } else {
+            formData.append(name, get({ refs: this.refs }, l.value));
+          }
+        }
+
+        options.body = formData;
+      }
+    }
+    return options;
+  }
   private executeAction(action: ModAction) {
     switch (action.type) {
       case "GET":
@@ -486,49 +631,7 @@ export class Renderer {
       case "PUT":
       case "PATCH":
       case "DELETE": {
-        let options: HttpActionResolverInit = {
-          url: this.replaceInlineContext(action.url),
-          method: action.type,
-        };
-        if (
-          (action.type === "POST" ||
-            action.type === "PUT" ||
-            action.type === "PATCH") &&
-          action.body
-        ) {
-          if ("json" in action.body) {
-            const interpretJson = (json: JsonType): any => {
-              if (json.type === "object") {
-                return mapValues(json.value, (val) => interpretJson(val));
-              }
-              if (json.type === "array") {
-                return json.value.map((val) => interpretJson(val));
-              }
-              if (json.type === "string") {
-                return this.replaceInlineContext(json.value);
-              }
-              return json.value;
-            };
-            options.body = JSON.stringify(interpretJson(action.body.json));
-            options.headers = {
-              "content-type": "application/json",
-            };
-          } else {
-            const formData = new FormData();
-
-            for (const name in action.body.formData) {
-              const l = action.body.formData[name];
-
-              if (l.type === "string") {
-                formData.append(name, this.replaceInlineContext(l.value));
-              } else {
-                formData.append(name, get({ refs: this.refs }, l.value));
-              }
-            }
-
-            options.body = formData;
-          }
-        }
+        const options = this.constructHttpAction(action);
 
         if (action.ref) {
           set(this.refs, action.ref, { progress: 0 });
@@ -543,7 +646,6 @@ export class Renderer {
                 if (this.asyncAction?.promise !== promise) {
                   return;
                 }
-                // CODE GOES HERE
               },
               onSuccess: (response) => {
                 resolve();
@@ -779,6 +881,73 @@ export class Renderer {
         };
         break;
       }
+      case "web3.eth.personal.sign": {
+        const promise = new Promise<void>((resolve) => {
+          setTimeout(() => {
+            this.onEthPersonalSignAction(
+              {
+                data: {
+                  // domain: this.replaceInlineContext(action.data.domain),
+                  // address: this.replaceInlineContext(action.data.address),
+                  statement: this.replaceInlineContext(action.data.statement),
+                  // uri: this.replaceInlineContext(action.data.uri),
+                  version: this.replaceInlineContext(action.data.version),
+                  chainId: this.replaceInlineContext(action.data.chainId),
+                },
+              },
+              {
+                onSuccess: ({ signature, signedMessage, address }) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, {
+                      signature,
+                      signedMessage,
+                      address,
+                    });
+                  }
+
+                  if (action.onsuccess) {
+                    this.stepIntoOrTriggerAction(action.onsuccess);
+                  }
+                },
+                onError: (error) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, { error });
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.onerror) {
+                    this.stepIntoOrTriggerAction(action.onerror);
+                  }
+
+                  this.onTreeChange();
+                },
+              }
+            );
+          }, 1);
+        });
+
+        this.asyncAction = {
+          promise,
+          ref: action,
+        };
+
+        break;
+      }
       case "SENDETHTRANSACTION": {
         const promise = new Promise<void>((resolve) => {
           setTimeout(() => {
@@ -1001,6 +1170,7 @@ export class Renderer {
           return fn(
             {
               type: "button",
+              loadingLabel: this.replaceInlineContext(el.loadingLabel ?? ""),
               label: this.replaceInlineContext(el.label),
               isLoading: this.asyncAction?.ref === el.onclick,
               isDisabled: Boolean(this.asyncAction),
@@ -1060,11 +1230,113 @@ export class Renderer {
             key
           );
         }
+        case "select": {
+          return fn(
+            {
+              type: "select",
+              isClearable: el.isClearable || false,
+              placeholder: el.placeholder
+                ? this.replaceInlineContext(el.placeholder)
+                : el.placeholder,
+              options: el.options.map(
+                (
+                  option
+                ): {
+                  label: string;
+                  value: any;
+                } => ({
+                  value: option.value,
+                  label: this.replaceInlineContext(option.label),
+                })
+              ),
+              events: {
+                onChange: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
+                  }
+                },
+              },
+            },
+            key
+          );
+        }
+        case "textarea": {
+          return fn(
+            {
+              type: "textarea",
+              placeholder: el.placeholder,
+              events: {
+                onChange: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
+                  }
+                },
+                onSubmit: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
+                  }
+                },
+              },
+            },
+            key
+          );
+        }
+        case "combobox": {
+          const resolvedResults: Array<{ label: string; value: any }> | null =
+            isString(el.optionsRef)
+              ? get({ refs: this.refs }, el.optionsRef, null)
+              : null;
+          return fn(
+            {
+              type: "combobox",
+              isClearable: el.isClearable,
+              placeholder: this.replaceInlineContext(el.placeholder ?? ""),
+              options: resolvedResults,
+              events: {
+                onLoad: () => {
+                  if (el.onload) {
+                    this.stepIntoOrTriggerAction(el.onload);
+                  }
+                },
+                onChange: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
+                  }
+                },
+                onPick: (value: any) => {
+                  if (el.valueRef) {
+                    set(this.refs, el.valueRef, { value });
+                  }
+                  if (el.onpick) {
+                    this.stepIntoOrTriggerAction(el.onpick);
+                  }
+                },
+              },
+            },
+            key
+          );
+        }
         case "input": {
           return fn(
             {
               type: "input",
-              isClearable: el.clearable || false,
+              isClearable: el.isClearable || false,
               placeholder: el.placeholder,
               events: {
                 onChange: (value: string) => {

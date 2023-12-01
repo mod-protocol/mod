@@ -13,6 +13,7 @@ import {
   AddEmbedActionResolver,
   ContentContext,
   CreationContext,
+  EthPersonalSignActionResolver,
   SendEthTransactionActionResolver,
 } from "@mod-protocol/core";
 import actionResolverHttp from "./action-resolver-http";
@@ -20,6 +21,7 @@ import actionResolverOpenFile from "./action-resolver-open-file";
 import actionResolverOpenLink from "./action-resolver-open-link";
 import actionResolverSetInput from "./action-resolver-set-input";
 import actionResolverAddEmbed from "./action-resolver-add-embed";
+import actionResolverEthPersonalSign from "./action-resolver-eth-personal-sign";
 import actionResolverExit from "./action-resolver-exit";
 import actionResolverSendEthTransaction from "./action-resolver-send-eth-transaction";
 export * from "./render-embed";
@@ -32,6 +34,18 @@ export type Renderers = {
   Image: React.ComponentType<{
     imageSrc: string;
   }>;
+  Select: React.ComponentType<{
+    isClearable: boolean;
+    placeholder?: string;
+    options: Array<{ value: any; label: string }>;
+    onChange: (value: string) => void;
+  }>;
+  Combobox: React.ComponentType<{
+    placeholder?: string;
+    options: Array<{ value: any; label: string }> | null;
+    onChange: (value: string) => void;
+    onPick: (value: any) => void;
+  }>;
   Text: React.ComponentType<{ label: string }>;
   Link: React.ComponentType<{
     label: string;
@@ -42,6 +56,7 @@ export type Renderers = {
   Button: React.ComponentType<{
     label: string;
     isLoading: boolean;
+    loadingLabel?: string;
     variant?: "primary" | "secondary" | "destructive";
     isDisabled: boolean;
     onClick: () => void;
@@ -51,6 +66,11 @@ export type Renderers = {
   VerticalLayout: React.ComponentType<{ children: React.ReactNode }>;
   Input: React.ComponentType<{
     isClearable: boolean;
+    placeholder?: string;
+    onChange: (value: string) => void;
+    onSubmit: (value: string) => void;
+  }>;
+  Textarea: React.ComponentType<{
     placeholder?: string;
     onChange: (value: string) => void;
     onSubmit: (value: string) => void;
@@ -175,9 +195,84 @@ const WrappedVerticalLayoutRenderer = <T extends React.ReactNode>(props: {
   return <Component {...rest}>{elements}</Component>;
 };
 
+const WrappedSelectRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Select"];
+  element: Extract<ModElementRef<T>, { type: "select" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, ...rest } = element;
+
+  const onChange = React.useCallback(
+    (input: string) => {
+      events.onChange(input);
+    },
+    [events]
+  );
+
+  return <Component {...rest} onChange={onChange} />;
+};
+
 const WrappedInputRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Input"];
   element: Extract<ModElementRef<T>, { type: "input" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, ...rest } = element;
+
+  const onChange = React.useCallback(
+    (input: string) => {
+      events.onChange(input);
+    },
+    [events]
+  );
+  const onSubmit = React.useCallback(
+    (input: string) => {
+      events.onSubmit(input);
+    },
+    [events]
+  );
+
+  return <Component {...rest} onChange={onChange} onSubmit={onSubmit} />;
+};
+
+const WrappedComboboxRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Combobox"];
+  element: Extract<ModElementRef<T>, { type: "combobox" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, options, ...rest } = element;
+
+  const onChange = React.useCallback(
+    (input: string) => {
+      events.onChange(input);
+    },
+    [events]
+  );
+
+  React.useEffect(() => {
+    events.onLoad();
+  }, []);
+
+  const onPick = React.useCallback(
+    (value: string) => {
+      events.onPick(value);
+    },
+    [events]
+  );
+
+  return (
+    <Component
+      {...rest}
+      onChange={onChange}
+      options={options}
+      onPick={onPick}
+    />
+  );
+};
+
+const WrappedTextareaRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Textarea"];
+  element: Extract<ModElementRef<T>, { type: "textarea" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -323,6 +418,7 @@ export type ResolverTypes = {
   onSetInputAction?: SetInputActionResolver;
   onAddEmbedAction?: AddEmbedActionResolver;
   onOpenLinkAction?: OpenLinkActionResolver;
+  onEthPersonalSignAction?: EthPersonalSignActionResolver;
   onSendEthTransactionAction?: SendEthTransactionActionResolver;
   onExitAction?: ExitActionResolver;
 };
@@ -344,6 +440,7 @@ export const CreationMiniApp = (
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
+    onEthPersonalSignAction = actionResolverEthPersonalSign,
     onExitAction = actionResolverExit,
   } = props;
 
@@ -351,8 +448,8 @@ export const CreationMiniApp = (
 
   const input = variant === "creation" ? props.input : "";
   const context = React.useMemo<CreationContext>(
-    () => ({ input, embeds: props.embeds, api: props.api }),
-    [input, props.api, props.embeds]
+    () => ({ input, embeds: props.embeds, api: props.api, user: props.user }),
+    [input, props.api, props.embeds, props.user]
   );
 
   const [renderer] = React.useState<Renderer>(
@@ -367,6 +464,7 @@ export const CreationMiniApp = (
         onSetInputAction,
         onAddEmbedAction,
         onOpenLinkAction,
+        onEthPersonalSignAction,
         onSendEthTransactionAction,
         onExitAction,
       })
@@ -390,6 +488,7 @@ export const RenderMiniApp = (
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
+    onEthPersonalSignAction = actionResolverEthPersonalSign,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
     onExitAction = actionResolverExit,
   } = props;
@@ -413,6 +512,7 @@ export const RenderMiniApp = (
         onSetInputAction,
         onAddEmbedAction,
         onOpenLinkAction,
+        onEthPersonalSignAction,
         onSendEthTransactionAction,
         onExitAction,
       })
@@ -440,6 +540,7 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
+    onEthPersonalSignAction = actionResolverEthPersonalSign,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
     onExitAction = actionResolverExit,
   } = props;
@@ -461,6 +562,9 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
   React.useEffect(() => {
     renderer.setOpenLinkActionResolver(onOpenLinkAction);
   }, [onOpenLinkAction, renderer]);
+  React.useEffect(() => {
+    renderer.setEthPersonalSignActionResolver(onEthPersonalSignAction);
+  }, [onEthPersonalSignAction, renderer]);
   React.useEffect(() => {
     renderer.setSendEthTransactionActionResolver(onSendEthTransactionAction);
   }, [onSendEthTransactionAction, renderer]);
@@ -534,6 +638,30 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
               <WrappedVerticalLayoutRenderer
                 key={key}
                 component={renderers["VerticalLayout"]}
+                element={el}
+              />
+            );
+          case "combobox":
+            return (
+              <WrappedComboboxRenderer
+                key={key}
+                component={renderers["Combobox"]}
+                element={el}
+              />
+            );
+          case "textarea":
+            return (
+              <WrappedTextareaRenderer
+                key={key}
+                component={renderers["Textarea"]}
+                element={el}
+              />
+            );
+          case "select":
+            return (
+              <WrappedSelectRenderer
+                key={key}
+                component={renderers["Select"]}
                 element={el}
               />
             );

@@ -6,7 +6,14 @@ import { Button } from "components/ui/button";
 export const ButtonRenderer = (
   props: React.ComponentProps<Renderers["Button"]>
 ) => {
-  const { label, isDisabled, isLoading, onClick, variant = "primary" } = props;
+  const {
+    label,
+    isDisabled,
+    isLoading,
+    onClick,
+    variant = "primary",
+    loadingLabel = "",
+  } = props;
   return (
     <Button
       variant={variant}
@@ -17,7 +24,14 @@ export const ButtonRenderer = (
         return onClick();
       }}
     >
-      {isLoading ? <CircularProgress size="sm" /> : label}
+      {isLoading ? (
+        <>
+          <CircularProgress size="sm" className={loadingLabel ? "mr-1" : ""} />
+          {loadingLabel}
+        </>
+      ) : (
+        label
+      )}
     </Button>
   );
 };

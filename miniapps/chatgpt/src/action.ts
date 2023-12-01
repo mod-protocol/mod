@@ -7,7 +7,7 @@ const action: ModElement[] = [
       {
         type: "input",
         placeholder: "Ask the AI anything",
-        clearable: true,
+        isClearable: true,
         ref: "prompt",
         // onchange: {
         //   ref: "mySearchQueryRequest",

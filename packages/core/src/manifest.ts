@@ -1,4 +1,6 @@
-type ModConditionalElement = {
+import type { JSONSchema7 } from "json-schema";
+
+export type ModConditionalElement = {
   element: ModElement[];
   if: ValueOp;
 };
@@ -15,10 +17,12 @@ export type ModManifest = {
   /** A valid url pointing to an image file, it should be a square */
   logo: string;
   version: string;
+  modelDefinitions?: Record<string, JSONSchema7>;
   creationEntrypoints?: ModElement[];
   contentEntrypoints?: ModConditionalElement[];
   elements?: Record<string, ModElement[]>;
-  permissions?: string[];
+  // perhaps data.user.wallet.address is better.
+  permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign">;
 };
 
 export type ModEvent =
@@ -77,9 +81,10 @@ type HTTPBody =
       formData: Record<string, FormDataType>;
     };
 
-type HTTPAction = BaseAction & { url: string } & (
+export type HTTPAction = BaseAction & { url: string } & (
     | {
         type: "GET";
+        searchParams?: Record<string, string>;
       }
     | {
         type: "POST";
@@ -117,11 +122,22 @@ type OpenLinkAction = BaseAction & {
   url: string;
 };
 
+export type EthPersonalSignData = {
+  statement: string;
+  version: string;
+  chainId: string;
+};
+
 export type EthTransactionData = {
   to: string;
   from: string;
   data?: string;
   value?: string;
+};
+
+type EthPersonalSignAction = BaseAction & {
+  type: "web3.eth.personal.sign";
+  data: EthPersonalSignData;
 };
 
 type SendEthTransactionAction = BaseAction & {
@@ -147,6 +163,7 @@ export type ModAction =
   | AddEmbedAction
   | SetInputAction
   | OpenLinkAction
+  | EthPersonalSignAction
   | SendEthTransactionAction
   | ExitAction;
 
@@ -171,6 +188,7 @@ export type ModElement =
   | {
       type: "button";
       label: string;
+      loadingLabel?: string;
       variant?: "primary" | "secondary" | "destructive";
       onclick: ModEvent;
     }
@@ -188,10 +206,25 @@ export type ModElement =
       onload?: ModEvent;
     }
   | {
+      type: "textarea";
       ref?: string;
-      type: "input";
       placeholder?: string;
-      clearable?: boolean;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
+    }
+  | {
+      type: "select";
+      options: Array<{ label: string; value: any }>;
+      ref?: string;
+      placeholder?: string;
+      isClearable?: boolean;
+      onchange?: ModEvent;
+    }
+  | {
+      type: "input";
+      ref?: string;
+      placeholder?: string;
+      isClearable?: boolean;
       onchange?: ModEvent;
       onsubmit?: ModEvent;
     }
@@ -200,16 +233,27 @@ export type ModElement =
       videoSrc: string;
     }
   | {
-      ref?: string;
       type: "tabs";
+      ref?: string;
       values: string[];
       names: string[];
       onload?: ModEvent;
       onchange?: ModEvent;
     }
-  | ({
+  | {
+      type: "combobox";
       ref?: string;
+      isClearable?: boolean;
+      placeholder?: string;
+      optionsRef?: string;
+      valueRef?: string;
+      onload?: ModEvent;
+      onpick?: ModEvent;
+      onchange?: ModEvent;
+    }
+  | ({
       type: "image-grid-list";
+      ref?: string;
       onload?: ModEvent;
       onpick?: ModEvent;
     } & (

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { getAddress } from "viem";
 
 // Core
 import {
@@ -15,12 +16,15 @@ import { useEditor, EditorContent } from "@mod-protocol/react-editor";
 import { creationMiniApps } from "@mod-protocol/miniapp-registry";
 import {
   Embed,
+  EthPersonalSignActionResolverInit,
   ModManifest,
   fetchUrlMetadata,
   handleAddEmbed,
   handleOpenFile,
   handleSetInput,
 } from "@mod-protocol/core";
+import { SiweMessage } from "siwe";
+import { useAccount, useSignMessage } from "wagmi";
 
 // UI implementation
 import { createRenderMentionsSuggestionConfig } from "@mod-protocol/react-ui-shadcn/dist/lib/mentions";
@@ -94,8 +98,64 @@ export default function EditorExample() {
     }),
   });
 
+  const { address: unchecksummedAddress } = useAccount();
+  const checksummedAddress = React.useMemo(() => {
+    if (!unchecksummedAddress) return null;
+    return getAddress(unchecksummedAddress);
+  }, [unchecksummedAddress]);
+
+  const { signMessageAsync } = useSignMessage();
+
+  const getAuthSig = React.useCallback(
+    async (
+      {
+        data: { statement, version, chainId },
+      }: EthPersonalSignActionResolverInit,
+      { onSuccess, onError }
+    ): Promise<void> => {
+      if (!checksummedAddress) {
+        window.alert("please connect your wallet");
+        return;
+      }
+      try {
+        const siweMessage = new SiweMessage({
+          domain: process.env.NEXT_PUBLIC_HOST,
+          address: checksummedAddress,
+          statement,
+          uri: process.env.NEXT_PUBLIC_URL,
+          version,
+          chainId: Number(chainId),
+        });
+        const messageToSign = siweMessage.prepareMessage();
+
+        // Sign the message and format the authSig
+        const signature = await signMessageAsync({ message: messageToSign });
+        const authSig = {
+          signature,
+          // derivedVia: "web3.eth.personal.sign",
+          signedMessage: messageToSign,
+          address: checksummedAddress,
+        };
+
+        onSuccess(authSig);
+      } catch (err) {
+        console.error(err);
+        onError(err);
+      }
+    },
+    [signMessageAsync, checksummedAddress]
+  );
+
   const [currentMiniapp, setCurrentMiniapp] =
     React.useState<ModManifest | null>(null);
+
+  const user = React.useMemo(() => {
+    return {
+      wallet: {
+        address: checksummedAddress,
+      },
+    };
+  }, [checksummedAddress]);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -134,6 +194,7 @@ export default function EditorExample() {
                 input={getText()}
                 embeds={getEmbeds()}
                 api={API_URL}
+                user={user}
                 variant="creation"
                 manifest={currentMiniapp}
                 renderers={renderers}
@@ -141,6 +202,7 @@ export default function EditorExample() {
                 onExitAction={() => setCurrentMiniapp(null)}
                 onSetInputAction={handleSetInput(setText)}
                 onAddEmbedAction={handleAddEmbed(addEmbed)}
+                onEthPersonalSignAction={getAuthSig}
               />
             </div>
           </PopoverContent>

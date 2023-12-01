@@ -29,7 +29,7 @@ export function createEditorConfig({
     editorProps: {
       attributes: {
         // min-height allows clicking in the box and creating focus on the input
-        // FIXME: configurable/options
+        // TODO: configurable/options
         style: "outline: 0;  min-height: 200px;",
       },
       // attributes: {
