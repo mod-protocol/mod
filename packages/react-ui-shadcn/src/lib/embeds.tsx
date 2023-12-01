@@ -9,6 +9,9 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button } from "components/ui/button";
 import { Skeleton } from "components/ui/skeleton";
 import { VideoRenderer } from "../renderers/video";
+import { RenderEmbed } from "@mod-protocol/react";
+import * as miniapps from "@mod-protocol/miniapp-registry";
+import { renderers } from "../renderers";
 
 function shorten(str?: string, maxLength = 64) {
   if (!str) return str;
@@ -19,6 +22,7 @@ function shorten(str?: string, maxLength = 64) {
 export const EmbedsEditor = (props: {
   embeds: Embed[];
   setEmbeds: (e: Embed[]) => void;
+  apiUrl?: string;
 }) => {
   return (
     <>
@@ -51,45 +55,14 @@ export const EmbedsEditor = (props: {
             <Skeleton className="h-[100px] w-full items-center flex justify-center">
               Loading...
             </Skeleton>
-          ) : hasFullSizedImage(embed) ? (
-            <div className="border rounded mt-2" key={i}>
-              <div style={{ maxHeight: "200px", overflow: "hidden" }}>
-                <img
-                  src={embed.metadata?.image?.url}
-                  alt={embed.metadata?.title}
-                  className="rounded-t"
-                  style={{ width: "100%" }}
-                  width={300}
-                  height={100}
-                />
-              </div>
-              <div className="p-2">
-                <div className="font-bold">
-                  {shorten(embed.metadata?.title)}
-                </div>
-                <div className="text-muted-foreground">
-                  {embed.metadata?.publisher}
-                </div>
-              </div>
-            </div>
           ) : (
-            <div className="border rounded mt-2" key={i}>
-              <div className="p-2">
-                <div className="flex flex-row">
-                  <img
-                    src={embed.metadata?.logo?.url}
-                    alt={embed.metadata?.title}
-                    className="w-6 rounded mr-1 flex-shrink-0 h-6"
-                  />
-                  <div className="font-bold">
-                    {shorten(embed.metadata?.title)}
-                  </div>
-                </div>
-                <div className="text-muted-foreground">
-                  {embed.metadata?.publisher}
-                </div>
-              </div>
-            </div>
+            RenderEmbed({
+              api: props.apiUrl || "https://api.modprotocol.org/api",
+              defaultContentMiniApp: miniapps.defaultContentMiniApp,
+              contentMiniApps: [miniapps.defaultContentMiniApp],
+              embed,
+              renderers: renderers,
+            })
           )}
         </div>
       ))}
