@@ -125,16 +125,27 @@ This will return a JSON object with the following structure:
 ```json
 {
   "https://google.com": {
-    "title": "Example Title",
-    "description": "Example Description",
-    "image": "https://example.com/image.png"
-    // ...
+    "image": {
+      "url": "https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png",
+      "height": 128,
+      "width": 128
+    },
+    "description": "Celebrate Native American Heritage Month with Google",
+    "title": "Google",
+    "publisher": "google.com",
+    "logo": {
+      "url": "https://www.google.com/favicon.ico"
+    },
+    "mimeType": "text/html; charset=UTF-8"
   },
   "https://twitter.com": {
-    "title": "Example Title",
-    "description": "Example Description",
-    "image": "https://example.com/image.png"
-    // ...
+    "description": "From breaking news and entertainment to sports and politics, get the full story with all the live commentary.",
+    "title": "@ on Twitter",
+    "publisher": "Twitter",
+    "logo": {
+      "url": "https://abs.twimg.com/favicons/twitter.3.ico"
+    },
+    "mimeType": "text/html; charset=utf-8"
   }
 }
 ```
