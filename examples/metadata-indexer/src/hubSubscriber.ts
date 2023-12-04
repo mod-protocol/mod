@@ -36,6 +36,7 @@ export class HubSubscriber extends TypedEmitter<HubEvents> {
   public destroy() {
     if (!this.stopped) this.stop();
     this.hubClient.$.close();
+    this.log.info("Destroyed HubSubscriber");
   }
 
   private _waitForReadyHubClient(): Promise<Result<void, unknown>> {
