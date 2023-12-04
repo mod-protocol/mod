@@ -3,7 +3,7 @@ import {
   OpenFileActionResolverInit,
 } from "@mod-protocol/core";
 
-// This resolver is called when the miniapp calls the "OPENFILE" action type.
+// This resolver is called when the mod calls the "OPENFILE" action type.
 //
 // The action expected from the user is to open a native file picker and select
 // file(s). The app should make sure that it only chooses the files with mime-types
@@ -18,6 +18,6 @@ export default function actionResolverOpenFile(
 ) {
   // eslint-disable-next-line no-console
   console.warn(
-    "Please implement 'OpenFileActionResolver' and configure the MiniApp to use it"
+    "Please implement 'OpenFileActionResolver' and configure the Mod to use it"
   );
 }

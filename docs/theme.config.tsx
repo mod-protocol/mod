@@ -15,11 +15,11 @@ const config: DocsThemeConfig = {
       titleTemplate: "%s - Mod Protocol Docs",
       defaultTitle: "Mod Protocol Docs",
       description:
-        "A protocol and set of open source libraries for decentralized social Mini-apps",
+        "A protocol and set of open source libraries for decentralized social Mods",
       openGraph: {
         titleTemplate: "%s - Mod Protocol Docs",
         description:
-          "A protocol and set of open source libraries for decentralized social Mini-apps",
+          "A protocol and set of open source libraries for decentralized social Mods",
         images: [
           {
             url: "https://docs.modprotocol.org/og.png",

@@ -3,11 +3,11 @@
 "web": minor
 "@mod-protocol/react": minor
 "@mod-protocol/core": minor
-"@miniapps/zora-nft-minter": patch
-"@miniapps/giphy-picker": patch
+"@mods/zora-nft-minter": patch
+"@mods/giphy-picker": patch
 "@mod-protocol/react-editor": patch
-"@miniapps/nft-minter": patch
-"@miniapps/chatgpt": patch
+"@mods/nft-minter": patch
+"@mods/chatgpt": patch
 "api": patch
 "docs": patch
 ---

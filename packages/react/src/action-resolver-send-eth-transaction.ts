@@ -9,6 +9,6 @@ export default function actionResolverSendEthTransaction(
 ) {
   // eslint-disable-next-line no-console
   console.warn(
-    "Please implement 'SendEthTransactionActionResolver' and configure the MiniApp to use it"
+    "Please implement 'SendEthTransactionActionResolver' and configure the Mod to use it"
   );
 }

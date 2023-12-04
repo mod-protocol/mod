@@ -24,7 +24,7 @@
   "workspaces": [
     "configs/*",
     "examples/*",
-    "miniapps/*",
+    "mods/*",
     "packages/*",
     "docs"
   ]

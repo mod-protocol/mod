@@ -11,9 +11,9 @@ import {
   getFarcasterMentions,
   getMentionFidsByUsernames,
 } from "@mod-protocol/farcaster";
-import { CreationMiniApp } from "@mod-protocol/react";
+import { CreationMod } from "@mod-protocol/react";
 import { useEditor, EditorContent } from "@mod-protocol/react-editor";
-import { creationMiniApps } from "@mod-protocol/miniapp-registry";
+import { creationMods } from "@mod-protocol/mod-registry";
 import {
   Embed,
   EthPersonalSignActionResolverInit,
@@ -28,7 +28,7 @@ import { useAccount, useSignMessage } from "wagmi";
 
 // UI implementation
 import { createRenderMentionsSuggestionConfig } from "@mod-protocol/react-ui-shadcn/dist/lib/mentions";
-import { CreationMiniAppsSearch } from "@mod-protocol/react-ui-shadcn/dist/components/creation-miniapps-search";
+import { ModsSearch } from "@mod-protocol/react-ui-shadcn/dist/components/creation-mods-search";
 import { CastLengthUIIndicator } from "@mod-protocol/react-ui-shadcn/dist/components/cast-length-ui-indicator";
 import { ChannelPicker } from "@mod-protocol/react-ui-shadcn/dist/components/channel-picker";
 import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/dist/lib/embeds";
@@ -180,17 +180,14 @@ export default function EditorExample() {
           }}
         >
           <PopoverTrigger></PopoverTrigger>
-          <CreationMiniAppsSearch
-            miniapps={creationMiniApps}
-            onSelect={setCurrentMiniapp}
-          />
+          <ModsSearch mods={creationMods} onSelect={setCurrentMiniapp} />
           <PopoverContent className="w-[400px] ml-2" align="start">
             <div className="space-y-4">
               <h4 className="font-medium leading-none">
                 {currentMiniapp?.name}
               </h4>
               <hr />
-              <CreationMiniApp
+              <CreationMod
                 input={getText()}
                 embeds={getEmbeds()}
                 api={API_URL}

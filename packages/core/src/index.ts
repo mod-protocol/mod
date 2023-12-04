@@ -30,7 +30,7 @@ export type {
   SendEthTransactionActionResolver,
   ExitActionResolver,
   ContextType,
-  ContentContext,
+  RichEmbedContext,
   CreationContext,
 } from "./renderer";
 export { Renderer, canRenderEntrypointWithContext } from "./renderer";
