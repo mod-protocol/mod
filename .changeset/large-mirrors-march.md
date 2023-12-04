@@ -1,6 +1,6 @@
 ---
-"@miniapps/zora-nft-minter": patch
-"@miniapps/nft-minter": patch
+"@mods/zora-nft-minter": patch
+"@mods/nft-minter": patch
 ---
 
 fix: support fallback mint URL

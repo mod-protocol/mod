@@ -1,0 +1,198 @@
+import Image from 'next/image'
+
+# Creation Mods
+
+Here's where they live in your app. They enable you to leverage community created Mods for adding Gifs, Images, Videos, Polls, using AI and many more in development.
+
+<Image src="/creation.png" alt="creation example" width="400" height="200" />
+
+You have the choice whether to use our [Mod Editor library](../mod-editor.mdx) or not when integrating Creation Mods.
+
+## Integrating Creation Mods with your own editor
+
+```tsx
+import { CreationMod } from "@mod-protocol/react";
+
+...
+
+  <CreationMod
+    input={text}
+    embeds={embeds}
+    api={API_URL}
+    variant="creation"
+    manifest={currentMiniapp}
+    renderers={renderers}
+    onOpenFileAction={handleOpenFile}
+    onExitAction={hideCurrentMod}
+    onSetInputAction={handleSetInput}
+    onAddEmbedAction={handleAddEmbed}
+  />
+```
+
+if you want to support the user choosing between Mods, you can give them a UI to select a Mod, or use our component.
+
+## Full example with the Mod Editor
+
+Add the core libraries
+
+`yarn add @mod-protocol/react @mod-protocol/react-editor @mod-protocol/mod-registry`
+
+Add the default UI library, or use your own. The default uses [shadcn](https://ui.shadcn.com/) which uses [Tailwind](https://tailwindcss.com/) + [Radix UI](https://www.radix-ui.com/) under the hood
+We've made these packages modular to reduce unnecessary packages, facilitate tree shaking, and allow for flexibility to integrate natively with your UI.
+
+`yarn add @mod-protocol/react-ui-shadcn`
+
+### Example using Tailwind & Radix UI
+
+```tsx
+import * as React from "react";
+
+// Core
+import {
+  Channel,
+  getFarcasterChannels,
+  getFarcasterMentions,
+} from "@mod-protocol/farcaster";
+import { CreationMod } from "@mod-protocol/react";
+import { useEditor, EditorContent } from "@mod-protocol/react-editor";
+import { creationMods } from "@mod-protocol/mod-registry";
+import { Embed, ModManifest, fetchUrlMetadata, handleAddEmbed, handleOpenFile, handleSetInput } from "@mod-protocol/core";
+// UI implementation
+import { createRenderMentionsSuggestionConfig } from "@mod-protocol/react-ui-shadcn/dist/lib/mentions";
+import { ModsSearch } from "@mod-protocol/react-ui-shadcn/dist/components/creation-mods-search";
+import { CastLengthUIIndicator } from "@mod-protocol/react-ui-shadcn/dist/components/cast-length-ui-indicator";
+import { ChannelPicker } from "@mod-protocol/react-ui-shadcn/dist/components/channel-picker";
+import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/dist/lib/embeds";
+import { Button } from "@mod-protocol/react-ui-shadcn/dist/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@mod-protocol/react-ui-shadcn/dist/components/ui/popover";
+import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
+
+// Optionally replace with your API_URL here if you want to self host by running your own instance of https://github.com/mod-protocol/mod/tree/main/examples/api
+const API_URL = "https://api.modprotocol.org";
+const getResults = getFarcasterMentions(API_URL);
+const getChannels = getFarcasterChannels(API_URL);
+const getUrlMetadata = fetchUrlMetadata(API_URL);
+const onError = (err) => window.alert(err.message);
+const onSubmit = async ({
+  text,
+  embeds,
+  channel,
+}: {
+  text: string;
+  embeds: Embed[];
+  channel: Channel;
+}) => {
+  window.alert(
+    `This is a demo, and doesn't do anything.\n\nCast text:\n${text}\nEmbeds:\n${embeds
+      .map((embed) => (embed as any).url)
+      .join(", ")}\nChannel:\n${channel.name}`
+  );
+
+  return true;
+};
+
+export default function EditorExample() {
+  const {
+    editor,
+    getText,
+    getEmbeds,
+    setEmbeds,
+    setText,
+    setChannel,
+    getChannel,
+    addEmbed,
+    handleSubmit,
+  } = useEditor({
+    fetchUrlMetadata: getUrlMetadata,
+    onError,
+    onSubmit,
+    linkClassName: "text-blue-600",
+    renderMentionsSuggestionConfig: createRenderMentionsSuggestionConfig({
+      getResults: getResults,
+    }),
+  });
+
+  const [currentMiniapp, setCurrentMiniapp] =
+    React.useState<ModManifest | null>(null);
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="p-2 border-slate-200 rounded-md border">
+        <EditorContent
+          editor={editor}
+          autoFocus
+          className="w-full h-full min-h-[200px]"
+        />
+        <EmbedsEditor embeds={getEmbeds()} setEmbeds={setEmbeds} />
+      </div>
+      <div className="flex flex-row pt-2 gap-1">
+        <ChannelPicker
+          getChannels={getChannels}
+          onSelect={setChannel}
+          value={getChannel()}
+        />
+        <Popover
+          open={!!currentMiniapp}
+          onOpenChange={(op: boolean) => {
+            if (!op) setCurrentMiniapp(null);
+          }}
+        >
+          <PopoverTrigger></PopoverTrigger>
+          <ModsSearch
+            mods={creationMods}
+            onSelect={setCurrentMiniapp}
+          />
+          <PopoverContent className="w-[400px] ml-2" align="start">
+            <div className="space-y-4">
+              <h4 className="font-medium leading-none">
+                {currentMiniapp?.name}
+              </h4>
+              <hr />
+              <CreationMod
+                input={getText()}
+                embeds={getEmbeds()}
+                api={API_URL}
+                variant="creation"
+                manifest={currentMiniapp}
+                renderers={renderers}
+                onOpenFileAction={handleOpenFile}
+                onExitAction={() => setCurrentMiniapp(null)}
+                onSetInputAction={handleSetInput(setText)}
+                onAddEmbedAction={handleAddEmbed(addEmbed)}
+              />
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        <CastLengthUIIndicator getText={getText} />
+        <div className="grow"></div>
+        <Button type="submit">Cast</Button>
+      </div>
+    </form>
+  );
+}
+```
+
+## Customizing which Mods to support
+
+You can choose to filter or select which Mods are available
+
+### Opt out
+
+```tsx
+...
+<ModsSearch
+  mods={creationMods.filter(mod => mod.slug !== "giphy-picker" && !mod.permissions.includes('user.wallet.address'))}
+  onSelect={setCurrentMiniapp}
+/>
+```
+
+### Opt in
+
+```tsx
+...
+<ModsSearch
+  mods={creationMods.filter(mod => ['infura-ipfs-upload', 'livepeer-video'].includes(mod.slug)}
+  onSelect={setCurrentMiniapp}
+/>
+```

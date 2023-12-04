@@ -11,8 +11,8 @@
     "incremental": true,
     "declarationMap": true,
     "paths": {
-      "@miniapps/*": [
-        "./miniapps/*"
+      "@mods/*": [
+        "./mods/*"
       ],
     },
     "jsx": "react-jsx",

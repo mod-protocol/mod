@@ -1,0 +1,169 @@
+import Image from 'next/image'
+
+# Rich-embed Mods
+
+Rich-embed Mods turn urls into rich embeds, with a fallback to an open graph style card embed. These enable Images, Videos, Polls, Games, Minting NFTs,
+or any other mini-interaction to happen directly in the interface.
+
+Here's an example of a Mod that turns the url `https://zora.co/collect/zora:0x787c6366341fbb8a7bfff1064009bce60796338f/61` into an in-app Minting experience
+<Image src="/rich-embed.png" alt="Rich-embed example" width="400" height="200" />
+
+
+You can integrate Rich-embed Mods with or without our [Mod Metadata Cache](../metadata-cache.mdx).
+
+
+## Integration Example
+
+```tsx
+import { RichEmbed } from "@mod-protocol/react";
+import { richEmbedMods } from "@mod-protocol/mod-registry";
+
+  ...
+  <RichEmbed
+    embed={embed}
+    api={API_URL}
+    user={{
+      id: "3",
+      wallet: {
+        address: "0x1234...",
+    }}
+    renderers={renderers}
+    defaultRichEmbedMod={defaultRichEmbedMod}
+    mods={richEmbedMods}
+    resolvers={{
+      onSendEthTransactionAction,
+    }}
+  />
+```
+
+## Full integration example
+
+```tsx
+"use client";
+
+import { ContextType, Embed } from "@mod-protocol/core";
+import {
+  richEmbedMods,
+  defaultRichEmbedMod,
+} from "@mod-protocol/mod-registry";
+import { RichEmbed } from "@mod-protocol/react";
+import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
+import {
+  sendTransaction,
+  switchNetwork,
+  waitForTransaction,
+} from "@wagmi/core";
+import { useMemo } from "react";
+import { useAccount } from "wagmi";
+
+export function Embeds(props: { embeds: Array<Embed> }) {
+  const { address } = useAccount();
+
+  // Handle send transaction e.g. on click of a mint button
+  // This example uses wagmi
+  const onSendEthTransactionAction = useMemo(
+    () =>
+      async ({ data, chainId }, { onConfirmed, onError, onSubmitted }) => {
+        try {
+          const parsedChainId = parseInt(chainId);
+
+          // Switch chains if the user is not on the right one
+          await switchNetwork({ chainId: parsedChainId });
+
+          // Send the transaction
+          const { hash } = await sendTransaction({
+            ...data,
+            chainId: parsedChainId,
+          });
+          onSubmitted(hash);
+
+          // Wait for the transaction to be confirmed
+          const { status } = await waitForTransaction({
+            hash,
+            chainId: parsedChainId,
+          });
+
+          onConfirmed(hash, status === "success");
+        } catch (e) {
+          onError(e);
+        }
+      },
+    []
+  );
+
+  const context = useMemo<Omit<ContextType, "embed">>(() => {
+    return {
+      /* Required context */
+      api: process.env.NEXT_PUBLIC_API_URL,
+
+      /* Optional context */
+      user: {
+        id: "3", // Current user's FID
+        wallet: {
+          address: "0x1234...", // Current user's wallet address
+        },
+      },
+    };
+  }, [address]);
+
+  return (
+    <div>
+      {props.embeds.map((embed, i) => (
+        <RichEmbed
+          embed={embed}
+          {...context}
+          key={i}
+          renderers={renderers}
+          defaultRichEmbedMod={defaultRichEmbedMod}
+          mods={richEmbedMods}
+          resolvers={{
+            onSendEthTransactionAction,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+```
+
+## Customizing which Mods to support
+
+You can choose to filter or select which Mods are available
+
+### Opt out
+
+```tsx
+...
+<RichEmbed
+  embed={embed}
+  {...context}
+  key={i}
+  renderers={renderers.filter(mod => mod.slug !== "giphy-picker" && !mod.permissions.includes('user.wallet.address'))}
+  defaultRichEmbedMod={defaultRichEmbedMod}
+  mods={richEmbedMods}
+  resolvers={{
+    onSendEthTransactionAction,
+  }}
+/>
+```
+
+### Opt in
+
+```tsx
+...
+<RichEmbed
+  embed={embed}
+  {...context}
+  key={i}
+  renderers={renderers.filter(mod => ['infura-ipfs-upload', 'livepeer-video'].includes(mod.slug)}
+  defaultRichEmbedMod={defaultRichEmbedMod}
+  mods={richEmbedMods}
+  resolvers={{
+    onSendEthTransactionAction,
+  }}
+/>
+```
+
+### Using you own indexer
+
+If you don't use the [Mod Metadata Cache](../metadata-cache.mdx), you may need to fetch [json-ld](https://json-ld.org/) from pages yourself to support all Mods and the url metadata they require.

@@ -25,8 +25,8 @@ export type ModManifest = {
   modelDefinitions?: Record<string, JSONSchema7>;
   /** Interface this Mini-app exposes, if any, for Content Creation */
   creationEntrypoints?: ModElement[];
-  /** Interface this Mini-app exposes, if any, for Content Rendering */
-  contentEntrypoints?: ModConditionalElement[];
+  /** Interface this Mini-app exposes, if any, for RichEmbed Rendering */
+  richEmbedEntrypoints?: ModConditionalElement[];
   /** A definition map of reusable elements, using their id as the key */
   elements?: Record<string, ModElement[]>;
   /** Permissions requested by the Mini-app */

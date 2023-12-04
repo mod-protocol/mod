@@ -6,11 +6,8 @@ import {
   SendEthTransactionActionResolverEvents,
   SendEthTransactionActionResolverInit,
 } from "@mod-protocol/core";
-import {
-  contentMiniApps,
-  defaultContentMiniApp,
-} from "@mod-protocol/miniapp-registry";
-import { RenderEmbed } from "@mod-protocol/react";
+import { richEmbedMods, defaultRichEmbedMod } from "@mod-protocol/mod-registry";
+import { RichEmbed } from "@mod-protocol/react";
 import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
 import {
   sendTransaction,
@@ -74,13 +71,13 @@ export function Embeds(props: { embeds: Array<Embed> }) {
   return (
     <div>
       {props.embeds.map((embed, i) => (
-        <RenderEmbed
+        <RichEmbed
           embed={embed}
           {...context}
           key={i}
           renderers={renderers}
-          defaultContentMiniApp={defaultContentMiniApp}
-          contentMiniApps={contentMiniApps}
+          defaultRichEmbedMod={defaultRichEmbedMod}
+          mods={richEmbedMods}
           resolvers={{
             onSendEthTransactionAction,
           }}

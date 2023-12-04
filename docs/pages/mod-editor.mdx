@@ -1,0 +1,61 @@
+import Image from 'next/image'
+
+# Farcaster Editor
+
+A fully featured, performant, and open source Cast creator for your React app.
+
+<Image src="/mod-editor.png" alt="mod-editor example" width="400" height="200" />
+
+## Why should you use this and not build your own cast creator?
+
+- We've spent over 100 hours on this open source library to get it just right for your Farcaster app.
+- It supports: @ mentions, channels, link highlighting & automatic embeds, image, url and video embeds, max lengths in bytes, open graph previews, textcuts
+- You can easily use Mods that allow users to add Rich Embeds like image uploads, video uploads or choosing a GIF.
+- It's [open source](https://github.com/mod-protocol/mod/tree/main/packages/react-editor), MIT licensed and designed to put you in full control - you choose which if any Mods you want to use with it. 
+- You can and are free to use this even if you aren't integrating Mod - it doesn't depend on any of Mod's core SDKs.
+- It's lightweight, treeshakeable and performant, built on tiptap and prosemirror. It's extendable with your own Mods or tiptap plugins if you'd like.
+- It's unopinionated about UI and works with your UI library
+
+## Usage 
+
+```tsx
+import { useEditor, EditorContent } from "@mod-protocol/react-editor";
+import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/dist/lib/embeds";
+import { Embed, ModManifest, fetchUrlMetadata, handleAddEmbed, handleOpenFile, handleSetInput } from "@mod-protocol/core";
+import { Channel, getFarcasterChannels, getFarcasterMentions } from "@mod-protocol/farcaster";
+
+// use our API_URL, self host our API, or use your own API.
+const getUrlMetadata = fetchUrlMetadata(API_URL);
+const getResults = getFarcasterMentions(API_URL);
+const getChannels = getFarcasterChannels(API_URL);
+
+ // ...
+ const { editor, getEmbeds, setEmbeds, handleSubmit, getText, setChannel, getChannel } = useEditor({
+    fetchUrlMetadata: getUrlMetadata,
+    onError: (error) => console.error(error),
+    onSubmit: (cast) => console.log(cast), // submit to your hub
+    linkClassName: "text-blue-600",
+    renderMentionsSuggestionConfig: createRenderMentionsSuggestionConfig({
+      getResults: getResults,
+    }),
+  });
+  return (
+    <>
+        <EditorContent
+            editor={editor}
+            autoFocus
+            className="w-full h-full min-h-[200px]"
+        />
+        <EmbedsEditor embeds={getEmbeds()} setEmbeds={setEmbeds} />
+        <ChannelPicker
+          getChannels={getChannels}
+          onSelect={setChannel}
+          value={getChannel()}
+        />
+        <CastLengthUIIndicator getText={getText} />
+        <Button type="submit">Cast</Button>
+    </>
+  );
+```
+
+## Usage with Channels UI

@@ -2,43 +2,43 @@
 
 import React from "react";
 import {
-  ContentContext,
+  RichEmbedContext,
   Embed,
   ModManifest,
   canRenderEntrypointWithContext,
 } from "@mod-protocol/core";
 
-import { ResolverTypes, RenderMiniApp, Renderers } from ".";
+import { ResolverTypes, RenderMod, Renderers } from ".";
 
-type Props = ContentContext & {
+type Props = RichEmbedContext & {
   renderers: Renderers;
-  /** is used as a fallback when all other contentMiniApps fail to match the content type */
-  defaultContentMiniApp: ModManifest;
-  contentMiniApps: ModManifest[];
+  /** is used as a fallback when all other mods fail to match the richEmbed type */
+  defaultRichEmbedMod: ModManifest;
+  mods: ModManifest[];
   resolvers?: ResolverTypes;
 };
 
-export function RenderEmbed(props: Props) {
+export function RichEmbed(props: Props) {
   let matchingMiniapps = [
     { embed: props.embed, api: props.api, user: props.user },
   ].flatMap<{
-    context: ContentContext;
+    context: RichEmbedContext;
     manifest: ModManifest;
   }>((context) => {
-    function getMatchingMiniApps(miniApps: ModManifest[]) {
-      return miniApps
+    function getMatchingMods(mods: ModManifest[]) {
+      return mods
         .map(
           (
-            miniapp
+            mod
           ): null | {
-            context: ContentContext;
+            context: RichEmbedContext;
             manifest: ModManifest;
           } => {
-            for (const entrypoint of miniapp.contentEntrypoints ?? []) {
+            for (const entrypoint of mod.richEmbedEntrypoints ?? []) {
               if (canRenderEntrypointWithContext(entrypoint, context)) {
                 return {
                   context: context,
-                  manifest: miniapp,
+                  manifest: mod,
                 };
               }
             }
@@ -46,29 +46,29 @@ export function RenderEmbed(props: Props) {
           }
         )
         .filter(Boolean) as Array<{
-        context: ContentContext;
+        context: RichEmbedContext;
         manifest: ModManifest;
       }>;
     }
 
-    let matchingMiniApps = getMatchingMiniApps(props.contentMiniApps);
+    let matchingMods = getMatchingMods(props.mods);
 
-    if (matchingMiniApps.length) {
-      return matchingMiniApps;
+    if (matchingMods.length) {
+      return matchingMods;
     }
 
     // use fallback instead
-    return getMatchingMiniApps([props.defaultContentMiniApp]);
+    return getMatchingMods([props.defaultRichEmbedMod]);
   });
 
   return matchingMiniapps.length
-    ? matchingMiniapps.map((miniapp, index) => (
-        <RenderMiniApp
-          {...miniapp.context}
+    ? matchingMiniapps.map((mod, index) => (
+        <RenderMod
+          {...mod.context}
           {...props.resolvers}
           key={index}
-          variant="content"
-          manifest={miniapp.manifest}
+          variant="richEmbed"
+          manifest={mod.manifest}
           renderers={props.renderers}
         />
       ))

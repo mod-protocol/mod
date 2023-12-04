@@ -1,0 +1,17 @@
+# Getting started making a Miniapp
+
+A Miniapp is just a JSON file. Part of this JSON is the manifest, defining things like the version and name, and other parts
+are the elements rendered by the Miniapp, like a text or an image.
+
+Our convention is to write Mods in TypeScript, for better autocompletion and legibility, with the Mods being built to JSON.
+You can take a look inside the `/mods` folder of [this repo](https://github.com/mod-protocol/mod) to see how Mods work
+
+## Steps to make a new Miniapp
+
+1. Fork [this repo](https://github.com/mod-protocol/mod)
+2. Create a new mod by duplicating an existing one in `/mods` or creating a new folder
+3. Name your mod consistently between the folder name and the `slug` in the `manifest.ts` file
+4. Create the elements of your mod
+5. Add your mod to `/packages/mod-registry/src/index.ts` or load it directly into the `RichEmbed` `mods` array or `CreationMod` `renderers`
+6. Add any api backend your mod needs to `/examples/api/src/app`
+7. Submit a Pull request

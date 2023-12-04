@@ -19,13 +19,13 @@ First, ensure that the following are installed globally on your machine:
 ├── ./examples → Boilerplates to implement Mod protocol in your apps
 │   ├── ./examples/api → An open source next.js backend for endpoints
 │   ├── ./examples/nextjs-shadcn → A boilerplate next.js starter
-├── ./miniapps → All the current Mod protocol Mini-apps
+├── ./mods → All the current Mod protocol Mini-apps
 ├── ./docs → An .mdx based docs site
 ├── ./packages → The core Mod protocol libraries
 │   ├── ./packages/core → The core library that takes a Miniapp configuration and produces a JS Miniapp
 │   ├── ./packages/farcaster → Some farcaster specific types and utilities
-│   ├── ./packages/miniapp-registry → A list of all the current Mini-apps
-│   ├── ./packages/react → Renders a mini-app using a UI renderer into a React component for the web
+│   ├── ./packages/mod-registry → A list of all the current Mini-apps
+│   ├── ./packages/react → Renders a mod using a UI renderer into a React component for the web
 │   ├── ./packages/react-ui-shadcn → A set of default UI renderers for web, using react, shadcn/ui and tailwind
 │   ├── ./packages/react-editor → The web based rich text editor based on tiptap.dev
 │   ├── ./packages/tiptap-extension-link → An extension for the web based rich text editor to handle links

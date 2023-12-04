@@ -9,6 +9,6 @@ export default function actionResolverEthPersonalSign(
 ) {
   // eslint-disable-next-line no-console
   console.warn(
-    "Please implement 'EthPersonalSignActionResolver' and configure the MiniApp to use it"
+    "Please implement 'EthPersonalSignActionResolver' and configure the Mod to use it"
   );
 }

@@ -22,4 +22,4 @@
   - @mod-protocol/react-editor@0.0.2
   - @mod-protocol/react-ui-shadcn@0.0.2
   - @mod-protocol/react@0.0.2
-  - @mod-protocol/miniapp-registry@0.0.2
+  - @mod-protocol/mod-registry@0.0.2
