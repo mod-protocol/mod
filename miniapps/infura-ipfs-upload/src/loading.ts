@@ -1,6 +1,6 @@
-import { Element } from "@packages/core";
+import { ModElement } from "@mod-protocol/core";
 
-const loading: Element[] = [
+const loading: ModElement[] = [
   {
     type: "text",
     label: "Uploading the file: {{refs.myFileUploadRequest.progress}}%",

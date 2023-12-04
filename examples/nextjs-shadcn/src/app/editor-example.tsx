@@ -1,169 +1,169 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@packages/react-ui-shadcn/src/@/components/ui/button";
-import { CreationMiniApp } from "@packages/react";
-import { useEditor, EditorContent } from "@packages/tiptap";
-import { creationMiniApps } from "@packages/miniapp-registry";
+import { getAddress } from "viem";
+
+// Core
 import {
-  Manifest,
-  AddEmbedActionResolverEventsType,
-  AddEmbedActionResolverInitType,
-  OpenFileActionResolverEventsType,
-  OpenFileActionResolverInitType,
-  SetInputActionResolverEventsType,
-  SetInputActionResolverInitType,
-} from "@packages/core";
-import { createRenderMentionsSuggestionConfig } from "@packages/react-ui-shadcn/src/@/lib/create-render-mentions-suggestion-config";
-import { CreationMiniAppsSearch } from "@packages/react-ui-shadcn/src/@/components/creation-miniapps-search";
-import { CastLengthUIIndicator } from "@packages/react-ui-shadcn/src/@/components/cast-length-ui-indicator";
-import { ChannelPicker } from "@packages/react-ui-shadcn/src/@/components/channel-picker";
-import { FARCASTER_MAX_EMBEDS } from "@packages/farcaster";
-import { EmbedsEditor } from "@packages/react-ui-shadcn/src/@/lib/embeds";
+  Channel,
+  formatPlaintextToHubCastMessage,
+  getFarcasterChannels,
+  getFarcasterMentions,
+  getMentionFidsByUsernames,
+} from "@mod-protocol/farcaster";
+import { CreationMiniApp } from "@mod-protocol/react";
+import { useEditor, EditorContent } from "@mod-protocol/react-editor";
+import { creationMiniApps } from "@mod-protocol/miniapp-registry";
+import {
+  Embed,
+  EthPersonalSignActionResolverInit,
+  ModManifest,
+  fetchUrlMetadata,
+  handleAddEmbed,
+  handleOpenFile,
+  handleSetInput,
+} from "@mod-protocol/core";
+import { SiweMessage } from "siwe";
+import { useAccount, useSignMessage } from "wagmi";
+
+// UI implementation
+import { createRenderMentionsSuggestionConfig } from "@mod-protocol/react-ui-shadcn/dist/lib/mentions";
+import { CreationMiniAppsSearch } from "@mod-protocol/react-ui-shadcn/dist/components/creation-miniapps-search";
+import { CastLengthUIIndicator } from "@mod-protocol/react-ui-shadcn/dist/components/cast-length-ui-indicator";
+import { ChannelPicker } from "@mod-protocol/react-ui-shadcn/dist/components/channel-picker";
+import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/dist/lib/embeds";
+import { Button } from "@mod-protocol/react-ui-shadcn/dist/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@packages/react-ui-shadcn/src/@/components/ui/popover";
-import { renderers } from "@packages/react-ui-shadcn/src/renderers";
+} from "@mod-protocol/react-ui-shadcn/dist/components/ui/popover";
+import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
 
-if (!process.env.NEXT_PUBLIC_API_URL) {
-  throw new Error(
-    "Please provide the NEXT_PUBLIC_API_URL environment variable"
+// Optionally replace with your API_URL here
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? "https://api.modprotocol.org";
+
+const getMentions = getFarcasterMentions(API_URL);
+const getChannels = getFarcasterChannels(API_URL);
+const getMentionFids = getMentionFidsByUsernames(API_URL);
+const getUrlMetadata = fetchUrlMetadata(API_URL);
+const onError = (err) => console.error(err.message);
+const onSubmit = async ({
+  text,
+  embeds,
+  channel,
+}: {
+  text: string;
+  embeds: Embed[];
+  channel: Channel;
+}) => {
+  const formattedCast = await formatPlaintextToHubCastMessage({
+    text,
+    embeds,
+    parentUrl: channel.parent_url,
+    getMentionFidsByUsernames: getMentionFids,
+  });
+  window.alert(
+    `This is a demo, and doesn't do anything.\n\nCast text:\n${text}\nEmbeds:\n${embeds
+      .map((embed) => (embed as any).url)
+      .join(", ")}\nChannel:\n${channel.name}`
   );
-}
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-async function onSubmit() {
+  console.log(formattedCast);
+
+  // submit the cast to a hub
+
   return true;
-}
+};
 
 export default function EditorExample() {
-  const getMentions = React.useCallback(async (query: string) => {
-    const req = await fetch(
-      `${API_URL}/farcaster/mentions?q=${encodeURIComponent(query)}`
-    );
-
-    const reqJson = await req.json();
-
-    return reqJson.data;
-  }, []);
-
-  const fetchUrlMetadata = React.useCallback(async (url: string) => {
-    const req = await fetch(
-      `${API_URL}/open-graph?url=${encodeURIComponent(url)}`
-    );
-
-    const reqJson = await req.json();
-
-    return reqJson;
-  }, []);
-
   const {
     editor,
     getText,
-    setText,
     getEmbeds,
-    addEmbed,
     setEmbeds,
+    setText,
     setChannel,
     getChannel,
+    addEmbed,
+    handleSubmit,
   } = useEditor({
-    fetchUrlMetadata: fetchUrlMetadata,
-    placeholderText: "Whats on your mind",
-    onError: (err) => {
-      window.alert(err.message);
-    },
-    onSubmit: onSubmit,
-    maxEmbeds: FARCASTER_MAX_EMBEDS,
+    fetchUrlMetadata: getUrlMetadata,
+    onError,
+    onSubmit,
     linkClassName: "text-blue-600",
     renderMentionsSuggestionConfig: createRenderMentionsSuggestionConfig({
       getResults: getMentions,
     }),
   });
 
-  const handleSetInput = React.useCallback(
-    (
-      init: SetInputActionResolverInitType,
-      events: SetInputActionResolverEventsType
-    ) => {
-      setText(init.input);
-      events.onSuccess(init.input);
+  const { address: unchecksummedAddress } = useAccount();
+  const checksummedAddress = React.useMemo(() => {
+    if (!unchecksummedAddress) return null;
+    return getAddress(unchecksummedAddress);
+  }, [unchecksummedAddress]);
+
+  const { signMessageAsync } = useSignMessage();
+
+  const getAuthSig = React.useCallback(
+    async (
+      {
+        data: { statement, version, chainId },
+      }: EthPersonalSignActionResolverInit,
+      { onSuccess, onError }
+    ): Promise<void> => {
+      if (!checksummedAddress) {
+        window.alert("please connect your wallet");
+        return;
+      }
+      try {
+        const siweMessage = new SiweMessage({
+          domain: process.env.NEXT_PUBLIC_HOST,
+          address: checksummedAddress,
+          statement,
+          uri: process.env.NEXT_PUBLIC_URL,
+          version,
+          chainId: Number(chainId),
+        });
+        const messageToSign = siweMessage.prepareMessage();
+
+        // Sign the message and format the authSig
+        const signature = await signMessageAsync({ message: messageToSign });
+        const authSig = {
+          signature,
+          // derivedVia: "web3.eth.personal.sign",
+          signedMessage: messageToSign,
+          address: checksummedAddress,
+        };
+
+        onSuccess(authSig);
+      } catch (err) {
+        console.error(err);
+        onError(err);
+      }
     },
-    [setText]
+    [signMessageAsync, checksummedAddress]
   );
 
-  const handleAddEmbed = React.useCallback(
-    (
-      init: AddEmbedActionResolverInitType,
-      events: AddEmbedActionResolverEventsType
-    ) => {
-      addEmbed({ url: init.url, status: "loading" });
-      events.onSuccess();
-    },
-    [setText, addEmbed]
-  );
+  const [currentMiniapp, setCurrentMiniapp] =
+    React.useState<ModManifest | null>(null);
 
-  const handleOpenFile = React.useCallback(
-    (
-      init: OpenFileActionResolverInitType,
-      events: OpenFileActionResolverEventsType
-    ) => {
-      const inputElement = document.createElement("input");
-
-      inputElement.style.display = "none";
-      document.body.appendChild(inputElement);
-
-      inputElement.type = "file";
-      inputElement.accept = init.accept.join(",");
-      inputElement.multiple = init.maxFiles > 1;
-
-      inputElement.addEventListener("change", (arg) => {
-        const inputElement = arg.target as HTMLInputElement;
-        const files = inputElement.files ? Array.from(inputElement.files) : [];
-
-        events.onSuccess(
-          files.map((file) => ({
-            name: file.name,
-            mimeType: file.type,
-            blob: file,
-          }))
-        );
-
-        document.body.removeChild(inputElement);
-      });
-
-      inputElement.dispatchEvent(new MouseEvent("click"));
-    },
-    []
-  );
-
-  const [currentMiniapp, setCurrentMiniapp] = React.useState<Manifest | null>(
-    null
-  );
-
-  const handleMiniappExit = React.useCallback(
-    () => setCurrentMiniapp(null),
-    []
-  );
-
-  const getChannels = React.useCallback(async (query) => {
-    const results = await fetch(
-      `${API_URL}/farcaster/channels?q=${encodeURIComponent(query)}`
-    );
-
-    const body = await results.json();
-
-    return body.channels;
-  }, []);
+  const user = React.useMemo(() => {
+    return {
+      wallet: {
+        address: checksummedAddress,
+      },
+    };
+  }, [checksummedAddress]);
 
   return (
-    <form onSubmit={onSubmit}>
-      <div className="p-2 border-slate-200 rounded-md border">
+    <form onSubmit={handleSubmit}>
+      <div className="p-2 border border-input rounded-md">
         <EditorContent
           editor={editor}
           autoFocus
-          style={{ width: "100%", height: "100%", minHeight: "200px" }}
+          className="w-full h-full min-h-[200px]"
         />
         <EmbedsEditor embeds={getEmbeds()} setEmbeds={setEmbeds} />
       </div>
@@ -175,7 +175,9 @@ export default function EditorExample() {
         />
         <Popover
           open={!!currentMiniapp}
-          onOpenChange={(op) => (!op ? setCurrentMiniapp(null) : undefined)}
+          onOpenChange={(op: boolean) => {
+            if (!op) setCurrentMiniapp(null);
+          }}
         >
           <PopoverTrigger></PopoverTrigger>
           <CreationMiniAppsSearch
@@ -192,18 +194,19 @@ export default function EditorExample() {
                 input={getText()}
                 embeds={getEmbeds()}
                 api={API_URL}
+                user={user}
                 variant="creation"
                 manifest={currentMiniapp}
                 renderers={renderers}
                 onOpenFileAction={handleOpenFile}
-                onExitAction={handleMiniappExit}
-                onSetInputAction={handleSetInput}
-                onAddEmbedAction={handleAddEmbed}
+                onExitAction={() => setCurrentMiniapp(null)}
+                onSetInputAction={handleSetInput(setText)}
+                onAddEmbedAction={handleAddEmbed(addEmbed)}
+                onEthPersonalSignAction={getAuthSig}
               />
             </div>
           </PopoverContent>
         </Popover>
-
         <CastLengthUIIndicator getText={getText} />
         <div className="grow"></div>
         <Button type="submit">Cast</Button>

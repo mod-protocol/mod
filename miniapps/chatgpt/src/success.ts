@@ -1,6 +1,6 @@
-import { Element } from "@packages/core";
+import { ModElement } from "@mod-protocol/core";
 
-const success: Element[] = [
+const success: ModElement[] = [
   {
     type: "vertical-layout",
     elements: [
@@ -26,6 +26,7 @@ const success: Element[] = [
           {
             type: "button",
             label: "Retry",
+            variant: "secondary",
             onclick: {
               ref: "myChatGPTServerRequest",
               type: "POST",

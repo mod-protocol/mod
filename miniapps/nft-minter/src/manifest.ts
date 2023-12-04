@@ -1,7 +1,7 @@
-import { Manifest } from "@packages/core";
+import { ModManifest } from "@mod-protocol/core";
 import view from "./view";
 
-const manifest: Manifest = {
+const manifest: ModManifest = {
   slug: "nft-minter",
   name: "Preview and mint NFTs",
   custodyAddress: "furlong.eth",
@@ -11,7 +11,7 @@ const manifest: Manifest = {
   contentEntrypoints: [
     {
       if: {
-        value: "{{embed.metadata.nft.collectionName}}",
+        value: "{{embed.metadata.nft.collection.name}}",
         match: {
           NOT: {
             equals: "",

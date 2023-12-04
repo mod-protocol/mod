@@ -1,9 +1,9 @@
-import { Element } from "@packages/core";
+import { ModElement } from "@mod-protocol/core";
 
-const loading: Element[] = [
+const loading: ModElement[] = [
   {
     type: "text",
-    label: "Shortening the input...",
+    label: "Fetching a response...",
   },
   {
     type: "circular-progress",

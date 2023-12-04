@@ -1,0 +1,160 @@
+import { Tabs } from "nextra/components";
+
+# Metadata Cache
+
+The metadata cache can be used to retrieve Open Graph metadata for embeds in casts, useful for rendering embeds in a cast without having to make a request to each embed URL.
+
+It makes use of the [Metadata Indexer](https://github.com/mod-protocol/mod/tree/main/examples/metadata-indexer), an open source and self-hostable service that indexes casts, embeds, and their metadata.
+
+We are hosting a free instance of the Metadata indexer that can be reached at https://api.modprotocol.org/api/cast-embeds-metadata
+
+## `/api/cast-embeds-metadata`
+
+Fetching metadata from the cache is as simple as making a POST request to the following endpoint with a list of cast hashes in the body.
+
+<Tabs items={["Shell", "JS (fetch)", "Node.js v18+ (fetch)"]}>
+  <Tabs.Tab>
+    ```bash
+    curl --request POST \
+    --url https://api.modprotocol.org/api/cast-embeds-metadata \
+    --header 'Content-Type: application/json' \
+    --data '["0x15f0c75fd1735789b52c708f858816d149910c1d","0x1af019b5ad82f159efa3f2c51b4d4653604180d4"]'
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```js
+    const request = await fetch("https://api.modprotocol.org/api/cast-embeds-metadata", {
+      body: JSON.stringify(["0x15f0c75fd1735789b52c708f858816d149910c1d","0x1af019b5ad82f159efa3f2c51b4d4653604180d4"]),
+      method: 'POST',
+      headers: {
+        'Content-Type': "application/json"
+      }
+    });
+    const metadata = await request.json();
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```js
+    const request = await fetch("https://api.modprotocol.org/api/cast-embeds-metadata", {
+      body: JSON.stringify(["0x15f0c75fd1735789b52c708f858816d149910c1d","0x1af019b5ad82f159efa3f2c51b4d4653604180d4"]),
+      method: 'POST',
+      headers: {
+        'Content-Type': "application/json"
+      }
+    });
+    const metadata = await request.json();
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+This will return a JSON object with the following structure:
+
+```json
+{
+  "0x1234...abcd": [
+    {
+      "castHash": "0x1234...abcd",
+      "url": "...",
+      "normalizedUrl": "...",
+      "index": 0,
+      "metadata": {
+        "title": "Example Title",
+        "description": "Example Description",
+        "image": {
+          "url": "https://example.com/image.png"
+        }
+        // ...
+      }
+    }
+  ]
+}
+```
+
+Returned metadata objects conform to the `UrlMetadata` type. This can then be used to render embeds in a cast.
+
+```typescript
+import { UrlMetadata } from "@mod-protocol/core";
+
+cast.embeds.map((embed) => {
+  const metadata: UrlMetadata = metadataResponse[cast.hash][embed.url];
+  return <RenderEmbed metadata={metadata} />;
+});
+```
+
+## `/api/cast-embeds-metadata/by-url`
+
+Fetching metadata from the cache by url is as simple as making a POST request to the following endpoint with a list of urls in the body.
+
+<Tabs items={["Shell", "JS (fetch)", "Node.js v18+ (fetch)"]}>
+  <Tabs.Tab>
+    ```bash
+    curl --request POST \
+    --url https://api.modprotocol.org/api/cast-embeds-metadata/by-url \
+    --header 'Content-Type: application/json' \
+    --data '["https://google.com","https://twitter.com"]'
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```js
+    const request = await fetch("https://api.modprotocol.org/api/cast-embeds-metadata/by-url", {
+      body: JSON.stringify(["https://google.com","https://twitter.com"]),
+      method: 'POST',
+      headers: {
+        'Content-Type': "application/json"
+      }
+    });
+    const metadata = await request.json();
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```js
+    const request = await fetch("https://api.modprotocol.org/api/cast-embeds-metadata/by-url", {
+      body: JSON.stringify(["https://google.com","https://twitter.com"]),
+      method: 'POST',
+      headers: {
+        'Content-Type': "application/json"
+      }
+    });
+    const metadata = await request.json();
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+This will return a JSON object with the following structure:
+
+```json
+{
+  "https://google.com": {
+    "image": {
+      "url": "https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png",
+      "height": 128,
+      "width": 128
+    },
+    "description": "Celebrate Native American Heritage Month with Google",
+    "title": "Google",
+    "publisher": "google.com",
+    "logo": {
+      "url": "https://www.google.com/favicon.ico"
+    },
+    "mimeType": "text/html; charset=UTF-8"
+  },
+  "https://twitter.com": {
+    "description": "From breaking news and entertainment to sports and politics, get the full story with all the live commentary.",
+    "title": "@ on Twitter",
+    "publisher": "Twitter",
+    "logo": {
+      "url": "https://abs.twimg.com/favicons/twitter.3.ico"
+    },
+    "mimeType": "text/html; charset=utf-8"
+  }
+}
+```
+
+Returned metadata objects conform to the `UrlMetadata` type. This can then be used to render embeds in a cast.
+
+```typescript
+import { UrlMetadata } from "@mod-protocol/core";
+
+const metadata: UrlMetadata = metadataResponse[embed.url];
+return <RenderEmbed metadata={metadata} />;
+```

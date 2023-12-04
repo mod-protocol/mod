@@ -4,17 +4,20 @@ import isArray from "lodash.isarray";
 import isString from "lodash.isstring";
 import mapValues from "lodash.mapvalues";
 import {
-  Action,
-  EventType,
-  Element,
-  Manifest,
+  ModAction,
+  ModEvent,
+  ModElement,
+  ModManifest,
   JsonType,
   Op,
   ConditionalFlow,
+  EthTransactionData,
+  EthPersonalSignData,
+  HTTPAction,
 } from "./manifest";
 import { Embed } from "./embeds";
 
-export type ElementRefType<T> =
+export type ModElementRef<T> =
   | {
       type: "text";
       label: string;
@@ -29,8 +32,19 @@ export type ElementRefType<T> =
       videoSrc: string;
     }
   | {
+      type: "link";
+      label: string;
+      variant?: "link" | "primary" | "secondary" | "destructive";
+      url: string;
+      events: {
+        onClick?: () => void;
+      };
+    }
+  | {
       type: "button";
       label: string;
+      loadingLabel?: string;
+      variant?: "primary" | "secondary" | "destructive";
       isLoading: boolean;
       isDisabled: boolean;
       events: {
@@ -54,6 +68,34 @@ export type ElementRefType<T> =
         onLoad: () => void;
       };
       elements?: T[];
+    }
+  | {
+      type: "combobox";
+      isClearable?: boolean;
+      placeholder?: string;
+      options: Array<{ label: string; value: any }> | null;
+      events: {
+        onLoad: () => void;
+        onChange: (input: string) => void;
+        onPick: (newValue: any) => void;
+      };
+    }
+  | {
+      type: "textarea";
+      placeholder?: string;
+      events: {
+        onChange: (input: string) => void;
+        onSubmit: (input: string) => void;
+      };
+    }
+  | {
+      type: "select";
+      isClearable: boolean;
+      placeholder?: string;
+      options: Array<{ label: string; value: any }>;
+      events: {
+        onChange: (input: string) => void;
+      };
     }
   | {
       type: "input";
@@ -115,20 +157,30 @@ export type ElementRefType<T> =
       };
     };
 
-export type CreationContextType = {
+export type CreationContext = {
   input: any;
+  user?: {
+    wallet?: {
+      address: string;
+    };
+  };
   embeds: Embed[];
   /** The url of the api hosting the mini-app backends. (including /api) **/
   api: string;
 };
 
-// Render mini apps only are triggered by a single embed right now
-export type ContentContextType = {
+// Render Mini-apps only are triggered by a single embed right now
+export type ContentContext = {
+  user?: {
+    wallet?: {
+      address: string;
+    };
+  };
   embed: Embed;
   api: string;
 };
 
-export type ContextType = CreationContextType | ContentContextType;
+export type ContextType = CreationContext | ContentContext;
 
 function nonNullable<T>(value: T): value is NonNullable<T> {
   return value !== null && value !== undefined;
@@ -140,13 +192,13 @@ function hasDefinedProperty<T extends Record<any, any>, K extends keyof T>(
   return property in obj && typeof obj[property] !== "undefined";
 }
 
-export type HttpActionResolverInitType = {
+export type HttpActionResolverInit = {
   url: string;
   method: string;
   body?: any;
   headers?: Record<string, string>;
 };
-export type HttpActionResolverEventsType = {
+export type HttpActionResolverEvents = {
   onUploadProgress: (progress: number) => void;
   onAbort: () => void;
   onSuccess: (response: {
@@ -157,66 +209,102 @@ export type HttpActionResolverEventsType = {
   onError: (error: { status: number; statusText: string; error: any }) => void;
 };
 export interface HttpActionResolver {
-  (
-    init: HttpActionResolverInitType,
-    events: HttpActionResolverEventsType
-  ): void;
+  (init: HttpActionResolverInit, events: HttpActionResolverEvents): void;
 }
 
-export type OpenFileActionResolverInitType = {
+export type OpenFileActionResolverInit = {
   maxFiles: number;
   accept: string[];
 };
-export type OpenFileActionResolverEventsType = {
+export type OpenFileActionResolverEvents = {
   onAbort: () => void;
   onSuccess: (files: { name: string; mimeType: string; blob: any }[]) => void;
   onError: (error: { message: string }) => void;
 };
 export interface OpenFileActionResolver {
   (
-    init: OpenFileActionResolverInitType,
-    events: OpenFileActionResolverEventsType
+    init: OpenFileActionResolverInit,
+    events: OpenFileActionResolverEvents
   ): void;
 }
 
-export type SetInputActionResolverInitType = {
+export type SetInputActionResolverInit = {
   input: any;
 };
-export type SetInputActionResolverEventsType = {
+
+export type SetInputActionResolverEvents = {
   onSuccess: (input: any) => void;
 };
+
 export interface SetInputActionResolver {
   (
-    init: SetInputActionResolverInitType,
-    events: SetInputActionResolverEventsType
+    init: SetInputActionResolverInit,
+    events: SetInputActionResolverEvents
   ): void;
 }
 
-export type AddEmbedActionResolverInitType = {
+export type AddEmbedActionResolverInit = {
   url: string;
   name: string;
   mimeType: string;
 };
-export type AddEmbedActionResolverEventsType = {
+export type AddEmbedActionResolverEvents = {
   onSuccess: () => void;
 };
 export interface AddEmbedActionResolver {
   (
-    init: AddEmbedActionResolverInitType,
-    events: AddEmbedActionResolverEventsType
+    init: AddEmbedActionResolverInit,
+    events: AddEmbedActionResolverEvents
   ): void;
 }
 
-export type OpenLinkActionResolverInitType = {
+export type OpenLinkActionResolverInit = {
   url: string;
 };
-export type OpenLinkActionResolverEventsType = {
+export type OpenLinkActionResolverEvents = {
   onSuccess: () => void;
 };
 export interface OpenLinkActionResolver {
   (
-    init: OpenLinkActionResolverInitType,
-    events: OpenLinkActionResolverEventsType
+    init: OpenLinkActionResolverInit,
+    events: OpenLinkActionResolverEvents
+  ): void;
+}
+
+export type EthPersonalSignActionResolverInit = {
+  data: EthPersonalSignData;
+};
+
+export type EthPersonalSignActionResolverEvents = {
+  onSuccess: (data: {
+    signature: string;
+    signedMessage: string;
+    address: string;
+  }) => void;
+  onError(error: { message: string }): void;
+};
+
+export interface EthPersonalSignActionResolver {
+  (
+    init: EthPersonalSignActionResolverInit,
+    events: EthPersonalSignActionResolverEvents
+  ): void;
+}
+
+export type SendEthTransactionActionResolverInit = {
+  data: EthTransactionData;
+  chainId: string;
+};
+export type SendEthTransactionActionResolverEvents = {
+  onSubmitted: (txHash: string) => void;
+  onConfirmed: (txHash: string, isSuccess: boolean) => void;
+  onError(error: { message: string }): void;
+};
+
+export interface SendEthTransactionActionResolver {
+  (
+    init: SendEthTransactionActionResolverInit,
+    events: SendEthTransactionActionResolverEvents
   ): void;
 }
 
@@ -321,8 +409,8 @@ function matchesOp(value: string, op: Op, context: any): boolean {
 }
 
 export function canRenderEntrypointWithContext(
-  entrypoint: NonNullable<Manifest["contentEntrypoints"]>[number],
-  context: ContentContextType
+  entrypoint: NonNullable<ModManifest["contentEntrypoints"]>[number],
+  context: ContentContext
 ) {
   const arrayOfIfs = isArray(entrypoint.if) ? entrypoint.if : [entrypoint.if];
 
@@ -333,42 +421,46 @@ export function canRenderEntrypointWithContext(
 }
 
 export type RendererOptions = {
-  manifest: Manifest;
+  manifest: ModManifest;
   onTreeChange: () => void;
   onHttpAction: HttpActionResolver;
   onOpenFileAction: OpenFileActionResolver;
   onSetInputAction: SetInputActionResolver;
   onAddEmbedAction: AddEmbedActionResolver;
   onOpenLinkAction: OpenLinkActionResolver;
+  onEthPersonalSignAction: EthPersonalSignActionResolver;
+  onSendEthTransactionAction: SendEthTransactionActionResolver;
   onExitAction: ExitActionResolver;
 } & (
   | {
       variant: "creation";
-      context: CreationContextType;
+      context: CreationContext;
     }
   | {
       variant: "content";
-      context: ContentContextType;
+      context: ContentContext;
     }
 );
 
 export class Renderer {
   private interrupted: boolean = false;
-  private currentTree: Element[] = [];
+  private currentTree: ModElement[] = [];
   private asyncAction: {
     promise: Promise<any>;
-    ref: Action;
+    ref: ModAction;
   } | null = null;
   private refs: Record<string, any> = {};
   private context: Readonly<ContextType>;
   private manifestContext: Record<string, any> = {};
-  private readonly manifest: Manifest;
+  private readonly manifest: ModManifest;
   private onTreeChange: () => void;
   private onHttpAction: HttpActionResolver;
   private onOpenFileAction: OpenFileActionResolver;
   private onSetInputAction: SetInputActionResolver;
   private onAddEmbedAction: AddEmbedActionResolver;
   private onOpenLinkAction: OpenLinkActionResolver;
+  private onSendEthTransactionAction: SendEthTransactionActionResolver;
+  private onEthPersonalSignAction: EthPersonalSignActionResolver;
   private onExitAction: ExitActionResolver;
 
   constructor(options: RendererOptions) {
@@ -380,6 +472,8 @@ export class Renderer {
     this.onSetInputAction = options.onSetInputAction;
     this.onAddEmbedAction = options.onAddEmbedAction;
     this.onOpenLinkAction = options.onOpenLinkAction;
+    this.onEthPersonalSignAction = options.onEthPersonalSignAction;
+    this.onSendEthTransactionAction = options.onSendEthTransactionAction;
     this.onExitAction = options.onExitAction;
 
     if (options.variant === "creation") {
@@ -420,6 +514,16 @@ export class Renderer {
     this.onAddEmbedAction = resolver;
   }
 
+  setEthPersonalSignActionResolver(resolver: EthPersonalSignActionResolver) {
+    this.onEthPersonalSignAction = resolver;
+  }
+
+  setSendEthTransactionActionResolver(
+    resolver: SendEthTransactionActionResolver
+  ) {
+    this.onSendEthTransactionAction = resolver;
+  }
+
   setExitActionResolver(resolver: ExitActionResolver) {
     this.onExitAction = resolver;
   }
@@ -439,57 +543,67 @@ export class Renderer {
       refs: this.refs,
     });
   }
+  private constructHttpAction(action: HTTPAction) {
+    const url = new URL(this.replaceInlineContext(action.url));
+    // set query params
+    if (action.type === "GET" && action.searchParams) {
+      Object.entries(action.searchParams).forEach(([key, value]) => {
+        url.searchParams.set(key, this.replaceInlineContext(value));
+      });
+    }
+    let options: HttpActionResolverInit = {
+      url: url.toString(),
+      method: action.type,
+    };
+    if (
+      (action.type === "POST" ||
+        action.type === "PUT" ||
+        action.type === "PATCH") &&
+      action.body
+    ) {
+      if ("json" in action.body) {
+        const interpretJson = (json: JsonType): any => {
+          if (json.type === "object") {
+            return mapValues(json.value, (val) => interpretJson(val));
+          }
+          if (json.type === "array") {
+            return json.value.map((val) => interpretJson(val));
+          }
+          if (json.type === "string") {
+            return this.replaceInlineContext(json.value);
+          }
+          return json.value;
+        };
+        options.body = JSON.stringify(interpretJson(action.body.json));
+        options.headers = {
+          "content-type": "application/json",
+        };
+      } else {
+        const formData = new FormData();
 
-  private executeAction(action: Action) {
+        for (const name in action.body.formData) {
+          const l = action.body.formData[name];
+
+          if (l.type === "string") {
+            formData.append(name, this.replaceInlineContext(l.value));
+          } else {
+            formData.append(name, get({ refs: this.refs }, l.value));
+          }
+        }
+
+        options.body = formData;
+      }
+    }
+    return options;
+  }
+  private executeAction(action: ModAction) {
     switch (action.type) {
       case "GET":
       case "POST":
       case "PUT":
       case "PATCH":
       case "DELETE": {
-        let options: HttpActionResolverInitType = {
-          url: this.replaceInlineContext(action.url),
-          method: action.type,
-        };
-        if (
-          (action.type === "POST" ||
-            action.type === "PUT" ||
-            action.type === "PATCH") &&
-          action.body
-        ) {
-          if ("json" in action.body) {
-            const interpretJson = (json: JsonType): any => {
-              if (json.type === "object") {
-                return mapValues(json.value, (val) => interpretJson(val));
-              }
-              if (json.type === "array") {
-                return json.value.map((val) => interpretJson(val));
-              }
-              if (json.type === "string") {
-                return this.replaceInlineContext(json.value);
-              }
-              return json.value;
-            };
-            options.body = JSON.stringify(interpretJson(action.body.json));
-            options.headers = {
-              "content-type": "application/json",
-            };
-          } else {
-            const formData = new FormData();
-
-            for (const name in action.body.formData) {
-              const l = action.body.formData[name];
-
-              if (l.type === "string") {
-                formData.append(name, this.replaceInlineContext(l.value));
-              } else {
-                formData.append(name, get({ refs: this.refs }, l.value));
-              }
-            }
-
-            options.body = formData;
-          }
-        }
+        const options = this.constructHttpAction(action);
 
         if (action.ref) {
           set(this.refs, action.ref, { progress: 0 });
@@ -504,7 +618,6 @@ export class Renderer {
                 if (this.asyncAction?.promise !== promise) {
                   return;
                 }
-                // CODE GOES HERE
               },
               onSuccess: (response) => {
                 resolve();
@@ -740,6 +853,157 @@ export class Renderer {
         };
         break;
       }
+      case "web3.eth.personal.sign": {
+        const promise = new Promise<void>((resolve) => {
+          setTimeout(() => {
+            this.onEthPersonalSignAction(
+              {
+                data: {
+                  // domain: this.replaceInlineContext(action.data.domain),
+                  // address: this.replaceInlineContext(action.data.address),
+                  statement: this.replaceInlineContext(action.data.statement),
+                  // uri: this.replaceInlineContext(action.data.uri),
+                  version: this.replaceInlineContext(action.data.version),
+                  chainId: this.replaceInlineContext(action.data.chainId),
+                },
+              },
+              {
+                onSuccess: ({ signature, signedMessage, address }) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, {
+                      signature,
+                      signedMessage,
+                      address,
+                    });
+                  }
+
+                  if (action.onsuccess) {
+                    this.stepIntoOrTriggerAction(action.onsuccess);
+                  }
+                },
+                onError: (error) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, { error });
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.onerror) {
+                    this.stepIntoOrTriggerAction(action.onerror);
+                  }
+
+                  this.onTreeChange();
+                },
+              }
+            );
+          }, 1);
+        });
+
+        this.asyncAction = {
+          promise,
+          ref: action,
+        };
+
+        break;
+      }
+      case "SENDETHTRANSACTION": {
+        const promise = new Promise<void>((resolve) => {
+          setTimeout(() => {
+            this.onSendEthTransactionAction(
+              {
+                data: {
+                  from: this.replaceInlineContext(action.txData.from),
+                  to: this.replaceInlineContext(action.txData.to),
+                  value: this.replaceInlineContext(action.txData.value || "0"),
+                  data: this.replaceInlineContext(action.txData.data || ""),
+                },
+                chainId: this.replaceInlineContext(action.chainId),
+              },
+              {
+                onSubmitted: (txHash) => {
+                  resolve();
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, {
+                      hash: txHash,
+                      status: "submitted",
+                    });
+                  }
+
+                  if (action.onsubmitted) {
+                    this.stepIntoOrTriggerAction(action.onsubmitted);
+                  }
+
+                  this.onTreeChange();
+                },
+                onConfirmed: (txHash, isSuccess) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, {
+                      hash: txHash,
+                      isSuccess,
+                      status: "confirmed",
+                    });
+                  }
+
+                  if (action.onconfirmed) {
+                    this.stepIntoOrTriggerAction(action.onconfirmed);
+                  }
+
+                  this.onTreeChange();
+                },
+                onError: (error) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, { error });
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.onerror) {
+                    this.stepIntoOrTriggerAction(action.onerror);
+                  }
+
+                  this.onTreeChange();
+                },
+              }
+            );
+          }, 1);
+        });
+
+        this.asyncAction = {
+          promise,
+          ref: action,
+        };
+
+        break;
+      }
       case "EXIT": {
         this.onExitAction();
         this.interrupted = true;
@@ -760,7 +1024,7 @@ export class Renderer {
     }
   }
 
-  private stepIntoOrTriggerAction(maybeElementTreeOrAction: EventType): void {
+  private stepIntoOrTriggerAction(maybeElementTreeOrAction: ModEvent): void {
     if (this.interrupted) {
       return;
     }
@@ -820,9 +1084,9 @@ export class Renderer {
     this.onTreeChange();
   }
 
-  mapCurrentTree<T = any>(fn: (element: ElementRefType<T>, key: string) => T) {
+  mapCurrentTree<T = any>(fn: (element: ModElementRef<T>, key: string) => T) {
     const mapper = (
-      el: Element | ConditionalFlow<Element>,
+      el: ModElement | ConditionalFlow<ModElement>,
       index: number
     ): T | null => {
       const key = index + "";
@@ -856,13 +1120,33 @@ export class Renderer {
             key
           );
         }
+        case "link": {
+          return fn(
+            {
+              type: "link",
+              label: this.replaceInlineContext(el.label),
+              variant: el.variant,
+              url: this.replaceInlineContext(el.url),
+              events: {
+                onClick: el.onclick
+                  ? () => {
+                      this.stepIntoOrTriggerAction(el.onclick!);
+                    }
+                  : undefined,
+              },
+            },
+            key
+          );
+        }
         case "button": {
           return fn(
             {
               type: "button",
+              loadingLabel: this.replaceInlineContext(el.loadingLabel ?? ""),
               label: this.replaceInlineContext(el.label),
               isLoading: this.asyncAction?.ref === el.onclick,
               isDisabled: Boolean(this.asyncAction),
+              variant: el.variant,
               events: {
                 onClick: () => {
                   this.stepIntoOrTriggerAction(el.onclick);
@@ -918,11 +1202,113 @@ export class Renderer {
             key
           );
         }
+        case "select": {
+          return fn(
+            {
+              type: "select",
+              isClearable: el.isClearable || false,
+              placeholder: el.placeholder
+                ? this.replaceInlineContext(el.placeholder)
+                : el.placeholder,
+              options: el.options.map(
+                (
+                  option
+                ): {
+                  label: string;
+                  value: any;
+                } => ({
+                  value: option.value,
+                  label: this.replaceInlineContext(option.label),
+                })
+              ),
+              events: {
+                onChange: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
+                  }
+                },
+              },
+            },
+            key
+          );
+        }
+        case "textarea": {
+          return fn(
+            {
+              type: "textarea",
+              placeholder: el.placeholder,
+              events: {
+                onChange: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
+                  }
+                },
+                onSubmit: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
+                  }
+                },
+              },
+            },
+            key
+          );
+        }
+        case "combobox": {
+          const resolvedResults: Array<{ label: string; value: any }> | null =
+            isString(el.optionsRef)
+              ? get({ refs: this.refs }, el.optionsRef, null)
+              : null;
+          return fn(
+            {
+              type: "combobox",
+              isClearable: el.isClearable,
+              placeholder: this.replaceInlineContext(el.placeholder ?? ""),
+              options: resolvedResults,
+              events: {
+                onLoad: () => {
+                  if (el.onload) {
+                    this.stepIntoOrTriggerAction(el.onload);
+                  }
+                },
+                onChange: (value: string) => {
+                  if (el.ref) {
+                    set(this.refs, el.ref, { value });
+                  }
+
+                  if (el.onchange) {
+                    this.stepIntoOrTriggerAction(el.onchange);
+                  }
+                },
+                onPick: (value: any) => {
+                  if (el.valueRef) {
+                    set(this.refs, el.valueRef, { value });
+                  }
+                  if (el.onpick) {
+                    this.stepIntoOrTriggerAction(el.onpick);
+                  }
+                },
+              },
+            },
+            key
+          );
+        }
         case "input": {
           return fn(
             {
               type: "input",
-              isClearable: el.clearable || false,
+              isClearable: el.isClearable || false,
               placeholder: el.placeholder,
               events: {
                 onChange: (value: string) => {

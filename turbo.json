@@ -10,7 +10,8 @@
       ],
       "outputs": [
         ".next/**",
-        "!.next/cache/**"
+        "!.next/cache/**",
+        "dist/**"
       ]
     },
     "lint": {},
@@ -26,6 +27,13 @@
     "INFURA_API_KEY",
     "INFURA_API_SECRET",
     "LIVEPEER_API_SECRET",
-    "NEXT_PUBLIC_API_URL"
+    "NEXT_PUBLIC_API_URL",
+    "OPENSEA_API_KEY",
+    "MICROLINK_API_KEY",
+    "DATABASE_URL",
+    "NODE_ENV",
+    "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID",
+    "NEXT_PUBLIC_URL",
+    "NEXT_PUBLIC_HOST"
   ]
 }

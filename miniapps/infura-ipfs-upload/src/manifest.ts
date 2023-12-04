@@ -1,14 +1,14 @@
-import { Manifest } from "@packages/core";
+import { ModManifest } from "@mod-protocol/core";
 import action from "./action";
 import error from "./error";
 import loading from "./loading";
 import upload from "./upload";
 
-const manifest: Manifest = {
+const manifest: ModManifest = {
   slug: "infura-ipfs-upload",
-  name: "Upload files to IPFS using infura",
+  name: "Add image",
   custodyAddress: "furlong.eth",
-  logo: "https://i.imgur.com/ks7Akx5.png",
+  logo: "https://i.imgur.com/ptsz1Ig.png",
   custodyGithubUsername: "davidfurlong",
   version: "0.0.1",
   creationEntrypoints: action,

@@ -1,6 +1,14 @@
+import { FarcasterMention } from "@mod-protocol/farcaster";
 import { NextResponse, NextRequest } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<
+  | NextResponse<{
+      message: string;
+    }>
+  | NextResponse<{
+      data: FarcasterMention[];
+    }>
+> {
   const q =
     request.nextUrl.searchParams.get("q") ||
     // neynar won't give a response if the query is empty, so we fallback to "a"
@@ -9,7 +17,7 @@ export async function GET(request: NextRequest) {
   const req = await fetch(
     `https://api.neynar.com/v2/farcaster/user/search?api_key=${
       process.env.NEYNAR_API_SECRET
-      // TODO: viewer_fid
+      // TODO: set viewer_fid
     }&viewer_fid=3&q=${encodeURIComponent(q)}`
   );
 

@@ -1,6 +1,6 @@
-import { Element } from "@packages/core";
+import { ModElement } from "@mod-protocol/core";
 
-const error: Element[] = [
+const error: ModElement[] = [
   {
     type: "vertical-layout",
     elements: [
@@ -22,7 +22,7 @@ const error: Element[] = [
         ref: "myInput",
         type: "input",
         placeholder: "Search",
-        clearable: true,
+        isClearable: true,
         onchange: {
           ref: "mySearchQueryRequest",
           type: "GET",

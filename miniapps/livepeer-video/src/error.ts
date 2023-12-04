@@ -1,6 +1,6 @@
-import { Element } from "@packages/core";
+import { ModElement } from "@mod-protocol/core";
 
-const error: Element[] = [
+const error: ModElement[] = [
   {
     type: "text",
     label: "ERROR: {{refs.myFileUploadRequest.error.statusText}}",

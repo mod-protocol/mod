@@ -1,0 +1,179 @@
+# Schema Reference
+
+## Variables
+
+Variables can be used to inside strings to access values. For example we might want to use a request's response to add to the input.
+
+`{{api}}` -> the api url provided
+
+`{{refs.[REF_NAME]}}` -> you can access values of elements that have a `ref` property. For example if you add `ref: "myInput"` to an element with `type: "input"`
+then you can access the values of the input by chaining properties like `{{refs.myInput.value}}`. This can be used for requests as well.
+
+`{{input}}` -> the current value of the input, only defined for elements within `creationEntrypoints`
+
+`{{embed}}` -> the embed value that triggered the `contentEntrypoints`
+
+## Properties of the Manifest
+
+```ts
+type ModManifest = {
+  /** A unique string identifying this Miniapp */
+  slug: string;
+  /** A human readable name for the Mini-app */
+  name: string;
+  /** A (temporary) github username to define as the owner */
+  custodyGithubUsername: string;
+  /** An ethereum address or ENS address to define as the owner */
+  custodyAddress: string;
+  /** A valid url pointing to an image file, it should be a square */
+  logo: string;
+  /** should be the same as the package version */
+  version: string;
+  /**
+   * A Map of unique ids to json-schema.org definitions. Used to define a new standard data model for use in this or other Mini-apps.
+   * Most useful when used in conjunction with json-ld that utilizes these data models
+   */
+  modelDefinitions?: Record<string, JSONSchema7>;
+  /** Interface this Mini-app exposes, if any, for Content Creation */
+  creationEntrypoints?: ModElement[];
+  /** Interface this Mini-app exposes, if any, for Content Rendering */
+  contentEntrypoints?: ModConditionalElement[];
+  /** A definition map of reusable elements, using their id as the key */
+  elements?: Record<string, ModElement[]>;
+  /** Permissions requested by the Mini-app */
+  permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign">;
+};
+```
+
+## Elements that build up a UI
+
+```ts
+export type ModElement =
+  | {
+      type: "text";
+      label: string;
+    }
+  | {
+      type: "image";
+      imageSrc: string;
+    }
+  | {
+      type: "link";
+      label: string;
+      variant?: "link" | "primary" | "secondary" | "destructive";
+      url: string;
+      onclick?: ModEvent;
+    }
+  | {
+      type: "button";
+      label: string;
+      variant?: "primary" | "secondary" | "destructive";
+      onclick: ModEvent;
+    }
+  | {
+      type: "circular-progress";
+    }
+  | {
+      type: "horizontal-layout";
+      elements?: string | ElementOrConditionalFlow[];
+      onload?: ModEvent;
+    }
+  | {
+      type: "vertical-layout";
+      elements?: string | ElementOrConditionalFlow[];
+      onload?: ModEvent;
+    }
+  | {
+      ref?: string;
+      type: "select";
+      options: Array<{ label: string; value: any }>;
+      placeholder?: string;
+      isClearable?: boolean;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
+    }
+  | {
+      type: "combobox";
+      ref?: string;
+      isClearable?: boolean;
+      placeholder?: string;
+      optionsRef?: string;
+      valueRef?: string;
+      onload?: ModEvent;
+      onpick?: ModEvent;
+      onchange?: ModEvent;
+    }
+  | {
+      ref?: string;
+      type: "textarea";
+      placeholder?: string;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
+    }
+  | {
+      ref?: string;
+      type: "input";
+      placeholder?: string;
+      isClearable?: boolean;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
+    }
+  | {
+      type: "video";
+      videoSrc: string;
+    }
+  | {
+      ref?: string;
+      type: "tabs";
+      values: string[];
+      names: string[];
+      onload?: ModEvent;
+      onchange?: ModEvent;
+    }
+  | ({
+      ref?: string;
+      type: "image-grid-list";
+      onload?: ModEvent;
+      onpick?: ModEvent;
+    } & (
+      | { loading: boolean; imagesListRef?: never }
+      | { loading?: never; imagesListRef: string }
+    ))
+  | {
+      type: "dialog";
+      elements?: string | ElementOrConditionalFlow[];
+      onclose?: ModEvent;
+    }
+  | {
+      type: "alert";
+      title: string;
+      description: string;
+      variant: "success" | "error";
+    }
+  | {
+      type: "avatar";
+      src: string;
+    }
+  | ({
+      type: "card";
+      elements?: string | ElementOrConditionalFlow[];
+      onclick?: ModEvent;
+    } & (
+      | {
+          imageSrc: string;
+          aspectRatio?: number;
+          topLeftBadge?: string;
+          topRightBadge?: string;
+          bottomLeftBadge?: string;
+          bottomRightBadge?: string;
+        }
+      | {
+          imageSrc?: never;
+          aspectRatio?: never;
+          topLeftBadge?: never;
+          topRightBadge?: never;
+          bottomLeftBadge?: never;
+          bottomRightBadge?: never;
+        }
+    ));
+```

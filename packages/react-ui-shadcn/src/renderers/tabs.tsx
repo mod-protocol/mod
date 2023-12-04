@@ -1,6 +1,6 @@
 import React from "react";
-import { Renderers } from "@packages/react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Renderers } from "@mod-protocol/react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
 
 export const TabsRenderer = (
   props: React.ComponentProps<Renderers["Tabs"]>

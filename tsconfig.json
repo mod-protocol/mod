@@ -9,6 +9,12 @@
     "esModuleInterop": true,
     "preserveSymlinks": true,
     "incremental": true,
+    "declarationMap": true,
+    "paths": {
+      "@miniapps/*": [
+        "./miniapps/*"
+      ],
+    },
     "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "node",
@@ -25,13 +31,21 @@
     "sourceMap": false,
     "strictNullChecks": true,
     "target": "es2019",
-    "types": ["node"],
-    "lib": ["es2021", "dom", "esnext"],
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "es2021",
+      "dom",
+      "esnext"
+    ],
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "exclude": ["_"],
+  "exclude": [
+    "_"
+  ],
   "typeAcquisition": {
     "enable": true
   }

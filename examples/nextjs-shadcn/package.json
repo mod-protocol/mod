@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "1.0.0",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,19 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@miniapps/chatgpt": "*",
-    "@miniapps/giphy-picker": "*",
-    "@miniapps/infura-ipfs-upload": "*",
-    "@miniapps/nft-minter": "*",
-    "@packages/miniapp-registry": "*",
-    "@packages/core": "*",
-    "@packages/react": "*",
-    "@packages/tiptap": "*",
-    "next": "^13.4.1",
+    "@mod-protocol/core": "^0.0.2",
+    "@mod-protocol/miniapp-registry": "^0.0.2",
+    "@mod-protocol/react": "^0.0.2",
+    "@mod-protocol/react-editor": "^0.0.2",
+    "@mod-protocol/react-ui-shadcn": "^0.0.3",
+    "@rainbow-me/rainbowkit": "^1.2.0",
+    "encoding": "^0.1.13",
+    "next": "^13.5.6",
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss-animate": "^1.0.6"
+    "tailwindcss-animate": "^1.0.6",
+    "viem": "^1.19.0",
+    "wagmi": "^1.4.6"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
@@ -34,6 +35,6 @@
     "postcss": "^8.4.27",
     "tailwindcss": "^3.3.3",
     "tsconfig": "*",
-    "typescript": "^4.5.3"
+    "typescript": "^5.2.2"
   }
 }

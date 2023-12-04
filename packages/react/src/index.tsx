@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import {
-  Manifest,
-  ElementRefType,
+  ModManifest,
+  ModElementRef,
   Renderer,
   HttpActionResolver,
   OpenFileActionResolver,
@@ -11,27 +11,53 @@ import {
   SetInputActionResolver,
   ExitActionResolver,
   AddEmbedActionResolver,
-  ContentContextType,
-  CreationContextType,
-} from "@packages/core";
+  ContentContext,
+  CreationContext,
+  EthPersonalSignActionResolver,
+  SendEthTransactionActionResolver,
+} from "@mod-protocol/core";
 import actionResolverHttp from "./action-resolver-http";
 import actionResolverOpenFile from "./action-resolver-open-file";
 import actionResolverOpenLink from "./action-resolver-open-link";
 import actionResolverSetInput from "./action-resolver-set-input";
 import actionResolverAddEmbed from "./action-resolver-add-embed";
+import actionResolverEthPersonalSign from "./action-resolver-eth-personal-sign";
 import actionResolverExit from "./action-resolver-exit";
+import actionResolverSendEthTransaction from "./action-resolver-send-eth-transaction";
+export * from "./render-embed";
 
 export type Renderers = {
+  Container: React.ComponentType<{ children: React.ReactNode }>;
   Video: React.ComponentType<{
     videoSrc: string;
   }>;
   Image: React.ComponentType<{
     imageSrc: string;
   }>;
+  Select: React.ComponentType<{
+    isClearable: boolean;
+    placeholder?: string;
+    options: Array<{ value: any; label: string }>;
+    onChange: (value: string) => void;
+  }>;
+  Combobox: React.ComponentType<{
+    placeholder?: string;
+    options: Array<{ value: any; label: string }> | null;
+    onChange: (value: string) => void;
+    onPick: (value: any) => void;
+  }>;
   Text: React.ComponentType<{ label: string }>;
+  Link: React.ComponentType<{
+    label: string;
+    url: string;
+    variant?: "link" | "primary" | "secondary" | "destructive";
+    onClick: () => void;
+  }>;
   Button: React.ComponentType<{
     label: string;
     isLoading: boolean;
+    loadingLabel?: string;
+    variant?: "primary" | "secondary" | "destructive";
     isDisabled: boolean;
     onClick: () => void;
   }>;
@@ -40,6 +66,11 @@ export type Renderers = {
   VerticalLayout: React.ComponentType<{ children: React.ReactNode }>;
   Input: React.ComponentType<{
     isClearable: boolean;
+    placeholder?: string;
+    onChange: (value: string) => void;
+    onSubmit: (value: string) => void;
+  }>;
+  Textarea: React.ComponentType<{
     placeholder?: string;
     onChange: (value: string) => void;
     onSubmit: (value: string) => void;
@@ -82,7 +113,7 @@ export type Renderers = {
 
 const WrappedVideoRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Video"];
-  element: Extract<ElementRefType<T>, { type: "video" }>;
+  element: Extract<ModElementRef<T>, { type: "video" }>;
 }) => {
   const { component: Component, element } = props;
   const { type, ...rest } = element;
@@ -91,16 +122,30 @@ const WrappedVideoRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedTextRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Text"];
-  element: Extract<ElementRefType<T>, { type: "text" }>;
+  element: Extract<ModElementRef<T>, { type: "text" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
   return <Component {...rest} />;
 };
 
+const WrappedLinkRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Link"];
+  element: Extract<ModElementRef<T>, { type: "link" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, ...rest } = element;
+
+  const onClick = React.useCallback(() => {
+    events.onClick?.();
+  }, [events]);
+
+  return <Component {...rest} onClick={onClick} />;
+};
+
 const WrappedButtonRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Button"];
-  element: Extract<ElementRefType<T>, { type: "button" }>;
+  element: Extract<ModElementRef<T>, { type: "button" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -114,7 +159,7 @@ const WrappedButtonRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedCircularProgressRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["CircularProgress"];
-  element: Extract<ElementRefType<T>, { type: "circular-progress" }>;
+  element: Extract<ModElementRef<T>, { type: "circular-progress" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -124,7 +169,7 @@ const WrappedCircularProgressRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedHorizontalLayoutRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["HorizontalLayout"];
-  element: Extract<ElementRefType<T>, { type: "horizontal-layout" }>;
+  element: Extract<ModElementRef<T>, { type: "horizontal-layout" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, elements, ...rest } = element;
@@ -138,7 +183,7 @@ const WrappedHorizontalLayoutRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedVerticalLayoutRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["VerticalLayout"];
-  element: Extract<ElementRefType<T>, { type: "vertical-layout" }>;
+  element: Extract<ModElementRef<T>, { type: "vertical-layout" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, elements, ...rest } = element;
@@ -150,9 +195,84 @@ const WrappedVerticalLayoutRenderer = <T extends React.ReactNode>(props: {
   return <Component {...rest}>{elements}</Component>;
 };
 
+const WrappedSelectRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Select"];
+  element: Extract<ModElementRef<T>, { type: "select" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, ...rest } = element;
+
+  const onChange = React.useCallback(
+    (input: string) => {
+      events.onChange(input);
+    },
+    [events]
+  );
+
+  return <Component {...rest} onChange={onChange} />;
+};
+
 const WrappedInputRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Input"];
-  element: Extract<ElementRefType<T>, { type: "input" }>;
+  element: Extract<ModElementRef<T>, { type: "input" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, ...rest } = element;
+
+  const onChange = React.useCallback(
+    (input: string) => {
+      events.onChange(input);
+    },
+    [events]
+  );
+  const onSubmit = React.useCallback(
+    (input: string) => {
+      events.onSubmit(input);
+    },
+    [events]
+  );
+
+  return <Component {...rest} onChange={onChange} onSubmit={onSubmit} />;
+};
+
+const WrappedComboboxRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Combobox"];
+  element: Extract<ModElementRef<T>, { type: "combobox" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, options, ...rest } = element;
+
+  const onChange = React.useCallback(
+    (input: string) => {
+      events.onChange(input);
+    },
+    [events]
+  );
+
+  React.useEffect(() => {
+    events.onLoad();
+  }, []);
+
+  const onPick = React.useCallback(
+    (value: string) => {
+      events.onPick(value);
+    },
+    [events]
+  );
+
+  return (
+    <Component
+      {...rest}
+      onChange={onChange}
+      options={options}
+      onPick={onPick}
+    />
+  );
+};
+
+const WrappedTextareaRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Textarea"];
+  element: Extract<ModElementRef<T>, { type: "textarea" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -175,7 +295,7 @@ const WrappedInputRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedTabsRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Tabs"];
-  element: Extract<ElementRefType<T>, { type: "tabs" }>;
+  element: Extract<ModElementRef<T>, { type: "tabs" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, elements, ...rest } = element;
@@ -200,7 +320,7 @@ const WrappedTabsRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedImageGridListRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["ImageGridList"];
-  element: Extract<ElementRefType<T>, { type: "image-grid-list" }>;
+  element: Extract<ModElementRef<T>, { type: "image-grid-list" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -221,7 +341,7 @@ const WrappedImageGridListRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedDialogRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Dialog"];
-  element: Extract<ElementRefType<T>, { type: "dialog" }>;
+  element: Extract<ModElementRef<T>, { type: "dialog" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, elements, ...rest } = element;
@@ -239,7 +359,7 @@ const WrappedDialogRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedAlertRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Alert"];
-  element: Extract<ElementRefType<T>, { type: "alert" }>;
+  element: Extract<ModElementRef<T>, { type: "alert" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, ...rest } = element;
@@ -249,7 +369,7 @@ const WrappedAlertRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedImageRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Image"];
-  element: Extract<ElementRefType<T>, { type: "image" }>;
+  element: Extract<ModElementRef<T>, { type: "image" }>;
 }) => {
   const { component: Component, element } = props;
   const { type, ...rest } = element;
@@ -259,7 +379,7 @@ const WrappedImageRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedAvatarRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Avatar"];
-  element: Extract<ElementRefType<T>, { type: "avatar" }>;
+  element: Extract<ModElementRef<T>, { type: "avatar" }>;
 }) => {
   const { component: Component, element } = props;
   const { type, ...rest } = element;
@@ -269,7 +389,7 @@ const WrappedAvatarRenderer = <T extends React.ReactNode>(props: {
 
 const WrappedCardRenderer = <T extends React.ReactNode>(props: {
   component: Renderers["Card"];
-  element: Extract<ElementRefType<T>, { type: "card" }>;
+  element: Extract<ModElementRef<T>, { type: "card" }>;
 }) => {
   const { component: Component, element } = props;
   const { events, type, elements, ...rest } = element;
@@ -292,19 +412,24 @@ const useForceRerender = () => {
   }, []);
 };
 
-type Props = {
-  manifest: Manifest;
-  renderers: Renderers;
+export type ResolverTypes = {
   onHttpAction?: HttpActionResolver;
   onOpenFileAction?: OpenFileActionResolver;
   onSetInputAction?: SetInputActionResolver;
   onAddEmbedAction?: AddEmbedActionResolver;
   onOpenLinkAction?: OpenLinkActionResolver;
+  onEthPersonalSignAction?: EthPersonalSignActionResolver;
+  onSendEthTransactionAction?: SendEthTransactionActionResolver;
   onExitAction?: ExitActionResolver;
 };
 
+type Props = ResolverTypes & {
+  manifest: ModManifest;
+  renderers: Renderers;
+};
+
 export const CreationMiniApp = (
-  props: Props & ({ variant: "creation" } & CreationContextType)
+  props: Props & ({ variant: "creation" } & CreationContext)
 ) => {
   const {
     manifest,
@@ -314,15 +439,17 @@ export const CreationMiniApp = (
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
+    onSendEthTransactionAction = actionResolverSendEthTransaction,
+    onEthPersonalSignAction = actionResolverEthPersonalSign,
     onExitAction = actionResolverExit,
   } = props;
 
   const forceRerender = useForceRerender();
 
   const input = variant === "creation" ? props.input : "";
-  const context = React.useMemo<CreationContextType>(
-    () => ({ input, embeds: props.embeds, api: props.api }),
-    [input, props.api, props.embeds]
+  const context = React.useMemo<CreationContext>(
+    () => ({ input, embeds: props.embeds, api: props.api, user: props.user }),
+    [input, props.api, props.embeds, props.user]
   );
 
   const [renderer] = React.useState<Renderer>(
@@ -337,6 +464,8 @@ export const CreationMiniApp = (
         onSetInputAction,
         onAddEmbedAction,
         onOpenLinkAction,
+        onEthPersonalSignAction,
+        onSendEthTransactionAction,
         onExitAction,
       })
   );
@@ -350,7 +479,7 @@ export const CreationMiniApp = (
 };
 
 export const RenderMiniApp = (
-  props: Props & ({ variant: "content" } & ContentContextType)
+  props: Props & ({ variant: "content" } & ContentContext)
 ) => {
   const {
     manifest,
@@ -359,14 +488,16 @@ export const RenderMiniApp = (
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
+    onEthPersonalSignAction = actionResolverEthPersonalSign,
+    onSendEthTransactionAction = actionResolverSendEthTransaction,
     onExitAction = actionResolverExit,
   } = props;
 
   const forceRerender = useForceRerender();
 
-  const context = React.useMemo<ContentContextType>(
-    () => ({ embed: props.embed, api: props.api }),
-    [props.embed, props.api]
+  const context = React.useMemo<ContentContext>(
+    () => ({ embed: props.embed, api: props.api, user: props.user }),
+    [props.embed, props.api, props.user]
   );
 
   const [renderer] = React.useState<Renderer>(
@@ -381,6 +512,8 @@ export const RenderMiniApp = (
         onSetInputAction,
         onAddEmbedAction,
         onOpenLinkAction,
+        onEthPersonalSignAction,
+        onSendEthTransactionAction,
         onExitAction,
       })
   );
@@ -389,8 +522,13 @@ export const RenderMiniApp = (
     renderer.setContext(context);
     forceRerender();
   }, [forceRerender, context, renderer]);
+  const Container = props.renderers["Container"];
 
-  return <MiniApp {...props} renderer={renderer} />;
+  return (
+    <Container>
+      <MiniApp {...props} renderer={renderer} />
+    </Container>
+  );
 };
 
 export const MiniApp = (props: Props & { renderer: Renderer }) => {
@@ -402,6 +540,8 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
+    onEthPersonalSignAction = actionResolverEthPersonalSign,
+    onSendEthTransactionAction = actionResolverSendEthTransaction,
     onExitAction = actionResolverExit,
   } = props;
 
@@ -423,12 +563,18 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
     renderer.setOpenLinkActionResolver(onOpenLinkAction);
   }, [onOpenLinkAction, renderer]);
   React.useEffect(() => {
+    renderer.setEthPersonalSignActionResolver(onEthPersonalSignAction);
+  }, [onEthPersonalSignAction, renderer]);
+  React.useEffect(() => {
+    renderer.setSendEthTransactionActionResolver(onSendEthTransactionAction);
+  }, [onSendEthTransactionAction, renderer]);
+  React.useEffect(() => {
     renderer.setExitActionResolver(onExitAction);
   }, [onExitAction, renderer]);
 
   return (
     <VerticalLayout>
-      {renderer.mapCurrentTree((el: ElementRefType<React.ReactNode>, key) => {
+      {renderer.mapCurrentTree((el: ModElementRef<React.ReactNode>, key) => {
         switch (el.type) {
           // TODO: this switch should enforce completeness via types
           case "image":
@@ -452,6 +598,14 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
               <WrappedVideoRenderer
                 key={key}
                 component={renderers["Video"]}
+                element={el}
+              />
+            );
+          case "link":
+            return (
+              <WrappedLinkRenderer
+                key={key}
+                component={renderers["Link"]}
                 element={el}
               />
             );
@@ -484,6 +638,30 @@ export const MiniApp = (props: Props & { renderer: Renderer }) => {
               <WrappedVerticalLayoutRenderer
                 key={key}
                 component={renderers["VerticalLayout"]}
+                element={el}
+              />
+            );
+          case "combobox":
+            return (
+              <WrappedComboboxRenderer
+                key={key}
+                component={renderers["Combobox"]}
+                element={el}
+              />
+            );
+          case "textarea":
+            return (
+              <WrappedTextareaRenderer
+                key={key}
+                component={renderers["Textarea"]}
+                element={el}
+              />
+            );
+          case "select":
+            return (
+              <WrappedSelectRenderer
+                key={key}
+                component={renderers["Select"]}
                 element={el}
               />
             );

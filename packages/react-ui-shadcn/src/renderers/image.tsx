@@ -1,4 +1,4 @@
-import { Renderers } from "@packages/react";
+import { Renderers } from "@mod-protocol/react";
 import React from "react";
 
 export const ImageRenderer = (

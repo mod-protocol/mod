@@ -1,6 +1,6 @@
-import { Element } from "@packages/core";
+import { ModElement } from "@mod-protocol/core";
 
-const success: Element[] = [
+const success: ModElement[] = [
   {
     type: "vertical-layout",
     elements: [
@@ -22,7 +22,7 @@ const success: Element[] = [
         ref: "myInput",
         type: "input",
         placeholder: "Search",
-        clearable: true,
+        isClearable: true,
         onchange: {
           ref: "mySearchQueryRequest",
           type: "GET",
@@ -45,6 +45,10 @@ const success: Element[] = [
             type: "EXIT",
           },
         },
+      },
+      {
+        type: "image",
+        imageSrc: "https://i.imgur.com/rGB2Uev.png",
       },
     ],
   },

@@ -1,7 +1,8 @@
-import { Manifest } from "@packages/core";
-import view from "./view";
+import { ModManifest } from "@mod-protocol/core";
+import fullimage from "./fullimage";
+// import smallimage from "./smallimage";
 
-const manifest: Manifest = {
+const manifest: ModManifest = {
   slug: "url-render",
   name: "View urls",
   custodyAddress: "furlong.eth",
@@ -11,17 +12,16 @@ const manifest: Manifest = {
   contentEntrypoints: [
     {
       if: {
-        // this will always be true
         value: "true",
         match: {
           equals: "true",
         },
       },
-      element: view,
+      element: fullimage,
     },
   ],
   elements: {
-    "#view": view,
+    "#fullimage": fullimage,
   },
 };
 

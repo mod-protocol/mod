@@ -1,8 +1,8 @@
 import React from "react";
-import { Renderers } from "@packages/react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Renderers } from "@mod-protocol/react";
+import { ScrollArea } from "components/ui/scroll-area";
+import { AspectRatio } from "components/ui/aspect-ratio";
+import { Skeleton } from "components/ui/skeleton";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 export const ImageGridListRenderer = (
@@ -23,6 +23,7 @@ export const ImageGridListRenderer = (
           images.map((item) => (
             <AspectRatio key={item} ratio={1}>
               <button
+                type="button"
                 className="w-full h-full active:opacity-50 rounded-md"
                 onClick={() => onPick(item)}
               >

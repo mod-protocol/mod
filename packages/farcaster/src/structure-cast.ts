@@ -14,8 +14,9 @@ export const imgRegex = /(https?:\/\/.*\.(?:png|jpg|gif|webp|jpeg))/i;
 export const videoRegex = /(https?:\/\/.*\.(?:mp4|webm|avi|mov))/i;
 
 /** https://github.com/farcasterxyz/protocol/discussions/90 **/
-const usernameRegexForSplit = /(^|\s|\.)(@[a-z0-9][a-z0-9-]{0,15}(?:\.eth)?)/gi;
-const usernameRegex = /(?:^|\s)@([a-z0-9][a-z0-9-]{0,15}(?:\.eth)?)/gi;
+export const usernameRegexForSplit =
+  /(^|\s|\.)(@[a-z0-9][a-z0-9-]{0,15}(?:\.eth)?)/gi;
+export const usernameRegex = /(?:^|\s)@([a-z0-9][a-z0-9-]{0,15}(?:\.eth)?)/gi;
 
 const newlineRegex = /(\n)/gi;
 
@@ -61,26 +62,6 @@ export type StructuredCastNewline = {
   type: "newline";
   serializedContent: string;
 };
-export type StructuredCastDoubleBrackets = {
-  type: "doublebrackets";
-  serializedContent: string;
-};
-
-function extractDoubleBrackets(
-  structuredCast: StructuredCastUnit
-): StructuredCastUnit[] {
-  if (structuredCast.type !== "plaintext") return [structuredCast];
-
-  return [
-    {
-      type: "doublebrackets",
-      serializedContent: structuredCast.serializedContent.replaceAll(
-        /\[\[[^\]]+\]\]/gi,
-        ""
-      ),
-    },
-  ];
-}
 
 function extractMentions(
   structuredCast: StructuredCastUnit

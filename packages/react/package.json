@@ -1,14 +1,16 @@
 {
-  "name": "@packages/react",
-  "version": "0.0.0",
-  "main": "./src/index.tsx",
-  "types": "./src/index.tsx",
-  "private": true,
+  "name": "@mod-protocol/react",
+  "version": "0.0.2",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "lint": "eslint \"**/*.ts*\""
+    "lint": "eslint \"**/*.ts*\" && tsc --noEmit",
+    "build": "tsup src/index.tsx --format cjs,esm --dts",
+    "dev": "npm run build -- --watch"
   },
   "dependencies": {
-    "@packages/core": "*"
+    "@mod-protocol/core": "*"
   },
   "peerDependencies": {
     "react": "^18.2.0",
@@ -20,6 +22,6 @@
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "tsconfig": "*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.2.2"
   }
 }

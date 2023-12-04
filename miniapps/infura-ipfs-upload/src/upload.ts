@@ -1,6 +1,6 @@
-import { Element } from "@packages/core";
+import { ModElement } from "@mod-protocol/core";
 
-const upload: Element[] = [
+const upload: ModElement[] = [
   {
     type: "vertical-layout",
     onload: {

@@ -1,0 +1,46 @@
+{
+  "name": "@mod-protocol/react-editor",
+  "version": "0.0.2",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "lint": "eslint \"**/*.ts*\" && tsc --noEmit",
+    "build": "tsup src/index.tsx --format cjs,esm --dts",
+    "dev": "npm run build -- --watch"
+  },
+  "dependencies": {
+    "@tiptap/core": "^2.0.4",
+    "@mod-protocol/core": "*",
+    "@mod-protocol/farcaster": "*",
+    "@tiptap/extension-document": "^2.0.4",
+    "@tiptap/extension-hard-break": "^2.0.4",
+    "@tiptap/extension-history": "^2.0.4",
+    "@tiptap/extension-link": "^2.0.4",
+    "@tiptap/extension-mention": "^2.0.4",
+    "@tiptap/extension-paragraph": "^2.0.4",
+    "@tiptap/extension-placeholder": "^2.0.4",
+    "@tiptap/extension-text": "^2.0.4",
+    "@tiptap/pm": "^2.0.4",
+    "@tiptap/suggestion": "^2.0.4",
+    "@tiptap/react": "^2.0.4",
+    "prosemirror-model": "^1.19.3"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "workspaces": [
+    "configs/*",
+    "packages/*",
+    "examples/*"
+  ],
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "typescript": "^5.2.2"
+  }
+}

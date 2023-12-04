@@ -1,13 +1,31 @@
 {
-  "index": "Getting started",
-  "farcaster": "Farcaster",
-  "integrate-into-your-app": "Integrate into your app",
-  "create-mini-app": "Create a mini app",
+  "index": "Getting Started",
+  "integrate": "Integrate Mod Editor",
+  "create-mini-app": "Create a Mini-app",
+  "metadata-cache": "Metadata Cache",
   "faq": "FAQ",
+  "example": {
+    "title": "Live Example ↗",
+    "type": "page",
+    "href": "https://example-nextjs.modprotocol.org",
+    "newWindow": true
+  },
   "contact": {
     "title": "Contact ↗",
     "type": "page",
-    "href": "https://warpcast.com/df",
+    "href": "mailto:david+docs@modprotocol.org",
+    "newWindow": true
+  },
+  "website": {
+    "title": "Homepage ↗",
+    "type": "page",
+    "href": "https://www.modprotocol.org",
+    "newWindow": true
+  },
+  "suggest-a-mini-app": {
+    "title": "Suggest a Mini-app ↗",
+    "type": "page",
+    "href": "https://tally.so/r/wvDAJl",
     "newWindow": true
   }
 }

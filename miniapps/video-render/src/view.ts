@@ -1,6 +1,6 @@
-import { Element } from "@packages/core";
+import { ModElement } from "@mod-protocol/core";
 
-const view: Element[] = [
+const view: ModElement[] = [
   {
     type: "video",
     videoSrc: "{{embed.url}}",

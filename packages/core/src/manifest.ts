@@ -1,31 +1,49 @@
-type ConditionalElement = {
-  element: Element[];
+import type { JSONSchema7 } from "json-schema";
+
+export type ModConditionalElement = {
+  element: ModElement[];
   if: ValueOp;
 };
 
-export type Manifest = {
+export type ModManifest = {
+  /** A unique string identifying this Miniapp */
   slug: string;
+  /** A human readable name for the Mini-app */
   name: string;
+  /** A (temporary) github username to define as the owner */
   custodyGithubUsername: string;
+  /** An ethereum address or ENS address to define as the owner */
   custodyAddress: string;
+  /** A valid url pointing to an image file, it should be a square */
   logo: string;
+  /** should be the same as the package version */
   version: string;
-  creationEntrypoints?: Element[];
-  contentEntrypoints?: ConditionalElement[];
-  elements?: Record<string, Element[]>;
+  /**
+   * A Map of unique ids to json-schema.org definitions. Used to define a new standard data model for use in this or other Mini-apps.
+   * Most useful when used in conjunction with json-ld that utilizes these data models
+   */
+  modelDefinitions?: Record<string, JSONSchema7>;
+  /** Interface this Mini-app exposes, if any, for Content Creation */
+  creationEntrypoints?: ModElement[];
+  /** Interface this Mini-app exposes, if any, for Content Rendering */
+  contentEntrypoints?: ModConditionalElement[];
+  /** A definition map of reusable elements, using their id as the key */
+  elements?: Record<string, ModElement[]>;
+  /** Permissions requested by the Mini-app */
+  permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign">;
 };
 
-export type EventType =
-  | Action
+export type ModEvent =
+  | ModAction
   | string
-  | Element[]
-  | ConditionalFlow<Action | string | Element[]>;
+  | ModElement[]
+  | ConditionalFlow<ModAction | string | ModElement[]>;
 
 type BaseAction = {
   ref?: string;
-  onsuccess?: EventType;
-  onerror?: EventType;
-  onloading?: EventType;
+  onsuccess?: ModEvent;
+  onerror?: ModEvent;
+  onloading?: ModEvent;
 };
 
 export type Op = {
@@ -58,6 +76,7 @@ export type JsonType =
   | { type: "boolean"; value: boolean }
   | { type: "array"; value: JsonType[] }
   | { type: "object"; value: Record<string, JsonType> };
+
 type FormDataType =
   | { type: "blobRef"; value: string }
   | { type: "string"; value: string };
@@ -70,9 +89,10 @@ type HTTPBody =
       formData: Record<string, FormDataType>;
     };
 
-type HTTPAction = BaseAction & { url: string } & (
+export type HTTPAction = BaseAction & { url: string } & (
     | {
         type: "GET";
+        searchParams?: Record<string, string>;
       }
     | {
         type: "POST";
@@ -95,7 +115,7 @@ type OpenFileAction = BaseAction & {
   type: "OPENFILE";
   accept: string[];
   maxFiles: number;
-  oncancel?: EventType;
+  oncancel?: ModEvent;
 };
 
 type AddEmbedAction = BaseAction & {
@@ -110,6 +130,32 @@ type OpenLinkAction = BaseAction & {
   url: string;
 };
 
+export type EthPersonalSignData = {
+  statement: string;
+  version: string;
+  chainId: string;
+};
+
+export type EthTransactionData = {
+  to: string;
+  from: string;
+  data?: string;
+  value?: string;
+};
+
+type EthPersonalSignAction = BaseAction & {
+  type: "web3.eth.personal.sign";
+  data: EthPersonalSignData;
+};
+
+type SendEthTransactionAction = BaseAction & {
+  type: "SENDETHTRANSACTION";
+  chainId: string;
+  txData: EthTransactionData;
+  onsubmitted?: ModEvent;
+  onconfirmed?: ModEvent;
+};
+
 type SetInputAction = BaseAction & {
   type: "SETINPUT";
   value: string;
@@ -119,17 +165,19 @@ type ExitAction = {
   type: "EXIT";
 };
 
-export type Action =
+export type ModAction =
   | HTTPAction
   | OpenFileAction
   | AddEmbedAction
   | SetInputAction
   | OpenLinkAction
+  | EthPersonalSignAction
+  | SendEthTransactionAction
   | ExitAction;
 
-type ElementOrConditionalFlow = Element | ConditionalFlow<Element>;
+type ElementOrConditionalFlow = ModElement | ConditionalFlow<ModElement>;
 
-export type Element =
+export type ModElement =
   | {
       type: "text";
       label: string;
@@ -139,9 +187,18 @@ export type Element =
       imageSrc: string;
     }
   | {
+      type: "link";
+      label: string;
+      onclick?: ModEvent;
+      variant?: "link" | "primary" | "secondary" | "destructive";
+      url: string;
+    }
+  | {
       type: "button";
       label: string;
-      onclick: EventType;
+      loadingLabel?: string;
+      variant?: "primary" | "secondary" | "destructive";
+      onclick: ModEvent;
     }
   | {
       type: "circular-progress";
@@ -149,38 +206,64 @@ export type Element =
   | {
       type: "horizontal-layout";
       elements?: string | ElementOrConditionalFlow[];
-      onload?: EventType;
+      onload?: ModEvent;
     }
   | {
       type: "vertical-layout";
       elements?: string | ElementOrConditionalFlow[];
-      onload?: EventType;
+      onload?: ModEvent;
     }
   | {
+      type: "textarea";
       ref?: string;
-      type: "input";
       placeholder?: string;
-      clearable?: boolean;
-      onchange?: EventType;
-      onsubmit?: EventType;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
+    }
+  | {
+      type: "select";
+      options: Array<{ label: string; value: any }>;
+      ref?: string;
+      placeholder?: string;
+      isClearable?: boolean;
+      onchange?: ModEvent;
+    }
+  | {
+      type: "input";
+      ref?: string;
+      placeholder?: string;
+      isClearable?: boolean;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
     }
   | {
       type: "video";
       videoSrc: string;
     }
   | {
-      ref?: string;
       type: "tabs";
+      ref?: string;
       values: string[];
       names: string[];
-      onload?: EventType;
-      onchange?: EventType;
+      onload?: ModEvent;
+      onchange?: ModEvent;
+    }
+  | {
+      type: "combobox";
+      ref?: string;
+      isClearable?: boolean;
+      placeholder?: string;
+      optionsRef?: string;
+      valueRef?: string;
+      onload?: ModEvent;
+      onpick?: ModEvent;
+      onchange?: ModEvent;
     }
   | ({
-      ref?: string;
       type: "image-grid-list";
-      onload?: EventType;
-      onpick?: EventType;
+      ref?: string;
+      onload?: ModEvent;
+      onpick?: ModEvent;
     } & (
       | { loading: boolean; imagesListRef?: never }
       | { loading?: never; imagesListRef: string }
@@ -188,7 +271,7 @@ export type Element =
   | {
       type: "dialog";
       elements?: string | ElementOrConditionalFlow[];
-      onclose?: EventType;
+      onclose?: ModEvent;
     }
   | {
       type: "alert";
@@ -203,7 +286,7 @@ export type Element =
   | ({
       type: "card";
       elements?: string | ElementOrConditionalFlow[];
-      onclick?: EventType;
+      onclick?: ModEvent;
     } & (
       | {
           imageSrc: string;

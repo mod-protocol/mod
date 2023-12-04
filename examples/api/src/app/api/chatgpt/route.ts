@@ -11,17 +11,9 @@ export async function POST(request: NextRequest) {
     // },
   });
 
-  let prompt = "";
-  if (body.text.length > 280) {
-    // send a message and wait for the response
-    prompt = `Please shorten the following text to below 280 characters:`;
-  } else {
-    prompt = `Please shorten the following text:`;
-  }
-
   const response = await api.sendMessage(
     `
-    ${prompt}
+    ${body.prompt}
 
     ${body.text}
     `

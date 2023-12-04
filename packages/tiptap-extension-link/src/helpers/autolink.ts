@@ -7,23 +7,13 @@ import {
 } from "@tiptap/core";
 import { MarkType } from "@tiptap/pm/model";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { find } from "linkifyjs";
 import { findLinksAndTextcuts } from "./textcuts";
+import { Link } from "../link";
 
 type AutolinkOptions = {
   type: MarkType;
   validate?: (url: string) => boolean;
-
-  onAddLink?: (link: {
-    from: number;
-    to: number;
-    type: string;
-    value: string;
-    isLink: boolean;
-    href: string;
-    start: number;
-    end: number;
-  }) => void;
+  onAddLink?: (link: Link) => void;
 };
 
 export function autolink(options: AutolinkOptions): Plugin {
@@ -139,7 +129,7 @@ export function autolink(options: AutolinkOptions): Plugin {
                 return;
               }
 
-              options.onAddLink?.(link);
+              if (!link.isTextcut) options.onAddLink?.(link);
 
               tr.addMark(
                 link.from,

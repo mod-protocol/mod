@@ -1,7 +1,7 @@
-import { Renderers } from "@packages/react";
+import { Renderers } from "@mod-protocol/react";
 import React from "react";
-import { cn } from "@/lib/utils";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { cn } from "lib/utils";
+import { AspectRatio } from "components/ui/aspect-ratio";
 
 export const CardRenderer = (
   props: React.ComponentProps<Renderers["Card"]>
@@ -17,32 +17,36 @@ export const CardRenderer = (
     onClick,
   } = props;
   return (
-    <div className="flex flex-col" onClick={onClick}>
-      <AspectRatio ratio={aspectRatio || 1}>
-        <div className="w-full h-full bg-slate-900 relative">
-          <img
-            className="object-cover w-full h-full"
-            alt="Image"
-            src={imageSrc}
-          />
-          {topLeftBadge ? (
-            <CardImageBadge position="topLeft">{topLeftBadge}</CardImageBadge>
-          ) : null}
-          {topRightBadge ? (
-            <CardImageBadge position="topRight">{topRightBadge}</CardImageBadge>
-          ) : null}
-          {bottomLeftBadge ? (
-            <CardImageBadge position="bottomLeft">
-              {bottomLeftBadge}
-            </CardImageBadge>
-          ) : null}
-          {bottomRightBadge ? (
-            <CardImageBadge position="bottomRight">
-              {bottomRightBadge}
-            </CardImageBadge>
-          ) : null}
-        </div>
-      </AspectRatio>
+    <div className="flex flex-col -m-2" onClick={onClick}>
+      {imageSrc ? (
+        <AspectRatio ratio={aspectRatio || 1}>
+          <div className="w-full h-full bg-slate-900 relative">
+            <img
+              className="object-cover w-full h-full"
+              alt="Image"
+              src={imageSrc}
+            />
+            {topLeftBadge ? (
+              <CardImageBadge position="topLeft">{topLeftBadge}</CardImageBadge>
+            ) : null}
+            {topRightBadge ? (
+              <CardImageBadge position="topRight">
+                {topRightBadge}
+              </CardImageBadge>
+            ) : null}
+            {bottomLeftBadge ? (
+              <CardImageBadge position="bottomLeft">
+                {bottomLeftBadge}
+              </CardImageBadge>
+            ) : null}
+            {bottomRightBadge ? (
+              <CardImageBadge position="bottomRight">
+                {bottomRightBadge}
+              </CardImageBadge>
+            ) : null}
+          </div>
+        </AspectRatio>
+      ) : null}
       <div className="p-2">{children}</div>
     </div>
   );

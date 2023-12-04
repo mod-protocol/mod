@@ -1,6 +1,6 @@
-import { Element } from "@packages/core";
+import { ModElement } from "@mod-protocol/core";
 
-const error: Element[] = [
+const error: ModElement[] = [
   {
     type: "text",
     label: "ERROR: {{refs.myChatGPTServerRequest.error.message}}",
@@ -16,6 +16,10 @@ const error: Element[] = [
         json: {
           type: "object",
           value: {
+            prompt: {
+              type: "string",
+              value: "{{refs.prompt.value}}",
+            },
             text: {
               type: "string",
               value: "{{input}}",

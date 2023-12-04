@@ -1,14 +1,14 @@
-import { Manifest } from "@packages/core";
+import { ModManifest } from "@mod-protocol/core";
 import action from "./action";
 import success from "./success";
 import error from "./error";
 import loading from "./loading";
 
-const manifest: Manifest = {
-  slug: "gpt-mini-text",
-  name: "Shorten using ChatGPT",
+const manifest: ModManifest = {
+  slug: "chatgpt",
+  name: "Prompt ChatGPT",
   custodyAddress: "furlong.eth",
-  logo: "https://i.imgur.com/hlMzGht.png",
+  logo: "https://i.imgur.com/YayIWi1.png",
   custodyGithubUsername: "davidfurlong",
   version: "0.0.1",
   creationEntrypoints: action,

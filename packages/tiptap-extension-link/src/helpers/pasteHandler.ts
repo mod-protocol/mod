@@ -1,23 +1,15 @@
 import { Editor } from "@tiptap/core";
 import { MarkType } from "@tiptap/pm/model";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { find } from "linkifyjs";
+import { Link } from "../link";
+import { findLinksAndTextcuts } from "./textcuts";
 
 type PasteHandlerOptions = {
   editor: Editor;
   type: MarkType;
   linkOnPaste?: boolean;
 
-  onAddLink?: (link: {
-    from: number;
-    to: number;
-    type: string;
-    value: string;
-    isLink: boolean;
-    href: string;
-    start: number;
-    end: number;
-  }) => void;
+  onAddLink?: (link: Link) => void;
 };
 
 export function pasteHandler(options: PasteHandlerOptions): Plugin {
@@ -51,7 +43,7 @@ export function pasteHandler(options: PasteHandlerOptions): Plugin {
           return;
         }
 
-        const link = find(textContent).find(
+        const link = findLinksAndTextcuts(textContent).find(
           (item) => item.isLink && item.value === textContent
         );
 
@@ -60,7 +52,8 @@ export function pasteHandler(options: PasteHandlerOptions): Plugin {
 
           if (pastedLink) {
             options.editor.commands.setMark(options.type, { href: pastedLink });
-            options.onAddLink?.({ ...link!, from: 0, to: link!.href.length });
+            if (!link?.isTextcut)
+              options.onAddLink?.({ ...link!, from: 0, to: link!.href.length });
 
             return true;
           }
@@ -83,11 +76,12 @@ export function pasteHandler(options: PasteHandlerOptions): Plugin {
             `<a href="${link.href}">${link.href}</a>`
           );
 
-          options.onAddLink?.({
-            ...link!,
-            from: 0,
-            to: link!.href.length,
-          });
+          if (!link.isTextcut)
+            options.onAddLink?.({
+              ...link!,
+              from: 0,
+              to: link!.href.length,
+            });
 
           return true;
         }
@@ -105,7 +99,7 @@ export function pasteHandler(options: PasteHandlerOptions): Plugin {
         let fragmentLinks = [];
 
         slice.content.forEach((node) => {
-          fragmentLinks = find(node.textContent);
+          fragmentLinks = findLinksAndTextcuts(node.textContent);
 
           tr.insert(currentPos - 1, node);
 
@@ -122,11 +116,12 @@ export function pasteHandler(options: PasteHandlerOptions): Plugin {
               );
 
               if (!hasMark) {
-                options.onAddLink?.({
-                  ...fragmentLink,
-                  from: linkStart,
-                  to: linkEnd,
-                });
+                if (!fragmentLink.isTextcut)
+                  options.onAddLink?.({
+                    ...fragmentLink,
+                    from: linkStart,
+                    to: linkEnd,
+                  });
 
                 tr.addMark(
                   linkStart,

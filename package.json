@@ -2,17 +2,21 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --concurrency 40",
+    "test": "echo \"no tests yet\"",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "publish-packages": "turbo run build lint test && changeset version && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "2.26.2",
     "@turbo/gen": "^1.9.7",
     "eslint": "^8.46.0",
     "eslint-config-custom": "*",
-    "react": "^18.2.0",
     "prettier": "^2.5.1",
-    "turbo": "latest"
+    "react": "^18.2.0",
+    "tsup": "^7.2.0",
+    "turbo": "^1.10.12"
   },
   "name": "mod",
   "license": "MIT",

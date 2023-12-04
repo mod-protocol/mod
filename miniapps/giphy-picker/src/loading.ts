@@ -1,6 +1,6 @@
-import { Element } from "@packages/core";
+import { ModElement } from "@mod-protocol/core";
 
-const loading: Element[] = [
+const loading: ModElement[] = [
   {
     type: "vertical-layout",
     elements: [
@@ -22,7 +22,7 @@ const loading: Element[] = [
         ref: "myInput",
         type: "input",
         placeholder: "Search",
-        clearable: true,
+        isClearable: true,
         onchange: {
           ref: "mySearchQueryRequest",
           type: "GET",

@@ -1,11 +1,12 @@
-import { Element } from "@packages/core";
+import { ModElement } from "@mod-protocol/core";
 
-const view: Element[] = [
+const view: ModElement[] = [
   {
     type: "card",
-    imageSrc: "{{embed.metadata.nft.mediaUrl}}",
+    imageSrc: "{{embed.metadata.image.url}}",
     aspectRatio: 16 / 11,
-    topLeftBadge: "@{{embed.metadata.nft.creator.username}}",
+    // fixme: may be undefined, in that case dont render.
+    topLeftBadge: "{{embed.metadata.nft.collection.creator.username}}",
     onclick: {
       type: "OPENLINK",
       url: "{{embed.metadata.nft.collection.openSeaUrl}}",
@@ -17,19 +18,30 @@ const view: Element[] = [
         elements: [
           {
             type: "avatar",
-            src: "{{api}}/nft-chain-logo?chain={{embed.metadata.nft.chain}}",
+            src: "{{api}}/nft-chain-logo?chain={{embed.metadata.nft.collection.chain}}",
           },
           {
             type: "text",
             label: "{{embed.metadata.nft.collection.name}}",
           },
           {
-            type: "button",
-            label: "Mint",
-            onclick: {
-              type: "OPENLINK",
-              url: "{{embed.metadata.nft.collection.mintUrl}}",
-              onsuccess: "#view",
+            if: {
+              value: "{{embed.metadata.nft.mintUrl}}",
+              match: {
+                NOT: {
+                  equals: "",
+                },
+              },
+            },
+            then: {
+              type: "link",
+              label: "Mint",
+              url: "{{embed.metadata.nft.mintUrl}}",
+            },
+            else: {
+              type: "link",
+              label: "View collection",
+              url: "{{embed.metadata.nft.collection.openSeaUrl}}",
             },
           },
         ],

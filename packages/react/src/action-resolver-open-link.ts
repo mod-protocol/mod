@@ -1,11 +1,11 @@
 import {
-  OpenLinkActionResolverInitType,
-  OpenLinkActionResolverEventsType,
-} from "@packages/core";
+  OpenLinkActionResolverInit,
+  OpenLinkActionResolverEvents,
+} from "@mod-protocol/core";
 
 export default function actionResolverOpenLink(
-  init: OpenLinkActionResolverInitType,
-  events: OpenLinkActionResolverEventsType
+  init: OpenLinkActionResolverInit,
+  events: OpenLinkActionResolverEvents
 ) {
   window.open(init.url, "_blank");
   events.onSuccess();

@@ -1,5 +1,5 @@
 {
-  "name": "@packages/tiptap-extension-link",
+  "name": "@mod-protocol/tiptap-extension-link",
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
@@ -11,18 +11,12 @@
     "@tiptap/core": "^2.0.0",
     "@tiptap/pm": "^2.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ueberdosis/tiptap",
-    "directory": "packages/extension-link"
-  },
   "workspaces": [
     "configs/*",
     "packages/*",
     "examples/*"
   ],
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": "npm run clean && rollup -c"
+    "clean": "rm -rf dist"
   }
 }

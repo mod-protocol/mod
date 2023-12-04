@@ -1,12 +1,12 @@
-import { Manifest } from "@packages/core";
+import { ModManifest } from "@mod-protocol/core";
 import action from "./action";
 import success from "./success";
 import error from "./error";
 import loading from "./loading";
 
-const manifest: Manifest = {
+const manifest: ModManifest = {
   slug: "giphy-picker",
-  name: "Search and pick GIFs from Giphy",
+  name: "Add GIF/Sticker",
   custodyAddress: "furlong.eth",
   custodyGithubUsername: "davidfurlong",
   logo: "https://i.imgur.com/wBKGHbT.png",
