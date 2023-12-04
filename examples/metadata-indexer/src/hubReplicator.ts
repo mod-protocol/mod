@@ -70,6 +70,18 @@ export class HubReplicator {
     });
 
     this.indexerQueue = new IndexerQueue(db, log);
+
+    process
+      .on("unhandledRejection", (reason, p) => {
+        log.error(reason, "Unhandled Rejection at Promise", p);
+        this.destroy();
+        process.exit(1);
+      })
+      .on("uncaughtException", (err) => {
+        log.error(err, "Uncaught Exception thrown");
+        this.destroy();
+        process.exit(1);
+      });
   }
 
   public async start() {
