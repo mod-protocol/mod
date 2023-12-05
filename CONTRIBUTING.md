@@ -22,7 +22,7 @@ First, ensure that the following are installed globally on your machine:
 ├── ./mods → All the current Mod protocol Mini-apps
 ├── ./docs → An .mdx based docs site
 ├── ./packages → The core Mod protocol libraries
-│   ├── ./packages/core → The core library that takes a Miniapp configuration and produces a JS Miniapp
+│   ├── ./packages/core → The core library that takes a Mod configuration and produces a JS Mod
 │   ├── ./packages/farcaster → Some farcaster specific types and utilities
 │   ├── ./packages/mod-registry → A list of all the current Mini-apps
 │   ├── ./packages/react → Renders a mod using a UI renderer into a React component for the web

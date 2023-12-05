@@ -6,7 +6,7 @@ export type ModConditionalElement = {
 };
 
 export type ModManifest = {
-  /** A unique string identifying this Miniapp */
+  /** A unique string identifying this Mod */
   slug: string;
   /** A human readable name for the Mini-app */
   name: string;

@@ -146,8 +146,7 @@ export default function EditorExample() {
     [signMessageAsync, checksummedAddress]
   );
 
-  const [currentMiniapp, setCurrentMiniapp] =
-    React.useState<ModManifest | null>(null);
+  const [currentMod, setCurrentMod] = React.useState<ModManifest | null>(null);
 
   const user = React.useMemo(() => {
     return {
@@ -174,18 +173,16 @@ export default function EditorExample() {
           value={getChannel()}
         />
         <Popover
-          open={!!currentMiniapp}
+          open={!!currentMod}
           onOpenChange={(op: boolean) => {
-            if (!op) setCurrentMiniapp(null);
+            if (!op) setCurrentMod(null);
           }}
         >
           <PopoverTrigger></PopoverTrigger>
-          <ModsSearch mods={creationMods} onSelect={setCurrentMiniapp} />
+          <ModsSearch mods={creationMods} onSelect={setCurrentMod} />
           <PopoverContent className="w-[400px] ml-2" align="start">
             <div className="space-y-4">
-              <h4 className="font-medium leading-none">
-                {currentMiniapp?.name}
-              </h4>
+              <h4 className="font-medium leading-none">{currentMod?.name}</h4>
               <hr />
               <CreationMod
                 input={getText()}
@@ -193,10 +190,10 @@ export default function EditorExample() {
                 api={API_URL}
                 user={user}
                 variant="creation"
-                manifest={currentMiniapp}
+                manifest={currentMod}
                 renderers={renderers}
                 onOpenFileAction={handleOpenFile}
-                onExitAction={() => setCurrentMiniapp(null)}
+                onExitAction={() => setCurrentMod(null)}
                 onSetInputAction={handleSetInput(setText)}
                 onAddEmbedAction={handleAddEmbed(addEmbed)}
                 onEthPersonalSignAction={getAuthSig}
