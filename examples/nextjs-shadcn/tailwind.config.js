@@ -6,6 +6,17 @@ module.exports = {
     // make sure tailwind doesn't tree shake classes used by the library
     "../../packages/react-ui-shadcn/dist/**/*.{ts,tsx,css,js}",
   ],
+  // Placeholder styles are not included in bundle by default because
+  // the element is rendered dynamically in the editor, so must be manually
+  // added here
+  safelist: [
+    "cursor-text",
+    "before:content-[attr(data-placeholder)]",
+    "before:absolute",
+    "before:text-foreground-secondary",
+    "before:opacity-50",
+    "before:pointer-events-none",
+  ],
   theme: {
     container: {
       center: true,
