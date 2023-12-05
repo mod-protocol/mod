@@ -41,7 +41,9 @@ function formatRow(row): EmbedWithCastHash {
         name: row.collection_name,
         openSeaUrl: row.collection_open_sea_url || undefined,
         ownerCount: row.collection_owner_count || undefined,
-        creator: row.collection_creator_fid || undefined,
+        creator: row.collection_creator_fid
+          ? { fid: row.collection_creator_fid }
+          : undefined,
       },
     };
   }

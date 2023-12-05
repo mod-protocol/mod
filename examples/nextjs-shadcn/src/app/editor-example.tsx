@@ -11,9 +11,9 @@ import {
   getFarcasterMentions,
   getMentionFidsByUsernames,
 } from "@mod-protocol/farcaster";
-import { CreationMod } from "@mod-protocol/react";
+import { CreationMod, RichEmbed } from "@mod-protocol/react";
 import { useEditor, EditorContent } from "@mod-protocol/react-editor";
-import { creationMods } from "@mod-protocol/mod-registry";
+import { creationMods, defaultRichEmbedMod } from "@mod-protocol/mod-registry";
 import {
   Embed,
   EthPersonalSignActionResolverInit,
@@ -164,7 +164,19 @@ export default function EditorExample() {
           autoFocus
           className="w-full h-full min-h-[200px]"
         />
-        <EmbedsEditor embeds={getEmbeds()} setEmbeds={setEmbeds} />
+        <EmbedsEditor
+          embeds={getEmbeds()}
+          setEmbeds={setEmbeds}
+          RichEmbed={({ embed }) => (
+            <RichEmbed
+              api={API_URL}
+              defaultRichEmbedMod={defaultRichEmbedMod}
+              mods={[defaultRichEmbedMod]}
+              embed={embed}
+              renderers={renderers}
+            />
+          )}
+        />
       </div>
       <div className="flex flex-row pt-2 gap-1">
         <ChannelPicker
