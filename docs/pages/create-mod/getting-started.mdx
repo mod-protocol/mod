@@ -1,12 +1,12 @@
-# Getting started making a Miniapp
+# Getting started making a Mod
 
-A Miniapp is just a JSON file. Part of this JSON is the manifest, defining things like the version and name, and other parts
-are the elements rendered by the Miniapp, like a text or an image.
+A Mod consists of a manifest JSON file and optionally a backend which can handle requests from the Mod and make external requests. 
+The Manifest contains metadata about the Mod, such as it's name and unique identifier, which Mod Elements it renders onto the page, and conditions under which to render them.
 
 Our convention is to write Mods in TypeScript, for better autocompletion and legibility, with the Mods being built to JSON.
 You can take a look inside the `/mods` folder of [this repo](https://github.com/mod-protocol/mod) to see how Mods work
 
-## Steps to make a new Miniapp
+## Steps to make a new Mod
 
 1. Fork [this repo](https://github.com/mod-protocol/mod)
 2. Create a new mod by duplicating an existing one in `/mods` or creating a new folder

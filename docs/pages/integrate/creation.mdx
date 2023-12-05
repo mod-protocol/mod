@@ -20,7 +20,7 @@ import { CreationMod } from "@mod-protocol/react";
     embeds={embeds}
     api={API_URL}
     variant="creation"
-    manifest={currentMiniapp}
+    manifest={currentMod}
     renderers={renderers}
     onOpenFileAction={handleOpenFile}
     onExitAction={hideCurrentMod}
@@ -112,7 +112,7 @@ export default function EditorExample() {
     }),
   });
 
-  const [currentMiniapp, setCurrentMiniapp] =
+  const [currentMod, setCurrentMod] =
     React.useState<ModManifest | null>(null);
 
   return (
@@ -132,20 +132,20 @@ export default function EditorExample() {
           value={getChannel()}
         />
         <Popover
-          open={!!currentMiniapp}
+          open={!!currentMod}
           onOpenChange={(op: boolean) => {
-            if (!op) setCurrentMiniapp(null);
+            if (!op) setCurrentMod(null);
           }}
         >
           <PopoverTrigger></PopoverTrigger>
           <ModsSearch
             mods={creationMods}
-            onSelect={setCurrentMiniapp}
+            onSelect={setCurrentMod}
           />
           <PopoverContent className="w-[400px] ml-2" align="start">
             <div className="space-y-4">
               <h4 className="font-medium leading-none">
-                {currentMiniapp?.name}
+                {currentMod?.name}
               </h4>
               <hr />
               <CreationMod
@@ -153,10 +153,10 @@ export default function EditorExample() {
                 embeds={getEmbeds()}
                 api={API_URL}
                 variant="creation"
-                manifest={currentMiniapp}
+                manifest={currentMod}
                 renderers={renderers}
                 onOpenFileAction={handleOpenFile}
-                onExitAction={() => setCurrentMiniapp(null)}
+                onExitAction={() => setCurrentMod(null)}
                 onSetInputAction={handleSetInput(setText)}
                 onAddEmbedAction={handleAddEmbed(addEmbed)}
               />
@@ -183,7 +183,7 @@ You can choose to filter or select which Mods are available
 ...
 <ModsSearch
   mods={creationMods.filter(mod => mod.slug !== "giphy-picker" && !mod.permissions.includes('user.wallet.address'))}
-  onSelect={setCurrentMiniapp}
+  onSelect={setCurrentMod}
 />
 ```
 
@@ -193,6 +193,6 @@ You can choose to filter or select which Mods are available
 ...
 <ModsSearch
   mods={creationMods.filter(mod => ['infura-ipfs-upload', 'livepeer-video'].includes(mod.slug)}
-  onSelect={setCurrentMiniapp}
+  onSelect={setCurrentMod}
 />
 ```

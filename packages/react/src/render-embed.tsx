@@ -19,7 +19,7 @@ type Props = RichEmbedContext & {
 };
 
 export function RichEmbed(props: Props) {
-  let matchingMiniapps = [
+  let matchingMods = [
     { embed: props.embed, api: props.api, user: props.user },
   ].flatMap<{
     context: RichEmbedContext;
@@ -61,8 +61,8 @@ export function RichEmbed(props: Props) {
     return getMatchingMods([props.defaultRichEmbedMod]);
   });
 
-  return matchingMiniapps.length
-    ? matchingMiniapps.map((mod, index) => (
+  return matchingMods.length
+    ? matchingMods.map((mod, index) => (
         <RenderMod
           {...mod.context}
           {...props.resolvers}
