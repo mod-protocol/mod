@@ -11,7 +11,7 @@ import {
   SetInputActionResolver,
   ExitActionResolver,
   AddEmbedActionResolver,
-  ContentContext,
+  RichEmbedContext,
   CreationContext,
   EthPersonalSignActionResolver,
   SendEthTransactionActionResolver,
@@ -428,7 +428,7 @@ type Props = ResolverTypes & {
   renderers: Renderers;
 };
 
-export const CreationMiniApp = (
+export const CreationMod = (
   props: Props & ({ variant: "creation" } & CreationContext)
 ) => {
   const {
@@ -475,11 +475,11 @@ export const CreationMiniApp = (
     forceRerender();
   }, [forceRerender, context, renderer]);
 
-  return <MiniApp {...props} renderer={renderer} />;
+  return <Mod {...props} renderer={renderer} />;
 };
 
-export const RenderMiniApp = (
-  props: Props & ({ variant: "content" } & ContentContext)
+export const RenderMod = (
+  props: Props & ({ variant: "richEmbed" } & RichEmbedContext)
 ) => {
   const {
     manifest,
@@ -495,7 +495,7 @@ export const RenderMiniApp = (
 
   const forceRerender = useForceRerender();
 
-  const context = React.useMemo<ContentContext>(
+  const context = React.useMemo<RichEmbedContext>(
     () => ({ embed: props.embed, api: props.api, user: props.user }),
     [props.embed, props.api, props.user]
   );
@@ -504,7 +504,7 @@ export const RenderMiniApp = (
     () =>
       new Renderer({
         manifest,
-        variant: "content",
+        variant: "richEmbed",
         context,
         onTreeChange: forceRerender,
         onHttpAction,
@@ -526,12 +526,12 @@ export const RenderMiniApp = (
 
   return (
     <Container>
-      <MiniApp {...props} renderer={renderer} />
+      <Mod {...props} renderer={renderer} />
     </Container>
   );
 };
 
-export const MiniApp = (props: Props & { renderer: Renderer }) => {
+export const Mod = (props: Props & { renderer: Renderer }) => {
   const {
     renderers,
     renderer,

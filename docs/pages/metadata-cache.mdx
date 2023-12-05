@@ -1,16 +1,25 @@
 import { Tabs } from "nextra/components";
 
-# Metadata Cache
+# Metadata Indexer
 
-The metadata cache can be used to retrieve Open Graph metadata for embeds in casts, useful for rendering embeds in a cast without having to make a request to each embed URL.
+An open source and self-hostable service that indexes all the embed urls mentioned in Farcaster casts, and their metadata.
 
-It makes use of the [Metadata Indexer](https://github.com/mod-protocol/mod/tree/main/examples/metadata-indexer), an open source and self-hostable service that indexes casts, embeds, and their metadata.
+## Why should you use this, and not build your own, or load the data on pageload?
 
-We are hosting a free instance of the Metadata indexer that can be reached at https://api.modprotocol.org/api/cast-embeds-metadata
+- We've put 100+ hours of work into this tool; is this a core differentiator for your app? If not, perhaps use this infra rather than building it yourself
+- You can and are free to use this even if you aren't integrating Mod.
+- Fetching metadata on user's pageload is slow (1s+) and you can't always be sure of the dimensions of the image(s), so you may accidentally introduce [Cumulative Layout Shift](https://web.dev/articles/cls)
+- It supports special handlers for [NFT-extended open graph spec](https://warpcast.notion.site/NFT-extended-Open-Graph-Spec-4e350bd8e4c34e3b86e77d58bf1f5575), CAIP-19 urls, Opensea, Zora, Images and Arweave files.
+- This indexer live indexes every new Farcaster cast as soon as it's propagated to our hub.
+- It supports [JSON Linked Data](https://json-schema.org/) and gives you additional metadata about the page
+- We're already indexing and caching the metadata of over 500,000 urls shared on Farcaster.
+- It's MIT Licensed and if you don't want to rely on our APIs or are worried about it shutting down, you can always [self host](https://github.com/mod-protocol/mod/tree/main/examples/metadata-indexer) it easier than you can build it yourself.
 
-## `/api/cast-embeds-metadata`
+## How to use
 
-Fetching metadata from the cache is as simple as making a POST request to the following endpoint with a list of cast hashes in the body.
+## Endpoint to get the Metadata for a list of cast hashes
+
+`POST https://api.modprotocol.org/api/cast-embeds-metadata`
 
 <Tabs items={["Shell", "JS (fetch)", "Node.js v18+ (fetch)"]}>
   <Tabs.Tab>
@@ -77,11 +86,13 @@ import { UrlMetadata } from "@mod-protocol/core";
 
 cast.embeds.map((embed) => {
   const metadata: UrlMetadata = metadataResponse[cast.hash][embed.url];
-  return <RenderEmbed metadata={metadata} />;
+  return <RichEmbed metadata={metadata} />;
 });
 ```
 
-## `/api/cast-embeds-metadata/by-url`
+## Endpoint to get the Metadata for a list of urls
+
+`/api/cast-embeds-metadata/by-url`
 
 Fetching metadata from the cache by url is as simple as making a POST request to the following endpoint with a list of urls in the body.
 
@@ -156,5 +167,46 @@ Returned metadata objects conform to the `UrlMetadata` type. This can then be us
 import { UrlMetadata } from "@mod-protocol/core";
 
 const metadata: UrlMetadata = metadataResponse[embed.url];
-return <RenderEmbed metadata={metadata} />;
+return <RichEmbed metadata={metadata} />;
+```
+
+## Typescript type of Metadata
+
+```tsx
+type UrlMetadata = {
+    image?: {
+        url?: string;
+        width?: number;
+        height?: number;
+    };
+    "json-ld"?: Record<string, object[]>;
+    description?: string;
+    alt?: string;
+    title?: string;
+    publisher?: string;
+    logo?: {
+        url: string;
+    };
+    nft?: {
+      owner?: FarcasterUser;
+      tokenId?: string;
+      mediaUrl?: string;
+      mintUrl?: string;
+      mimeType?: string;
+      collection: {
+        id: string;
+        name: string;
+        chain: string;
+        contractAddress: string;
+        creatorAddress: string;
+        itemCount: number;
+        ownerCount: number;
+        mintUrl?: string;
+        description?: string;
+        imageUrl?: string;
+        openSeaUrl?: string;
+        creator?: FarcasterUser;
+      };
+    };
+};
 ```

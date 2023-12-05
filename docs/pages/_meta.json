@@ -1,8 +1,9 @@
 {
   "index": "Getting Started",
-  "integrate": "Integrate Mod Editor",
-  "create-mini-app": "Create a Mini-app",
-  "metadata-cache": "Metadata Cache",
+  "integrate": "Integrate Mod",
+  "metadata-cache": "Metadata Indexer",
+  "mod-editor": "Farcaster Editor",
+  "create-mod": "Create a Mod",
   "faq": "FAQ",
   "example": {
     "title": "Live Example ↗",
@@ -22,8 +23,8 @@
     "href": "https://www.modprotocol.org",
     "newWindow": true
   },
-  "suggest-a-mini-app": {
-    "title": "Suggest a Mini-app ↗",
+  "suggest-a-mod": {
+    "title": "Suggest a Mod ↗",
     "type": "page",
     "href": "https://tally.so/r/wvDAJl",
     "newWindow": true

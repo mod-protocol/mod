@@ -95,7 +95,7 @@ export default function Page() {
                   <li>✅ Max cast length (320 bytes)</li>
                   <li>✅ Open graph previews</li>
                   <li>✅ Textcuts</li>
-                  <li>✅ Image upload to IPFS (via mini-app)</li>
+                  <li>✅ Image upload to IPFS (via mod)</li>
                 </ul>
               </div>
             </div>

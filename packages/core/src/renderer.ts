@@ -165,12 +165,12 @@ export type CreationContext = {
     };
   };
   embeds: Embed[];
-  /** The url of the api hosting the mini-app backends. (including /api) **/
+  /** The url of the api hosting the mod backends. (including /api) **/
   api: string;
 };
 
 // Render Mini-apps only are triggered by a single embed right now
-export type ContentContext = {
+export type RichEmbedContext = {
   user?: {
     wallet?: {
       address: string;
@@ -180,7 +180,7 @@ export type ContentContext = {
   api: string;
 };
 
-export type ContextType = CreationContext | ContentContext;
+export type ContextType = CreationContext | RichEmbedContext;
 
 function nonNullable<T>(value: T): value is NonNullable<T> {
   return value !== null && value !== undefined;
@@ -409,8 +409,8 @@ function matchesOp(value: string, op: Op, context: any): boolean {
 }
 
 export function canRenderEntrypointWithContext(
-  entrypoint: NonNullable<ModManifest["contentEntrypoints"]>[number],
-  context: ContentContext
+  entrypoint: NonNullable<ModManifest["richEmbedEntrypoints"]>[number],
+  context: RichEmbedContext
 ) {
   const arrayOfIfs = isArray(entrypoint.if) ? entrypoint.if : [entrypoint.if];
 
@@ -437,8 +437,8 @@ export type RendererOptions = {
       context: CreationContext;
     }
   | {
-      variant: "content";
-      context: ContentContext;
+      variant: "richEmbed";
+      context: RichEmbedContext;
     }
 );
 
@@ -479,7 +479,7 @@ export class Renderer {
     if (options.variant === "creation") {
       this.currentTree = options.manifest.creationEntrypoints || [];
     } else {
-      const entrypoints = options.manifest.contentEntrypoints;
+      const entrypoints = options.manifest.richEmbedEntrypoints;
 
       for (const entrypoint of entrypoints || []) {
         if (canRenderEntrypointWithContext(entrypoint, options.context)) {
