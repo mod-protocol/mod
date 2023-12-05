@@ -10,6 +10,7 @@ import UrlRender from "@mods/url-render";
 import ImageRender from "@mods/image-render";
 import ChatGPTShorten from "@mods/chatgpt-shorten";
 // import ZoraNftMinter from "@mods/zora-nft-minter";
+// import DALLE from "@mods/dall-e";
 
 export const allMods = [
   InfuraIPFSUpload,
@@ -21,6 +22,7 @@ export const allMods = [
   ImageRender,
   ChatGPTShorten,
   ChatGPT,
+  // DALLE,
 ];
 
 export const creationMods: ModManifest[] = allMods.filter(
