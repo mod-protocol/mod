@@ -72,6 +72,7 @@ export function useEditor({
   linkClassName,
   renderMentionsSuggestionConfig,
   maxEmbeds = FARCASTER_MAX_EMBEDS,
+  editorOptions,
 }: useEditorParameter): useEditorReturn {
   const [embeds, setEmbeds] = useState<Embed[]>([]);
 
@@ -184,8 +185,15 @@ export function useEditor({
         placeholderText,
         onAddLink,
         renderMentionsSuggestionConfig,
+        editorOptions,
       }),
-    [linkClassName, placeholderText, renderMentionsSuggestionConfig, onAddLink]
+    [
+      linkClassName,
+      placeholderText,
+      renderMentionsSuggestionConfig,
+      onAddLink,
+      editorOptions,
+    ]
   );
   const editor: Editor | null = useTipTapEditor(editorConfig);
   useEffect(() => {
@@ -278,7 +286,7 @@ function setEditorContentWithPlaintext(editor: Editor, text: string): void {
 }
 
 /**
-The Chatgpt Mini-app transforms plaintext, and our editor should be able to convert plaintext
+The Chatgpt Mod transforms plaintext, and our editor should be able to convert plaintext
 **/
 function preserveMentionsInTextTransform({
   sourceJSON,

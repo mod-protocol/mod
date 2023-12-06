@@ -125,6 +125,11 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
     return null;
   }
 
+  if (!(urlMetadata.image || urlMetadata.logo)) {
+    console.error(`[Local Fetch] No image or logo found for ${url}`);
+    return null;
+  }
+
   return urlMetadata;
 }
 

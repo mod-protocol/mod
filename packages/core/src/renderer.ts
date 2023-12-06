@@ -21,6 +21,7 @@ export type ModElementRef<T> =
   | {
       type: "text";
       label: string;
+      variant?: "bold" | "secondary" | "regular";
       events?: undefined;
     }
   | {
@@ -164,25 +165,26 @@ export type ModElementRef<T> =
       };
     };
 
-export type CreationContext = {
-  input: any;
+export type BaseContext = {
   user?: {
     wallet?: {
-      address: string;
+      address?: string;
+    };
+    farcaster?: {
+      fid?: string;
     };
   };
+};
+
+export type CreationContext = BaseContext & {
+  input: any;
   embeds: Embed[];
   /** The url of the api hosting the mod backends. (including /api) **/
   api: string;
 };
 
 // Render Mini-apps only are triggered by a single embed right now
-export type RichEmbedContext = {
-  user?: {
-    wallet?: {
-      address: string;
-    };
-  };
+export type RichEmbedContext = BaseContext & {
   embed: Embed;
   api: string;
 };
@@ -1206,6 +1208,7 @@ export class Renderer {
             {
               type: "text",
               label: this.replaceInlineContext(el.label),
+              variant: el.variant,
             },
             key
           );

@@ -9,22 +9,24 @@ import NFTMinter from "@mods/nft-minter";
 import UrlRender from "@mods/url-render";
 import ImageRender from "@mods/image-render";
 import ChatGPTShorten from "@mods/chatgpt-shorten";
-// import ZoraNftMinter from "@mods/zora-nft-minter";
 import CreatePoll from "@mods/create-poll";
 import RenderPoll from "@mods/render-poll";
+import ZoraNftMinter from "@mods/zora-nft-minter";
+import ImgurUpload from "@mods/imgur-upload";
+import DALLE from "@mods/dall-e";
+
+/** All - Stable, suitable for use  */
 
 export const allMods = [
+  ImgurUpload,
   InfuraIPFSUpload,
   LivepeerVideo,
   GiphyPicker,
   VideoRender,
-  // ZoraNftMinter,
   NFTMinter,
   ImageRender,
   ChatGPTShorten,
   ChatGPT,
-  CreatePoll,
-  RenderPoll,
 ];
 
 export const creationMods: ModManifest[] = allMods.filter(
@@ -36,6 +38,36 @@ export const richEmbedMods: ModManifest[] = allMods.filter(
   (manifest) =>
     manifest.richEmbedEntrypoints && manifest.richEmbedEntrypoints.length !== 0
 );
+
+/** All + Experimental - Potentially unstable, unsuitable for production use  */
+export const allModsExperimental = [
+  ImgurUpload,
+  InfuraIPFSUpload,
+  LivepeerVideo,
+  GiphyPicker,
+  VideoRender,
+  ZoraNftMinter,
+  NFTMinter,
+  ImageRender,
+  ChatGPTShorten,
+  ChatGPT,
+  DALLE,
+  CreatePoll,
+  RenderPoll,
+];
+
+export const creationModsExperimental: ModManifest[] =
+  allModsExperimental.filter(
+    (manifest) =>
+      manifest.creationEntrypoints && manifest.creationEntrypoints.length !== 0
+  );
+
+export const richEmbedModsExperimental: ModManifest[] =
+  allModsExperimental.filter(
+    (manifest) =>
+      manifest.richEmbedEntrypoints &&
+      manifest.richEmbedEntrypoints.length !== 0
+  );
 
 /** When no renderMod matches an embed, this one will be used **/
 export const defaultRichEmbedMod: ModManifest = UrlRender;

@@ -10,13 +10,14 @@ import {
   clipboardTextParser,
   transformPastedHTML,
 } from "./extension-clipboard";
+import { EditorOptions } from "@tiptap/core";
 
 export type EditorConfig = {
   placeholderText: string;
-
   onAddLink: (link: Link) => void;
   renderMentionsSuggestionConfig: Pick<MentionOptions, "suggestion">;
   linkClassName: string;
+  editorOptions?: Partial<EditorOptions>;
 };
 
 export function createEditorConfig({
@@ -24,12 +25,12 @@ export function createEditorConfig({
   renderMentionsSuggestionConfig,
   linkClassName,
   onAddLink,
-}: EditorConfig) {
+  editorOptions = {},
+}: EditorConfig): Partial<EditorOptions> {
   return {
     editorProps: {
       attributes: {
         // min-height allows clicking in the box and creating focus on the input
-        // TODO: configurable/options
         style: "outline: 0;  min-height: 200px;",
       },
       // attributes: {
@@ -39,6 +40,7 @@ export function createEditorConfig({
       transformPastedHTML: transformPastedHTML,
       // Prevents weird paste new line inconsistencies when coming from textedit, plaintext, ...
       clipboardTextParser: clipboardTextParser,
+      ...editorOptions.editorProps,
     },
     extensions: [
       // you can find pro extensions at https://embed-pro.tiptap.dev/preview/Nodes/Emoji?inline=false&hideSource=true
@@ -49,6 +51,9 @@ export function createEditorConfig({
       TipTapParagraph,
       TipTapPlaceholder.configure({
         placeholder: placeholderText,
+        // https://github.com/ueberdosis/tiptap/issues/2659#issuecomment-1230954941
+        emptyEditorClass:
+          "cursor-text before:content-[attr(data-placeholder)] before:absolute before:text-foreground-secondary before:opacity-50 before-pointer-events-none",
       }),
 
       // TipTapCustomImagePlugin,

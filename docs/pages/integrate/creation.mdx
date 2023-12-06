@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from "next/image";
 
 # Creation Mods
 
@@ -57,7 +57,14 @@ import {
 import { CreationMod } from "@mod-protocol/react";
 import { useEditor, EditorContent } from "@mod-protocol/react-editor";
 import { creationMods } from "@mod-protocol/mod-registry";
-import { Embed, ModManifest, fetchUrlMetadata, handleAddEmbed, handleOpenFile, handleSetInput } from "@mod-protocol/core";
+import {
+  Embed,
+  ModManifest,
+  fetchUrlMetadata,
+  handleAddEmbed,
+  handleOpenFile,
+  handleSetInput,
+} from "@mod-protocol/core";
 // UI implementation
 import { createRenderMentionsSuggestionConfig } from "@mod-protocol/react-ui-shadcn/dist/lib/mentions";
 import { ModsSearch } from "@mod-protocol/react-ui-shadcn/dist/components/creation-mods-search";
@@ -65,7 +72,11 @@ import { CastLengthUIIndicator } from "@mod-protocol/react-ui-shadcn/dist/compon
 import { ChannelPicker } from "@mod-protocol/react-ui-shadcn/dist/components/channel-picker";
 import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/dist/lib/embeds";
 import { Button } from "@mod-protocol/react-ui-shadcn/dist/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@mod-protocol/react-ui-shadcn/dist/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@mod-protocol/react-ui-shadcn/dist/components/ui/popover";
 import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
 
 // Optionally replace with your API_URL here if you want to self host by running your own instance of https://github.com/mod-protocol/mod/tree/main/examples/api
@@ -113,8 +124,7 @@ export default function EditorExample() {
     }),
   });
 
-  const [currentMod, setCurrentMod] =
-    React.useState<ModManifest | null>(null);
+  const [currentMod, setCurrentMod] = React.useState<ModManifest | null>(null);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -139,15 +149,10 @@ export default function EditorExample() {
           }}
         >
           <PopoverTrigger></PopoverTrigger>
-          <ModsSearch
-            mods={creationMods}
-            onSelect={setCurrentMod}
-          />
+          <ModsSearch mods={creationMods} onSelect={setCurrentMod} />
           <PopoverContent className="w-[400px] ml-2" align="start">
             <div className="space-y-4">
-              <h4 className="font-medium leading-none">
-                {currentMod?.name}
-              </h4>
+              <h4 className="font-medium leading-none">{currentMod?.name}</h4>
               <hr />
               <CreationMod
                 input={getText()}
@@ -193,7 +198,7 @@ You can choose to filter or select which Mods are available
 ```tsx
 ...
 <ModsSearch
-  mods={creationMods.filter(mod => ['infura-ipfs-upload', 'livepeer-video'].includes(mod.slug)}
+  mods={creationMods.filter(mod => ['infura-ipfs-upload', 'livepeer-video'].includes(mod.slug))}
   onSelect={setCurrentMod}
 />
 ```

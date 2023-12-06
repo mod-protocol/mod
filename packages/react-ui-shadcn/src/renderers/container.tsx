@@ -5,7 +5,7 @@ export const ContainerRenderer = (
   props: React.ComponentProps<Renderers["Container"]>
 ) => {
   return (
-    <div className="mt-2 rounded-md overflow-hidden border p-2">
+    <div className="mt-2 rounded-md overflow-hidden border">
       {props.children}
     </div>
   );
