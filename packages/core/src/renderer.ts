@@ -158,25 +158,26 @@ export type ModElementRef<T> =
       };
     };
 
-export type CreationContext = {
-  input: any;
+export type BaseContext = {
   user?: {
     wallet?: {
-      address: string;
+      address?: string;
+    };
+    farcaster?: {
+      fid?: string;
     };
   };
+};
+
+export type CreationContext = BaseContext & {
+  input: any;
   embeds: Embed[];
   /** The url of the api hosting the mod backends. (including /api) **/
   api: string;
 };
 
-// Render Mods only are triggered by a single embed right now
-export type RichEmbedContext = {
-  user?: {
-    wallet?: {
-      address: string;
-    };
-  };
+// Render Mini-apps only are triggered by a single embed right now
+export type RichEmbedContext = BaseContext & {
   embed: Embed;
   api: string;
 };
