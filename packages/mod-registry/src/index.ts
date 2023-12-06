@@ -11,8 +11,10 @@ import ImageRender from "@mods/image-render";
 import ChatGPTShorten from "@mods/chatgpt-shorten";
 // import ZoraNftMinter from "@mods/zora-nft-minter";
 // import DALLE from "@mods/dall-e";
+import ImgurUpload from "@mods/imgur-upload";
 
 export const allMods = [
+  ImgurUpload,
   InfuraIPFSUpload,
   LivepeerVideo,
   GiphyPicker,
