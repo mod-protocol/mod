@@ -14,7 +14,7 @@ const uploadToImgur = async (file: Blob): Promise<string | null> => {
   const response = await fetch("https://api.imgur.com/3/upload", {
     method: "POST",
     headers: {
-      Authorization: `Client-ID ${NEXT_PUBLIC_IMGUR_CLIENT_ID}`, // replace with your Client ID
+      Authorization: `Client-ID ${NEXT_PUBLIC_IMGUR_CLIENT_ID}`,
     },
     body: formData,
   });
@@ -44,10 +44,11 @@ function createSchemaMetadata(
   return {
     "@context": ["https://schema.org", "https://schema.modprotocol.org"],
     "@type": "WebPage",
-    name: "Poll",
+    name: "Reply to this Cast to participate in the Poll",
     image: imageUrl,
     description:
-      "It looks like this app doesn't support Mods yet, but if it did, you'd see the Mod here. Vote by replying",
+      // Warpcast shows 176 characters in the description on desktop, and 0 on mobile.
+      "Your Farcaster app doesn't support Mods yet, but if it did, you'd be able to vote with one click & see tallied results",
     "mod:model": {
       // unique identifier for the renderer of this miniapp
       "@type": "schema.modprotocol.org/create-poll/0.0.1/Poll",
@@ -101,27 +102,30 @@ export async function POST(request: NextRequest) {
     );
 
     // generate image
-    const text = `
-    1. ${choice1}
-    2. ${choice2}${choice3 ? `\n3. ${choice3}` : ""}${
+    const text = `1. ${choice1}
+2. ${choice2}${choice3 ? `\n3. ${choice3}` : ""}${
       choice3 ? `\n4. ${choice4}` : ""
-    }\nEnds on: ${endDate.toUTCString()}
-    `;
-    const imageBuffer = await textToImage({ text, title: "Poll" });
+    }
+
+Poll ends on ${endDate.toUTCString()}
+`;
+    const imageBuffer = await textToImage({ text });
+    // const imageBuffer = new Buffer([]);
 
     // upload image to imgur
     const imageUrl = await uploadToImgur(new Blob([imageBuffer]));
 
-    // send to irys
-    const irysTransactionId = await storeOnIrys(
-      createSchemaMetadata(imageUrl, {
-        choice1,
-        choice2,
-        choice3,
-        choice4,
-        endDate: endDate.toISOString(),
-      })
-    );
+    // create schema
+    const schema = createSchemaMetadata(imageUrl, {
+      choice1,
+      choice2,
+      choice3,
+      choice4,
+      endDate: endDate.toISOString(),
+    });
+
+    // store with irys
+    const irysTransactionId = await storeOnIrys(schema);
 
     if (!irysTransactionId) {
       return new Response(null, {
