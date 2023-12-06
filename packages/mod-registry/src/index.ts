@@ -11,6 +11,7 @@ import ImageRender from "@mods/image-render";
 import ChatGPTShorten from "@mods/chatgpt-shorten";
 // import ZoraNftMinter from "@mods/zora-nft-minter";
 import CreatePoll from "@mods/create-poll";
+import RenderPoll from "@mods/render-poll";
 
 export const allMods = [
   InfuraIPFSUpload,
@@ -23,6 +24,7 @@ export const allMods = [
   ChatGPTShorten,
   ChatGPT,
   CreatePoll,
+  RenderPoll,
 ];
 
 export const creationMods: ModManifest[] = allMods.filter(

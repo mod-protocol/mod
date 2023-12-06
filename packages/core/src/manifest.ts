@@ -30,7 +30,12 @@ export type ModManifest = {
   /** A definition map of reusable elements, using their id as the key */
   elements?: Record<string, ModElement[]>;
   /** Permissions requested by the Mini-app */
-  permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign">;
+  permissions?: Array<
+    | "user.wallet.address"
+    | "web3.eth.personal.sign"
+    | "farcaster.messagereply.create"
+    | "user.farcaster.fid"
+  >;
 };
 
 export type ModEvent =
@@ -51,6 +56,8 @@ export type Op = {
   OR?: Op[];
   NOT?: Op | Op[];
   equals?: string;
+  greaterThan?: string;
+  lessThan?: string;
   oneOf?: string[];
   notOneOf?: string[];
   contains?: string;
@@ -118,6 +125,12 @@ type OpenFileAction = BaseAction & {
   oncancel?: ModEvent;
 };
 
+type AddReplyAction = BaseAction & {
+  type: "ADDREPLY";
+  text?: string;
+  embeds?: string[];
+};
+
 type AddEmbedAction = BaseAction & {
   type: "ADDEMBED";
   url: string;
@@ -169,6 +182,7 @@ export type ModAction =
   | HTTPAction
   | OpenFileAction
   | AddEmbedAction
+  | AddReplyAction
   | SetInputAction
   | OpenLinkAction
   | EthPersonalSignAction
@@ -199,6 +213,12 @@ export type ModElement =
       loadingLabel?: string;
       variant?: "primary" | "secondary" | "destructive";
       onclick: ModEvent;
+    }
+  | {
+      type: "progress";
+      label?: string;
+      /** percentage from 0 to 100. example: 33 **/
+      value: number;
     }
   | {
       type: "circular-progress";

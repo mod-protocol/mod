@@ -15,12 +15,14 @@ import {
   CreationContext,
   EthPersonalSignActionResolver,
   SendEthTransactionActionResolver,
+  AddReplyActionResolver,
 } from "@mod-protocol/core";
 import actionResolverHttp from "./action-resolver-http";
 import actionResolverOpenFile from "./action-resolver-open-file";
 import actionResolverOpenLink from "./action-resolver-open-link";
 import actionResolverSetInput from "./action-resolver-set-input";
 import actionResolverAddEmbed from "./action-resolver-add-embed";
+import actionResolverAddReply from "./action-resolver-add-reply";
 import actionResolverEthPersonalSign from "./action-resolver-eth-personal-sign";
 import actionResolverExit from "./action-resolver-exit";
 import actionResolverSendEthTransaction from "./action-resolver-send-eth-transaction";
@@ -61,6 +63,10 @@ export type Renderers = {
     variant?: "primary" | "secondary" | "destructive";
     isDisabled: boolean;
     onClick: () => void;
+  }>;
+  Progress: React.ComponentType<{
+    label?: string;
+    value: number;
   }>;
   CircularProgress: React.ComponentType<{}>;
   HorizontalLayout: React.ComponentType<{ children: React.ReactNode }>;
@@ -156,6 +162,16 @@ const WrappedButtonRenderer = <T extends React.ReactNode>(props: {
   }, [events]);
 
   return <Component {...rest} onClick={onClick} />;
+};
+
+const WrappedProgressRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Progress"];
+  element: Extract<ModElementRef<T>, { type: "progress" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { events, type, ...rest } = element;
+
+  return <Component {...rest} />;
 };
 
 const WrappedCircularProgressRenderer = <T extends React.ReactNode>(props: {
@@ -418,6 +434,7 @@ export type ResolverTypes = {
   onOpenFileAction?: OpenFileActionResolver;
   onSetInputAction?: SetInputActionResolver;
   onAddEmbedAction?: AddEmbedActionResolver;
+  onAddReplyAction?: AddReplyActionResolver;
   onOpenLinkAction?: OpenLinkActionResolver;
   onEthPersonalSignAction?: EthPersonalSignActionResolver;
   onSendEthTransactionAction?: SendEthTransactionActionResolver;
@@ -439,6 +456,7 @@ export const CreationMod = (
     onOpenFileAction = actionResolverOpenFile,
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
+    onAddReplyAction = actionResolverAddReply,
     onOpenLinkAction = actionResolverOpenLink,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
     onEthPersonalSignAction = actionResolverEthPersonalSign,
@@ -463,6 +481,7 @@ export const CreationMod = (
         onHttpAction,
         onOpenFileAction,
         onSetInputAction,
+        onAddReplyAction,
         onAddEmbedAction,
         onOpenLinkAction,
         onEthPersonalSignAction,
@@ -488,6 +507,7 @@ export const RenderMod = (
     onOpenFileAction = actionResolverOpenFile,
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
+    onAddReplyAction = actionResolverAddReply,
     onOpenLinkAction = actionResolverOpenLink,
     onEthPersonalSignAction = actionResolverEthPersonalSign,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
@@ -512,6 +532,7 @@ export const RenderMod = (
         onOpenFileAction,
         onSetInputAction,
         onAddEmbedAction,
+        onAddReplyAction,
         onOpenLinkAction,
         onEthPersonalSignAction,
         onSendEthTransactionAction,
@@ -540,6 +561,7 @@ export const Mod = (props: Props & { renderer: Renderer }) => {
     onOpenFileAction = actionResolverOpenFile,
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
+    onAddReplyAction = actionResolverAddReply,
     onOpenLinkAction = actionResolverOpenLink,
     onEthPersonalSignAction = actionResolverEthPersonalSign,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
@@ -560,6 +582,9 @@ export const Mod = (props: Props & { renderer: Renderer }) => {
   React.useEffect(() => {
     renderer.setAddEmbedActionResolver(onAddEmbedAction);
   }, [onAddEmbedAction, renderer]);
+  React.useEffect(() => {
+    renderer.setAddReplyActionResolver(onAddReplyAction);
+  }, [onAddReplyAction, renderer]);
   React.useEffect(() => {
     renderer.setOpenLinkActionResolver(onOpenLinkAction);
   }, [onOpenLinkAction, renderer]);
@@ -615,6 +640,14 @@ export const Mod = (props: Props & { renderer: Renderer }) => {
               <WrappedButtonRenderer
                 key={key}
                 component={renderers["Button"]}
+                element={el}
+              />
+            );
+          case "progress":
+            return (
+              <WrappedProgressRenderer
+                key={key}
+                component={renderers["Progress"]}
                 element={el}
               />
             );
