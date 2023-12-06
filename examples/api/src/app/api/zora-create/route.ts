@@ -37,11 +37,15 @@ export async function POST(request: NextRequest) {
     };
     imageData: string;
     // Optional
+    title: string | undefined;
+    description: string | undefined;
     signature: string | undefined;
     collection: PremintResponse["collection"] | undefined;
     chain_name: string | undefined;
   };
   const {
+    title: prefilledTitle,
+    description: prefilledDescription,
     creator,
     imageData,
     signature,
@@ -56,12 +60,16 @@ export async function POST(request: NextRequest) {
   });
 
   const timeString = new Date().toISOString();
-  const title = `Zora Create Mod - ${creator.id} - ${timeString}`;
+  const title =
+    prefilledTitle || `Zora Create Mod - ${creator.id} - ${timeString}`;
+  const description =
+    prefilledDescription ||
+    `This digital collectible was created using the Zora Create Mod.`;
 
   const tokenMetadataURI = await storeImage({
     image: imageBlob,
     name: title,
-    description: `This digital collectible was created using the Zora Create Mod.`,
+    description: description,
   });
 
   // Upload to zora
@@ -81,10 +89,9 @@ export async function POST(request: NextRequest) {
     // TODO: Custom collection metadata
     const collection: PremintResponse["collection"] = {
       contractAdmin: adminAccount.address,
-      contractName: "Zora Create Mod",
-      // Generic collection metadata
-      contractURI:
-        "ipfs://bafkreiabey53cnzke6eqcm7dzuryrx34e26pui2ut5pskfsg6fqef37zgu",
+      contractName: title,
+      // Collection metadata same as token metadata
+      contractURI: tokenMetadataURI,
       ...prefilledCollection,
     };
 
