@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const { NEXT_PUBLIC_IMGUR_CLIENT_ID } = process.env;
+const { IMGUR_CLIENT_ID } = process.env;
 
 const uploadToImgur = async (file: File): Promise<string | null> => {
   const formData = new FormData();
@@ -9,7 +9,7 @@ const uploadToImgur = async (file: File): Promise<string | null> => {
   const response = await fetch("https://api.imgur.com/3/upload", {
     method: "POST",
     headers: {
-      Authorization: `Client-ID ${NEXT_PUBLIC_IMGUR_CLIENT_ID}`, // replace with your Client ID
+      Authorization: `Client-ID ${IMGUR_CLIENT_ID}`, // replace with your Client ID
     },
     body: formData,
   });
