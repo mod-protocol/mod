@@ -13,8 +13,8 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 export const SelectRenderer = (
   props: React.ComponentProps<Renderers["Select"]>
 ) => {
-  const { isClearable, placeholder, onChange, options } = props;
-  const [value, setValue] = React.useState<string>("");
+  const { isClearable, placeholder, onChange, options, defaultValue } = props;
+  const [value, setValue] = React.useState<any>(defaultValue ?? null);
   const selectRef = React.useRef<HTMLSelectElement | null>(null);
   return (
     <div className="w-full flex flex-row items-center rounded-md flex-grow">
@@ -33,7 +33,7 @@ export const SelectRenderer = (
             return (
               <SelectItem
                 value={option.value}
-                // items are stable
+                // items are stable, so index is fine
                 key={i}
               >
                 {option.label}
@@ -48,8 +48,8 @@ export const SelectRenderer = (
             variant="ghost"
             size="icon"
             onClick={() => {
-              onChange("");
-              setValue("");
+              onChange(null);
+              setValue(null);
               selectRef.current?.focus();
             }}
           >

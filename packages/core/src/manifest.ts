@@ -223,6 +223,7 @@ export type ModElement =
   | {
       type: "select";
       options: Array<{ label: string; value: any }>;
+      defaultValue?: string;
       ref?: string;
       placeholder?: string;
       isClearable?: boolean;

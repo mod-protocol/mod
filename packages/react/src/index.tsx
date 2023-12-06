@@ -36,13 +36,14 @@ export type Renderers = {
   }>;
   Select: React.ComponentType<{
     isClearable: boolean;
+    defaultValue?: string;
     placeholder?: string;
-    options: Array<{ value: any; label: string }>;
-    onChange: (value: string) => void;
+    options: Array<{ value: string; label: string }>;
+    onChange: (value: any) => void;
   }>;
   Combobox: React.ComponentType<{
     placeholder?: string;
-    options: Array<{ value: any; label: string }> | null;
+    options: Array<{ value: string; label: string }> | null;
     onChange: (value: string) => void;
     onPick: (value: any) => void;
   }>;

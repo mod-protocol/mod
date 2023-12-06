@@ -25,7 +25,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "siwe": "^1.1.6",
-    "uint8arrays": "^3.0.0"
+    "uint8arrays": "^3.0.0",
+    "ultimate-text-to-image": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "^17.0.12",

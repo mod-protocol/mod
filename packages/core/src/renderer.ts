@@ -73,11 +73,11 @@ export type ModElementRef<T> =
       type: "combobox";
       isClearable?: boolean;
       placeholder?: string;
-      options: Array<{ label: string; value: any }> | null;
+      options: Array<{ label: string; value: string }> | null;
       events: {
         onLoad: () => void;
         onChange: (input: string) => void;
-        onPick: (newValue: any) => void;
+        onPick: (newValue: string) => void;
       };
     }
   | {
@@ -91,8 +91,9 @@ export type ModElementRef<T> =
   | {
       type: "select";
       isClearable: boolean;
+      defaultValue?: string;
       placeholder?: string;
-      options: Array<{ label: string; value: any }>;
+      options: Array<{ label: string; value: string }>;
       events: {
         onChange: (input: string) => void;
       };
@@ -1207,6 +1208,10 @@ export class Renderer {
             {
               type: "select",
               isClearable: el.isClearable || false,
+              defaultValue:
+                typeof el.defaultValue === "string"
+                  ? this.replaceInlineContext(el.defaultValue)
+                  : el.defaultValue,
               placeholder: el.placeholder
                 ? this.replaceInlineContext(el.placeholder)
                 : el.placeholder,
@@ -1266,10 +1271,12 @@ export class Renderer {
           );
         }
         case "combobox": {
-          const resolvedResults: Array<{ label: string; value: any }> | null =
-            isString(el.optionsRef)
-              ? get({ refs: this.refs }, el.optionsRef, null)
-              : null;
+          const resolvedResults: Array<{
+            label: string;
+            value: string;
+          }> | null = isString(el.optionsRef)
+            ? get({ refs: this.refs }, el.optionsRef, null)
+            : null;
           return fn(
             {
               type: "combobox",
