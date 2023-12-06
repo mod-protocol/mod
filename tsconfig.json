@@ -9,11 +9,10 @@
     "esModuleInterop": true,
     "preserveSymlinks": true,
     "incremental": true,
+    "composite": true,
     "declarationMap": true,
     "paths": {
-      "@mods/*": [
-        "./mods/*"
-      ],
+      "@mods/*": ["./mods/*"]
     },
     "jsx": "react-jsx",
     "module": "ESNext",
@@ -31,21 +30,13 @@
     "sourceMap": false,
     "strictNullChecks": true,
     "target": "es2019",
-    "types": [
-      "node"
-    ],
-    "lib": [
-      "es2021",
-      "dom",
-      "esnext"
-    ],
+    "types": ["node"],
+    "lib": ["es2021", "dom", "esnext"],
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true
   },
-  "exclude": [
-    "_"
-  ],
+  "exclude": ["_"],
   "typeAcquisition": {
     "enable": true
   }
