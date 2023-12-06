@@ -10,7 +10,7 @@ const manifest: ModManifest = {
   logo: "https://i.imgur.com/rsfLOfD.png",
   custodyGithubUsername: "stephancill",
   version: "0.0.1",
-  // permissions: ["user.wallet", "user.id"],
+  permissions: ["user.wallet.address"],
   creationEntrypoints: action,
   elements: {
     "#error": error,
