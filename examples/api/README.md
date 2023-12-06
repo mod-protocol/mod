@@ -1,6 +1,6 @@
 # Readme
 
-This is a standard next.js serverless api that hosts backend services for Mini-apps.
+This is a standard next.js serverless api that hosts backend services for Mods.
 You can either use a hosted version of these, or self host using this repo, and your own secrets.
 
 # Setup to develop locally

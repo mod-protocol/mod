@@ -80,7 +80,7 @@ export default function Page() {
               <h2 className="text-xl">Mod Editor</h2>
               <h3 className="my-2">
                 An open source library for Farcaster cast creation supporting
-                Mini-apps
+                Mods
               </h3>
               <div className="max-w-lg">
                 <EditorExample />
@@ -101,13 +101,13 @@ export default function Page() {
             </div>
             <div className="flex flex-col md:w-1/2">
               <h2 className="text-xl">Embed renderers</h2>
-              <h3 className="mb-2 mt-2">NFT Mini-app with native minting</h3>
+              <h3 className="mb-2 mt-2">NFT Mod with native minting</h3>
               <Cast cast={dummyCastData[4]} />
-              <h3 className="mb-2 mt-4">Video Mini-app</h3>
+              <h3 className="mb-2 mt-4">Video Mod</h3>
               <Cast cast={dummyCastData[3]} />
-              <h3 className="mb-2 mt-4">URL Mini-app</h3>
+              <h3 className="mb-2 mt-4">URL Mod</h3>
               <Cast cast={dummyCastData[0]} />
-              <h3 className="mb-2 mt-4">Image Mini-app</h3>
+              <h3 className="mb-2 mt-4">Image Mod</h3>
               <Cast cast={dummyCastData[1]} />
             </div>
           </div>

@@ -169,7 +169,7 @@ export type CreationContext = {
   api: string;
 };
 
-// Render Mini-apps only are triggered by a single embed right now
+// Render Mods only are triggered by a single embed right now
 export type RichEmbedContext = {
   user?: {
     wallet?: {

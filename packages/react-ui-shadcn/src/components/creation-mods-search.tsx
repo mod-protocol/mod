@@ -47,23 +47,18 @@ export function ModsSearch(props: Props) {
       </PopoverTrigger>
       <PopoverContent className="w-[400px] p-0" align="start">
         <Command>
-          <CommandInput placeholder="Search Mini-apps..." />
-          <CommandEmpty>No Mini-app found.</CommandEmpty>
+          <CommandInput placeholder="Search Mods..." />
+          <CommandEmpty>No Mod found.</CommandEmpty>
           <CommandGroup>
-            {mods.map((miniApp) => (
+            {mods.map((mod) => (
               <CommandItem
-                key={miniApp.slug}
-                value={miniApp.slug}
+                key={mod.slug}
+                value={mod.slug}
                 className="cursor-pointer"
                 onSelect={handleSelect}
               >
-                <img
-                  height={24}
-                  width={24}
-                  alt={miniApp.name}
-                  src={miniApp.logo}
-                />
-                <span className="ml-2">{miniApp.name}</span>
+                <img height={24} width={24} alt={mod.name} src={mod.logo} />
+                <span className="ml-2">{mod.name}</span>
               </CommandItem>
             ))}
           </CommandGroup>
