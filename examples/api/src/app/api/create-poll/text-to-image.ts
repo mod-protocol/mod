@@ -10,8 +10,8 @@ export function textToImage({ text }: { text: string }) {
     fontFamily: "Arial",
     fontColor: "#373530",
     fontWeight: "bold",
-    fontSize: 48,
-    lineHeight: 68,
+    fontSize: 32,
+    lineHeight: 48,
     backgroundColor: "#ffffff",
     // big margin allows for different client rendering dimensions, and safety to avoid cropping. Might still happen in places
     margin: 80,

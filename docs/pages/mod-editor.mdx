@@ -21,8 +21,8 @@ A fully featured, performant, and open source Cast creator for your React app.
 ```tsx
 import { useEditor, EditorContent } from "@mod-protocol/react-editor";
 import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/dist/lib/embeds";
-import { Embed, ModManifest, fetchUrlMetadata, handleAddEmbed, handleOpenFile, handleSetInput } from "@mod-protocol/core";
-import { Channel, getFarcasterChannels, getFarcasterMentions } from "@mod-protocol/farcaster";
+import { fetchUrlMetadata } from "@mod-protocol/core";
+import { getFarcasterChannels, getFarcasterMentions } from "@mod-protocol/farcaster";
 
 // use our API_URL, self host our API, or use your own API.
 const getUrlMetadata = fetchUrlMetadata(API_URL);
@@ -42,9 +42,9 @@ const getChannels = getFarcasterChannels(API_URL);
   return (
     <>
         <EditorContent
-            editor={editor}
-            autoFocus
-            className="w-full h-full min-h-[200px]"
+          editor={editor}
+          autoFocus
+          className="w-full h-full min-h-[200px]"
         />
         <EmbedsEditor embeds={getEmbeds()} setEmbeds={setEmbeds} />
         <ChannelPicker
@@ -57,5 +57,3 @@ const getChannels = getFarcasterChannels(API_URL);
     </>
   );
 ```
-
-## Usage with Channels UI

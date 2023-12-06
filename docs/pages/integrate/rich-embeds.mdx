@@ -32,6 +32,7 @@ import { richEmbedMods } from "@mod-protocol/mod-registry";
     mods={richEmbedMods}
     resolvers={{
       onSendEthTransactionAction,
+      onAddReplyAction
     }}
   />
 ```
@@ -91,6 +92,16 @@ export function Embeds(props: { embeds: Array<Embed> }) {
     []
   );
 
+  const handleAddReply = React.useCallback(
+    ({ text, embeds }, { onSuccess }) => {
+      // optional: first time a user does this, ask them to confirm and tell them what is happening (casting a reply on behalf of them)
+      // then: you create a cast with text, embeds
+      // TODO: implement your handler
+      onSuccess();
+    },
+    []
+  );
+
   const context = useMemo<Omit<ContextType, "embed">>(() => {
     return {
       /* Required context */
@@ -117,6 +128,7 @@ export function Embeds(props: { embeds: Array<Embed> }) {
           defaultRichEmbedMod={defaultRichEmbedMod}
           mods={richEmbedMods}
           resolvers={{
+            onAddReplyAction,
             onSendEthTransactionAction,
           }}
         />
@@ -142,6 +154,7 @@ You can choose to filter or select which Mods are available
   defaultRichEmbedMod={defaultRichEmbedMod}
   mods={richEmbedMods}
   resolvers={{
+    onAddReplyAction,
     onSendEthTransactionAction,
   }}
 />
@@ -159,6 +172,7 @@ You can choose to filter or select which Mods are available
   defaultRichEmbedMod={defaultRichEmbedMod}
   mods={richEmbedMods}
   resolvers={{
+    onAddReplyAction,
     onSendEthTransactionAction,
   }}
 />

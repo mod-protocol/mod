@@ -20,13 +20,15 @@ const manifest: ModManifest = {
     Poll: {
       type: "object",
       properties: {
+        question: { type: "string" },
         choice1: { type: "string" },
         choice2: { type: "string" },
         choice3: { type: "string" },
         choice4: { type: "string" },
+        // ISO 8601 date
         endDate: { type: "string", format: "date-time" },
       },
-      required: ["choice1", "choice2"],
+      required: ["question", "choice1", "choice2"],
     },
   },
 };

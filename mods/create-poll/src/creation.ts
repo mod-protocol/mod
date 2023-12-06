@@ -6,6 +6,11 @@ const creation: ModElement[] = [
     elements: [
       {
         type: "input",
+        ref: "question",
+        placeholder: "Question",
+      },
+      {
+        type: "input",
         ref: "choice1",
         placeholder: "Choice 1",
       },
@@ -23,11 +28,6 @@ const creation: ModElement[] = [
         type: "input",
         ref: "choice4",
         placeholder: "Choice 4 (optional)",
-      },
-      {
-        type: "input",
-        ref: "choice5",
-        placeholder: "Choice 5 (optional)",
       },
       {
         type: "text",
@@ -189,6 +189,10 @@ const creation: ModElement[] = [
             json: {
               type: "object",
               value: {
+                question: {
+                  type: "string",
+                  value: "{{refs.question.value}}",
+                },
                 choice1: {
                   type: "string",
                   value: "{{refs.choice1.value}}",
@@ -222,7 +226,7 @@ const creation: ModElement[] = [
           },
           onsuccess: {
             type: "ADDEMBED",
-            url: "{{refs.createPollRequest.url}}",
+            url: "{{refs.createPollRequest.response.data.url}}",
             name: "Poll image",
             mimeType: "image/png",
             onsuccess: {

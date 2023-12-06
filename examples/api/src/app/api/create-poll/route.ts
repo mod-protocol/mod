@@ -32,6 +32,7 @@ const uploadToImgur = async (file: Blob): Promise<string | null> => {
 function createSchemaMetadata(
   imageUrl: string,
   payload: {
+    question: string;
     choice1: string;
     choice2: string;
     choice3: string;
@@ -87,8 +88,16 @@ async function storeOnIrys(jsonPayload: object): Promise<string | null> {
 // take a poll object, generate image, store in irys, return a gateway url
 export async function POST(request: NextRequest) {
   try {
-    const { choice1, choice2, choice3, choice4, days, hours, minutes } =
-      await request.json();
+    const {
+      question,
+      choice1,
+      choice2,
+      choice3,
+      choice4,
+      days,
+      hours,
+      minutes,
+    } = await request.json();
 
     // calculate endDate
     const endDate = new Date();
@@ -98,9 +107,10 @@ export async function POST(request: NextRequest) {
     );
 
     // generate image
-    const text = `1. ${choice1}
+    const text = `${question}
+1. ${choice1}
 2. ${choice2}${choice3 ? `\n3. ${choice3}` : ""}${
-      choice3 ? `\n4. ${choice4}` : ""
+      choice4 ? `\n4. ${choice4}` : ""
     }
 
 Poll ends on ${endDate.toUTCString()}
@@ -113,6 +123,7 @@ Poll ends on ${endDate.toUTCString()}
 
     // create schema
     const schema = createSchemaMetadata(imageUrl, {
+      question,
       choice1,
       choice2,
       choice3,

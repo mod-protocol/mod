@@ -106,6 +106,16 @@ export default function EditorExample() {
 
   const { signMessageAsync } = useSignMessage();
 
+  const handleAddReply = React.useCallback(
+    ({ text, embeds }, { onSuccess }) => {
+      // optional: first time a user does this, ask them to confirm and tell them what is happening (casting a reply on behalf of them)
+      // then: you create a cast with text, embeds
+      // TODO: implement your handler
+      onSuccess();
+    },
+    []
+  );
+
   const getAuthSig = React.useCallback(
     async (
       {
@@ -196,6 +206,7 @@ export default function EditorExample() {
                 onExitAction={() => setCurrentMod(null)}
                 onSetInputAction={handleSetInput(setText)}
                 onAddEmbedAction={handleAddEmbed(addEmbed)}
+                onAddReplyAction={handleAddReply}
                 onEthPersonalSignAction={getAuthSig}
               />
             </div>

@@ -251,7 +251,7 @@ export interface SetInputActionResolver {
 }
 
 export type AddReplyActionResolverInit = {
-  text: string;
+  text?: string;
   embeds?: string[];
 };
 export type AddReplyActionResolverEvents = {
