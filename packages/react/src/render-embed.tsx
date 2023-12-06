@@ -59,14 +59,14 @@ export function RichEmbed(props: Props) {
     return getMatchingMods([props.defaultRichEmbedMod]);
   });
 
-  const miniapp = matchingMods[0];
+  const mod = matchingMods[0];
 
-  return miniapp ? (
+  return mod ? (
     <RenderMod
-      {...miniapp.context}
+      {...mod.context}
       {...props.resolvers}
       variant="richEmbed"
-      manifest={miniapp.manifest}
+      manifest={mod.manifest}
       renderers={props.renderers}
     />
   ) : null;
