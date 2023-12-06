@@ -12,7 +12,7 @@
     "@mod-protocol/farcaster": "^0.0.1",
     "@mod-protocol/react": "^0.0.2",
     "@mod-protocol/react-editor": "^0.0.2",
-    "@mod-protocol/miniapp-registry": "*",
+    "@mod-protocol/mod-registry": "*",
     "@primer/octicons-react": "^19.5.0",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.4",
