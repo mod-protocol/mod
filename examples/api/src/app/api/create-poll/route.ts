@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import Irys from "@irys/sdk";
 import { generatePrivateKey } from "viem/accounts";
 import { textToImage } from "./text-to-image";
-// const plugin = require.resolve("@jimp/plugin-print");
-// const jimpFont = path.resolve(__dirname, "./font/open-sans-64-black.fnt");
 
 const { NEXT_PUBLIC_IMGUR_CLIENT_ID } = process.env;
 
@@ -62,11 +60,10 @@ async function getIrys() {
 
   const irys = new Irys({
     url: "https://node2.irys.xyz",
-    // url: "https://node2.irys.xyz", // URL of the node you want to connect to
-    token: "matic", // Token used for payment
-    // under 100kb is free.
+    token: "matic",
+    // under 100kb is free, so will be free
     key: key,
-    config: { providerUrl: "https://polygon-mainnet.infura.io" }, // Optional provider URL, only required when using Devnet
+    config: { providerUrl: "https://polygon-mainnet.infura.io" },
   });
 
   return irys;
@@ -87,9 +84,8 @@ async function storeOnIrys(jsonPayload: object): Promise<string | null> {
   }
 }
 
+// take a poll object, generate image, store in irys, return a gateway url
 export async function POST(request: NextRequest) {
-  // take a poll object, store in irys, return a gateway url
-
   try {
     const { choice1, choice2, choice3, choice4, days, hours, minutes } =
       await request.json();

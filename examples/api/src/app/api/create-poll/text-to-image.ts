@@ -13,7 +13,7 @@ export function textToImage({ text }: { text: string }) {
     fontSize: 48,
     lineHeight: 68,
     backgroundColor: "#ffffff",
-    // big margin allows for different client rendering dimensions
+    // big margin allows for different client rendering dimensions, and safety to avoid cropping. Might still happen in places
     margin: 80,
     valign: "middle",
   });
