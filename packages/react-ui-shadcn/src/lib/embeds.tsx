@@ -24,7 +24,7 @@ export const EmbedsEditor = ({
       {embeds.map((embed, i) => (
         <div key={i} className="relative">
           <Button
-            className="rounded-full text-white dark:text-black hover:text-gray-300 absolute -top-4 -left-4 border-white border z-50"
+            className="rounded-full text-white dark:text-black hover:text-gray-300 absolute -top-4 -left-4 border-white dark:border-black border z-50"
             size="icon"
             type="button"
             onClick={() => {
