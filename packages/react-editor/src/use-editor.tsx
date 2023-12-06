@@ -278,7 +278,7 @@ function setEditorContentWithPlaintext(editor: Editor, text: string): void {
 }
 
 /**
-The Chatgpt Mini-app transforms plaintext, and our editor should be able to convert plaintext
+The Chatgpt Mod transforms plaintext, and our editor should be able to convert plaintext
 **/
 function preserveMentionsInTextTransform({
   sourceJSON,

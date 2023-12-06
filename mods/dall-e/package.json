@@ -1,9 +1,9 @@
 {
-  "name": "@miniapps/imgur-upload",
+  "name": "@mods/dall-e",
   "main": "./index.ts",
   "types": "./index.ts",
-  "version": "0.0.1",
   "private": true,
+  "version": "0.0.1",
   "dependencies": {
     "@mod-protocol/core": "^0.0.2"
   }
