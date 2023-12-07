@@ -271,7 +271,7 @@ const WrappedComboboxRenderer = <T extends React.ReactNode>(props: {
 
   React.useEffect(() => {
     events.onLoad();
-  }, []);
+  }, [events]);
 
   const onPick = React.useCallback(
     (value: string) => {

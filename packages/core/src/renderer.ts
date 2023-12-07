@@ -343,6 +343,8 @@ function replaceInlineContext(target: string, context: any): string {
       },
     },
   };
+  // safeguard
+  if (typeof target !== "string") return target;
   return target.replace(/{{([^{{}}]+)}}/g, (_, key) =>
     get({ ...context, ...dynamicContext }, key, ``)
   );
@@ -1262,7 +1264,7 @@ export class Renderer {
           return fn(
             {
               type: "progress",
-              value: el.value,
+              value: Number(this.replaceInlineContext(el.value)),
               label: el.label ? this.replaceInlineContext(el.label) : el.label,
             },
             key

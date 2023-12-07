@@ -6,7 +6,7 @@ import upload from "./upload";
 
 const manifest: ModManifest = {
   slug: "livepeer-video",
-  name: "Add video",
+  name: "Upload video",
   custodyAddress: "furlong.eth",
   logo: "https://i.imgur.com/UeuTxpI.png",
   custodyGithubUsername: "davidfurlong",

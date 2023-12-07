@@ -18,7 +18,7 @@ export const CardRenderer = (
   } = props;
   return (
     <div
-      className="flex flex-col"
+      className="flex flex-col -m-2"
       onClick={(e) => {
         // Prevent double event firing when clicking child components
         e.stopPropagation();

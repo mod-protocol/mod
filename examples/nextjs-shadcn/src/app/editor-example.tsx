@@ -13,7 +13,11 @@ import {
 } from "@mod-protocol/farcaster";
 import { CreationMod, RichEmbed } from "@mod-protocol/react";
 import { useEditor, EditorContent } from "@mod-protocol/react-editor";
-import { creationMods, defaultRichEmbedMod } from "@mod-protocol/mod-registry";
+import {
+  creationMods,
+  creationModsExperimental,
+  defaultRichEmbedMod,
+} from "@mod-protocol/mod-registry";
 import {
   Embed,
   EthPersonalSignActionResolverInit,
@@ -201,7 +205,14 @@ export default function EditorExample() {
           }}
         >
           <PopoverTrigger></PopoverTrigger>
-          <ModsSearch mods={creationMods} onSelect={setCurrentMod} />
+          <ModsSearch
+            mods={
+              process.env.NEXT_PUBLIC_EXPERIMENTAL_MODS === "true"
+                ? creationModsExperimental
+                : creationMods
+            }
+            onSelect={setCurrentMod}
+          />
           <PopoverContent className="w-[400px] ml-2" align="start">
             <div className="space-y-4">
               <h4 className="font-medium leading-none">{currentMod?.name}</h4>

@@ -41,6 +41,8 @@ export const richEmbedMods: ModManifest[] = allMods.filter(
 
 /** All + Experimental - Potentially unstable, unsuitable for production use  */
 export const allModsExperimental = [
+  CreatePoll,
+  RenderPoll,
   ImgurUpload,
   InfuraIPFSUpload,
   LivepeerVideo,
@@ -52,8 +54,6 @@ export const allModsExperimental = [
   ChatGPTShorten,
   ChatGPT,
   DALLE,
-  CreatePoll,
-  RenderPoll,
 ];
 
 export const creationModsExperimental: ModManifest[] =

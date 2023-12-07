@@ -1,4 +1,6 @@
 import { ModConditionalElement } from "@mod-protocol/core";
+import vote from "./vote";
+import loading from "./loading";
 
 const rendering: ModConditionalElement[] = [
   {
@@ -21,8 +23,8 @@ const rendering: ModConditionalElement[] = [
                 greaterThan: "{{date.now.iso}}",
               },
             },
-            then: "#loading",
-            else: "#vote",
+            then: loading,
+            else: vote,
           },
         ],
       },

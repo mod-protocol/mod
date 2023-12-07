@@ -218,8 +218,8 @@ export type ModElement =
   | {
       type: "progress";
       label?: string;
-      /** percentage from 0 to 100. example: 33 **/
-      value: number;
+      /** string percentage from 0 to 100. example: 33 **/
+      value: string;
     }
   | {
       type: "circular-progress";
