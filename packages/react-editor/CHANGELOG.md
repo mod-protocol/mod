@@ -1,5 +1,21 @@
 # @mod-protocol/react-editor
 
+## 0.0.3
+
+### Patch Changes
+
+- 9d4d7e1: feat: expose tiptap editor config
+- 2b7c514: Adds the combobox, select, textarea mod elements. Adds `Model Definitions` to Manifests. Adds the `ethPersonalSign` action. Adds `json-ld` indexing to metadata. Adds a `loadingLabel` prop to buttons
+- 9d4d7e1: fix: placeholder text
+- Updated dependencies [584ffc2]
+- Updated dependencies [f2141a9]
+- Updated dependencies [2b7c514]
+- Updated dependencies [f2141a9]
+- Updated dependencies [584ffc2]
+- Updated dependencies [69be77d]
+- Updated dependencies [63b4864]
+  - @mod-protocol/core@0.1.0
+
 ## 0.0.2
 
 ### Patch Changes

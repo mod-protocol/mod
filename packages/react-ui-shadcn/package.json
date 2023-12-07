@@ -1,6 +1,6 @@
 {
   "name": "@mod-protocol/react-ui-shadcn",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"**/*.ts*\" && tsc --noEmit",
@@ -8,10 +8,10 @@
     "dev": "npm run build -- --watch"
   },
   "dependencies": {
-    "@mod-protocol/core": "^0.0.2",
+    "@mod-protocol/core": "^0.1.0",
     "@mod-protocol/farcaster": "^0.0.1",
-    "@mod-protocol/react": "^0.0.2",
-    "@mod-protocol/react-editor": "^0.0.2",
+    "@mod-protocol/react": "^0.1.0",
+    "@mod-protocol/react-editor": "^0.0.3",
     "@mod-protocol/mod-registry": "*",
     "@primer/octicons-react": "^19.5.0",
     "@radix-ui/react-aspect-ratio": "^1.0.3",

@@ -2,9 +2,9 @@
   "name": "@mods/zora-nft-minter",
   "main": "./index.ts",
   "types": "./index.ts",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@mod-protocol/core": "^0.0.2"
+    "@mod-protocol/core": "^0.1.0"
   }
 }
