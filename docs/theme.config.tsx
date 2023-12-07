@@ -12,6 +12,7 @@ const config: DocsThemeConfig = {
   },
   useNextSeoProps() {
     return {
+      head: null,
       titleTemplate: "%s - Mod Protocol Docs",
       defaultTitle: "Mod Protocol Docs",
       description:
