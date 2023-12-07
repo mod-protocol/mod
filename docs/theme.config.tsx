@@ -10,9 +10,9 @@ const config: DocsThemeConfig = {
   footer: {
     text: "Mod Protocol",
   },
+  head: null,
   useNextSeoProps() {
     return {
-      head: null,
       titleTemplate: "%s - Mod Protocol Docs",
       defaultTitle: "Mod Protocol Docs",
       description:
