@@ -1,10 +1,15 @@
+import Image from "next/image";
+
+
 # Data Storage
 
 Mods may need to store data beyond what fits in a Farcaster cast, or in a different structure.
 
 Mods solves this by utilizing the [Open graph protocol](https://ogp.me/), [JSON schema](https://json-schema.org/) web standards, in combination with any third party storage.
 
-## An example of how storage works for the `Poll Mod`
+## An example of how storage works for the `Poll` Mod
+
+<Image src="/create-poll.png" alt="create poll mod example" width="800" height="300" />
 
 1. The Poll Mod wants to store poll metadata, such as when the poll ends, the question, and the choices.
 2. The Poll Mod collects the information via a form, and POSTs it to the backend
@@ -14,8 +19,14 @@ Mods solves this by utilizing the [Open graph protocol](https://ogp.me/), [JSON 
 5. The Backend constructs a URL that starts with a proxy gateway (we're using our own, https://cast.fun/mods/) with the path to the stored JSON in it.
 This proxy gateway is responsible for fetching and serving these `JSON schema` objects as [JSON Linked-data](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data), serving other web metadata like open graph data and images, and can optionally serve a fallback Mod interface.
 6. This url is returned to the client, and added to the Farcaster cast as an embed, or shared elsewhere.
+
+<Image src="/render-poll-mod.png" alt="render poll mod example" width="800" height="300" />
+
 7. The Render-poll Mod is rendered by apps that have integrated it when a URL has metadata with `JSON schema` with the unique identifier of the `Poll` Model defined by the `Poll` Mod
 8. The Render-poll Mod, when rendered, shows a voting interface using the `Poll` metadata, stores votes as `reply casts` by the user, and uses a backend to fetch all casts responding to this url that match a vote format.
+
+
+
 
 ## Benefits of this design
 
