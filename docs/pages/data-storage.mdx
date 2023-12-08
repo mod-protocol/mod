@@ -11,10 +11,10 @@ Mods solves this by utilizing the [Open graph protocol](https://ogp.me/), [JSON 
 
 <Image src="/create-poll.png" alt="create poll mod example" width="800" height="300" />
 
-1. The Poll Mod wants to store poll metadata, such as when the poll ends, the question, and the choices.
-2. The Poll Mod collects the information via a form, and POSTs it to the backend
+1. The Poll Creation Mod wants to store poll metadata, such as when the poll ends, the question, and the choices.
+2. The Poll Creation Mod collects the information via a form, and POSTs it to the backend
 3. The Backend generates an image from the text, to use as an open graph image, which serves as a fallback image interface for the Mod, and uploads it somewhere to get a url (for example imgur)
-4. The Backend constructs a `JSON schema` object using a well-known schema definition, or a schema definition defined by any Mod`. This object includes the poll metadata, and image to use for the open graph. In this case, the Poll Mod defines a `Poll` Definition in it's Manifest that is used.
+4. The Backend constructs a `JSON schema` object using a well-known schema definition, or a schema definition defined by any Mod. This object includes the poll metadata, and image to use for the open graph. In this case, the Poll Mod defines a `Poll` Definition in it's Manifest that is used.
 4. The Backend stores this `JSON schema` JSON object in some sort of storage (our Mod uses arweave for this), and gets in return a unique URL or identitifer for it.
 5. The Backend constructs a URL that starts with a proxy gateway (we're using our own, https://cast.fun/mods/) with the path to the stored JSON in it.
 This proxy gateway is responsible for fetching and serving these `JSON schema` objects as [JSON Linked-data](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data), serving other web metadata like open graph data and images, and can optionally serve a fallback Mod interface.
