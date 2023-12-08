@@ -6,7 +6,11 @@ import {
   SendEthTransactionActionResolverEvents,
   SendEthTransactionActionResolverInit,
 } from "@mod-protocol/core";
-import { richEmbedMods, defaultRichEmbedMod } from "@mod-protocol/mod-registry";
+import {
+  richEmbedMods,
+  defaultRichEmbedMod,
+  richEmbedModsExperimental,
+} from "@mod-protocol/mod-registry";
 import { RichEmbed } from "@mod-protocol/react";
 import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
 import {
@@ -77,7 +81,11 @@ export function Embeds(props: { embeds: Array<Embed> }) {
           key={i}
           renderers={renderers}
           defaultRichEmbedMod={defaultRichEmbedMod}
-          mods={richEmbedMods}
+          mods={
+            process.env.NEXT_PUBLIC_EXPERIMENTAL_MODS === "true"
+              ? richEmbedModsExperimental
+              : richEmbedMods
+          }
           resolvers={{
             onSendEthTransactionAction,
           }}

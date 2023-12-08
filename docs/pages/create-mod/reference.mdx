@@ -13,6 +13,12 @@ then you can access the values of the input by chaining properties like `{{refs.
 
 `{{embed}}` -> the embed value that triggered the `richEmbedEntrypoints`
 
+`{{date.now.iso}}` -> the current date as 8601 ISO format
+
+`{{user.wallet.address}}` -> if requested in permissions, is the wallet address of the current user
+
+`{{user.farcaster.fid}}` -> if requested in permissions, is the fid of the current user
+
 ## Properties of the Manifest
 
 ```ts
@@ -41,7 +47,7 @@ type ModManifest = {
   /** A definition map of reusable elements, using their id as the key */
   elements?: Record<string, ModElement[]>;
   /** Permissions requested by the Mod */
-  permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign">;
+  permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign" | 'farcaster.messagereply.create' | 'user.farcaster.fid'>;
 };
 ```
 
@@ -86,7 +92,8 @@ export type ModElement =
   | {
       ref?: string;
       type: "select";
-      options: Array<{ label: string; value: any }>;
+      options: Array<{ label: string; value: string }>;
+      defaultValue?: string;
       placeholder?: string;
       isClearable?: boolean;
       onchange?: ModEvent;

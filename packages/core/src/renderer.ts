@@ -53,6 +53,12 @@ export type ModElementRef<T> =
       };
     }
   | {
+      type: "progress";
+      value: number;
+      label?: string;
+      events?: undefined;
+    }
+  | {
       type: "circular-progress";
       events?: undefined;
     }
@@ -74,11 +80,11 @@ export type ModElementRef<T> =
       type: "combobox";
       isClearable?: boolean;
       placeholder?: string;
-      options: Array<{ label: string; value: any }> | null;
+      options: Array<{ label: string; value: string }> | null;
       events: {
         onLoad: () => void;
         onChange: (input: string) => void;
-        onPick: (newValue: any) => void;
+        onPick: (newValue: string) => void;
       };
     }
   | {
@@ -92,8 +98,9 @@ export type ModElementRef<T> =
   | {
       type: "select";
       isClearable: boolean;
+      defaultValue?: string;
       placeholder?: string;
-      options: Array<{ label: string; value: any }>;
+      options: Array<{ label: string; value: string }>;
       events: {
         onChange: (input: string) => void;
       };
@@ -245,6 +252,20 @@ export interface SetInputActionResolver {
   ): void;
 }
 
+export type AddReplyActionResolverInit = {
+  text?: string;
+  embeds?: string[];
+};
+export type AddReplyActionResolverEvents = {
+  onSuccess: () => void;
+};
+export interface AddReplyActionResolver {
+  (
+    init: AddReplyActionResolverInit,
+    events: AddReplyActionResolverEvents
+  ): void;
+}
+
 export type AddEmbedActionResolverInit = {
   url: string;
   name: string;
@@ -315,13 +336,26 @@ export interface ExitActionResolver {
 }
 
 function replaceInlineContext(target: string, context: any): string {
-  return target.replace(/{{([^{{}}]+)}}/g, (_, key) => get(context, key, ``));
+  const dynamicContext = {
+    date: {
+      now: {
+        iso: new Date().toISOString(),
+      },
+    },
+  };
+  // safeguard
+  if (typeof target !== "string") return target;
+  return target.replace(/{{([^{{}}]+)}}/g, (_, key) =>
+    get({ ...context, ...dynamicContext }, key, ``)
+  );
 }
 
 function matchesOp(value: string, op: Op, context: any): boolean {
   const replaceInlineContext_ = (v: string) => replaceInlineContext(v, context);
   if (
-    hasDefinedProperty(op, "equals") &&
+    // truthy check for `equals` property would skip the case where equals: ""
+    op.hasOwnProperty("equals") &&
+    typeof op.equals === "string" &&
     value !== replaceInlineContext_(op.equals)
   ) {
     return false;
@@ -351,6 +385,20 @@ function matchesOp(value: string, op: Op, context: any): boolean {
   if (
     hasDefinedProperty(op, "startsWith") &&
     !value.startsWith(replaceInlineContext_(op.startsWith))
+  ) {
+    return false;
+  }
+
+  if (
+    hasDefinedProperty(op, "lessThan") &&
+    !(value < replaceInlineContext_(op.startsWith))
+  ) {
+    return false;
+  }
+
+  if (
+    hasDefinedProperty(op, "greaterThan") &&
+    !(value > replaceInlineContext_(op.startsWith))
   ) {
     return false;
   }
@@ -427,6 +475,7 @@ export type RendererOptions = {
   onOpenFileAction: OpenFileActionResolver;
   onSetInputAction: SetInputActionResolver;
   onAddEmbedAction: AddEmbedActionResolver;
+  onAddReplyAction: AddReplyActionResolver;
   onOpenLinkAction: OpenLinkActionResolver;
   onEthPersonalSignAction: EthPersonalSignActionResolver;
   onSendEthTransactionAction: SendEthTransactionActionResolver;
@@ -458,6 +507,7 @@ export class Renderer {
   private onOpenFileAction: OpenFileActionResolver;
   private onSetInputAction: SetInputActionResolver;
   private onAddEmbedAction: AddEmbedActionResolver;
+  private onAddReplyAction: AddReplyActionResolver;
   private onOpenLinkAction: OpenLinkActionResolver;
   private onSendEthTransactionAction: SendEthTransactionActionResolver;
   private onEthPersonalSignAction: EthPersonalSignActionResolver;
@@ -470,6 +520,7 @@ export class Renderer {
     this.onHttpAction = options.onHttpAction;
     this.onOpenFileAction = options.onOpenFileAction;
     this.onSetInputAction = options.onSetInputAction;
+    this.onAddReplyAction = options.onAddReplyAction;
     this.onAddEmbedAction = options.onAddEmbedAction;
     this.onOpenLinkAction = options.onOpenLinkAction;
     this.onEthPersonalSignAction = options.onEthPersonalSignAction;
@@ -512,6 +563,10 @@ export class Renderer {
 
   setAddEmbedActionResolver(resolver: AddEmbedActionResolver) {
     this.onAddEmbedAction = resolver;
+  }
+
+  setAddReplyActionResolver(resolver: AddReplyActionResolver) {
+    this.onAddReplyAction = resolver;
   }
 
   setEthPersonalSignActionResolver(resolver: EthPersonalSignActionResolver) {
@@ -765,6 +820,45 @@ export class Renderer {
                   if (action.ref) {
                     set(this.refs, action.ref, input);
                   }
+
+                  if (action.onsuccess) {
+                    this.stepIntoOrTriggerAction(action.onsuccess);
+                  }
+                },
+              }
+            );
+          }, 1);
+        });
+
+        this.asyncAction = {
+          promise,
+          ref: action,
+        };
+        break;
+      }
+      case "ADDREPLY": {
+        const promise = new Promise<void>((resolve) => {
+          setTimeout(() => {
+            this.onAddReplyAction(
+              {
+                text: action.text
+                  ? this.replaceInlineContext(action.text)
+                  : action.text,
+                embeds: action.embeds
+                  ? action.embeds.map((embed) =>
+                      this.replaceInlineContext(embed)
+                    )
+                  : action.embeds,
+              },
+              {
+                onSuccess: () => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  this.asyncAction = null;
 
                   if (action.onsuccess) {
                     this.stepIntoOrTriggerAction(action.onsuccess);
@@ -1166,6 +1260,16 @@ export class Renderer {
             key
           );
         }
+        case "progress": {
+          return fn(
+            {
+              type: "progress",
+              value: Number(this.replaceInlineContext(el.value)),
+              label: el.label ? this.replaceInlineContext(el.label) : el.label,
+            },
+            key
+          );
+        }
         case "circular-progress": {
           return fn(
             {
@@ -1208,6 +1312,10 @@ export class Renderer {
             {
               type: "select",
               isClearable: el.isClearable || false,
+              defaultValue:
+                typeof el.defaultValue === "string"
+                  ? this.replaceInlineContext(el.defaultValue)
+                  : el.defaultValue,
               placeholder: el.placeholder
                 ? this.replaceInlineContext(el.placeholder)
                 : el.placeholder,
@@ -1267,10 +1375,12 @@ export class Renderer {
           );
         }
         case "combobox": {
-          const resolvedResults: Array<{ label: string; value: any }> | null =
-            isString(el.optionsRef)
-              ? get({ refs: this.refs }, el.optionsRef, null)
-              : null;
+          const resolvedResults: Array<{
+            label: string;
+            value: string;
+          }> | null = isString(el.optionsRef)
+            ? get({ refs: this.refs }, el.optionsRef, null)
+            : null;
           return fn(
             {
               type: "combobox",

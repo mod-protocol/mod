@@ -9,6 +9,8 @@ import NFTMinter from "@mods/nft-minter";
 import UrlRender from "@mods/url-render";
 import ImageRender from "@mods/image-render";
 import ChatGPTShorten from "@mods/chatgpt-shorten";
+import CreatePoll from "@mods/create-poll";
+import RenderPoll from "@mods/render-poll";
 import ZoraNftMinter from "@mods/zora-nft-minter";
 import ImgurUpload from "@mods/imgur-upload";
 import DALLE from "@mods/dall-e";
@@ -38,8 +40,9 @@ export const richEmbedMods: ModManifest[] = allMods.filter(
 );
 
 /** All + Experimental - Potentially unstable, unsuitable for production use  */
-
 export const allModsExperimental = [
+  CreatePoll,
+  RenderPoll,
   ImgurUpload,
   InfuraIPFSUpload,
   LivepeerVideo,

@@ -1,0 +1,9 @@
+{
+  "name": "@mods/render-poll",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "version": "0.0.1",
+  "dependencies": {
+    "@mod-protocol/core": "*"
+  }
+}

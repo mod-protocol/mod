@@ -1,0 +1,21 @@
+import { UltimateTextToImage, VerticalImage } from "ultimate-text-to-image";
+
+// Original copied from https://github.com/backmeupplz/essay/blob/main/src/helpers/textToImage.ts (MIT)
+
+export function textToImage({ text }: { text: string }) {
+  const textToImage = new UltimateTextToImage(text, {
+    // 1200x600 is twitter, 1200x630 is facebook,  532x264 warpcast web
+    width: 1200,
+    height: 630,
+    fontFamily: "Arial",
+    fontColor: "#373530",
+    fontWeight: "bold",
+    fontSize: 32,
+    lineHeight: 48,
+    backgroundColor: "#ffffff",
+    // big margin allows for different client rendering dimensions, and safety to avoid cropping. Might still happen in places
+    margin: 80,
+    valign: "middle",
+  });
+  return textToImage.render().toBuffer();
+}

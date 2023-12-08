@@ -6,7 +6,7 @@ import upload from "./upload";
 
 const manifest: ModManifest = {
   slug: "infura-ipfs-upload",
-  name: "Add image",
+  name: "Upload image to IPFS",
   custodyAddress: "furlong.eth",
   logo: "https://i.imgur.com/ptsz1Ig.png",
   custodyGithubUsername: "davidfurlong",

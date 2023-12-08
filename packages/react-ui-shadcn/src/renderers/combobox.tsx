@@ -31,7 +31,7 @@ export function ComboboxRenderer<T extends number | string = any>(
 
   React.useEffect(() => {
     onChange("");
-  }, []);
+  }, [onChange]);
 
   const handlePick = React.useCallback(
     (newValue: ResultType<T>) => {
@@ -39,7 +39,7 @@ export function ComboboxRenderer<T extends number | string = any>(
       setValue(newValue);
       onPick(newValue.value);
     },
-    [onChange, setOpen, setValue]
+    [onChange, setOpen, setValue, onPick]
   );
   return (
     <Popover open={open} onOpenChange={setOpen}>

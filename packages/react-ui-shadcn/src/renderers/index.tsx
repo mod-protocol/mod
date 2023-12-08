@@ -2,6 +2,7 @@ import { Renderers } from "@mod-protocol/react";
 import { TextRenderer } from "./text";
 import { ButtonRenderer } from "./button";
 import { CircularProgressRenderer } from "./circular-progress";
+import { ProgressRenderer } from "./progress";
 import { HorizontalLayoutRenderer } from "./horizontal-layout";
 import { VerticalLayoutRenderer } from "./vertical-layout";
 import { TabsRenderer } from "./tabs";
@@ -31,6 +32,7 @@ export const renderers: Renderers = {
   Avatar: AvatarRenderer,
   Video: VideoRenderer,
   Button: ButtonRenderer,
+  Progress: ProgressRenderer,
   CircularProgress: CircularProgressRenderer,
   HorizontalLayout: HorizontalLayoutRenderer,
   VerticalLayout: VerticalLayoutRenderer,
