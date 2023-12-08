@@ -8,7 +8,7 @@ const manifest: ModManifest = {
   slug: "livepeer-video",
   name: "Add video",
   custodyAddress: "furlong.eth",
-  logo: "https://i.imgur.com/UeuTxpI.png",
+  logo: "https://i.imgur.com/89epIn5.png",
   custodyGithubUsername: "davidfurlong",
   version: "0.0.1",
   creationEntrypoints: action,

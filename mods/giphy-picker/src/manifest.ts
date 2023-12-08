@@ -9,7 +9,7 @@ const manifest: ModManifest = {
   name: "Add GIF/Sticker",
   custodyAddress: "furlong.eth",
   custodyGithubUsername: "davidfurlong",
-  logo: "https://i.imgur.com/wBKGHbT.png",
+  logo: "https://i.imgur.com/vccxL2r.png",
   version: "0.0.1",
   creationEntrypoints: action,
   elements: {

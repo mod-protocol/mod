@@ -8,7 +8,7 @@ const manifest: ModManifest = {
   slug: "chatgpt-shorten",
   name: "Shorten text using AI",
   custodyAddress: "furlong.eth",
-  logo: "https://i.imgur.com/YayIWi1.png",
+  logo: "https://i.imgur.com/hV566qC.png",
   custodyGithubUsername: "davidfurlong",
   version: "0.0.1",
   creationEntrypoints: action,

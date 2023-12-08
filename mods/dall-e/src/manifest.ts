@@ -8,7 +8,7 @@ const manifest: ModManifest = {
   slug: "dall-e",
   name: "Use AI to make an image",
   custodyAddress: "furlong.eth",
-  logo: "https://i.imgur.com/YayIWi1.png",
+  logo: "https://i.imgur.com/zKiFDal.png",
   custodyGithubUsername: "davidfurlong",
   version: "0.0.1",
   creationEntrypoints: action,
