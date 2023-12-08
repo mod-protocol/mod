@@ -1,0 +1,39 @@
+# Data Storage
+
+Mods may need to store data beyond what fits in a Farcaster cast, or in a different structure.
+
+Mods solves this by utilizing the [Open graph protocol](https://ogp.me/), [JSON schema](https://json-schema.org/) web standards, in combination with any third party storage.
+
+## An example of how storage works for the `Poll Mod`
+
+1. The Poll Mod wants to store poll metadata, such as when the poll ends, the question, and the choices.
+2. The Poll Mod collects the information via a form, and POSTs it to the backend
+3. The Backend generates an image from the text, to use as an open graph image, which serves as a fallback image interface for the Mod, and uploads it somewhere to get a url (for example imgur)
+4. The Backend constructs a `JSON schema` object using a well-known schema definition, or a schema definition defined by any Mod`. This object includes the poll metadata, and image to use for the open graph. In this case, the Poll Mod defines a `Poll` Definition in it's Manifest that is used.
+4. The Backend stores this `JSON schema` JSON object in some sort of storage (our Mod uses arweave for this), and gets in return a unique URL or identitifer for it.
+5. The Backend constructs a URL that starts with a proxy gateway (we're using our own, https://cast.fun/mods/) with the path to the stored JSON in it.
+This proxy gateway is responsible for fetching and serving these `JSON schema` objects as [JSON Linked-data](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data), serving other web metadata like open graph data and images, and can optionally serve a fallback Mod interface.
+6. This url is returned to the client, and added to the Farcaster cast as an embed, or shared elsewhere.
+7. The Render-poll Mod is rendered by apps that have integrated it when a URL has metadata with `JSON schema` with the unique identifier of the `Poll` Model defined by the `Poll` Mod
+8. The Render-poll Mod, when rendered, shows a voting interface using the `Poll` metadata, stores votes as `reply casts` by the user, and uses a backend to fetch all casts responding to this url that match a vote format.
+
+## Benefits of this design
+
+1. It works with existing open graph previews on the web, without a need for new integrations
+2. It uses widely adopted web standards - `JSON schema` is used by search engines like google to enrich search results with things like Jobs.
+3. The degree of decentralization, as well as the choice of storage is flexible and unopionated.
+4. It supports flexible data schemas and models that can be arbitrarily large
+5. Gateways that choose to use this URL pattern can be rewritten by apps, bypassed and all the data needed to retrieve the metadata is in the shared url itself
+6. JSON is a dev friendly format
+7. `JSON Schema` allows for the composition of Models
+
+## Why not use open graph?
+
+Open graph is good for strings, but doesn't natively support JSON (although you could serialize JSON as a set of key value string pairs).
+Open graph doesn't have a standard for the definition of data models.
+
+## Practical tips
+
+- og title: 64 characters or less recommended (web standards)
+- og images: recommend a 1200x600 and leave at least 10% pixel padding around the image where there shouldn't be any text, or it's at risk of being cropped
+- og descriptions: up to 176 characters on desktop are shown in apps like Warpcast, no characters shown on mobile

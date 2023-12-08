@@ -1,0 +1,11 @@
+# Permissions
+
+Mods can specify `permissions` in their `Manifest`.
+Permissions enable Mods to request access to specific data or SDKs, and for integrators of Mod to filter out Mods that require permissions
+that they either don't or don't want to support.
+
+## Currently supported permissions
+
+`user.wallet.address` Requests the currently connected user's wallet address as a hex string
+
+`web3.eth.personal.sign` Indicates the Mod needs to be able to 

@@ -4,6 +4,9 @@
   "metadata-cache": "Metadata Indexer",
   "mod-editor": "Farcaster Editor",
   "create-mod": "Create a Mod",
+  "data-storage": "Data Storage",
+  "permissions": "Permissions",
+  "security": "Security",
   "faq": "FAQ",
   "example": {
     "title": "Live Example ↗",
