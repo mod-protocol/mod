@@ -39,48 +39,29 @@ export const OPTIONS = async (request: NextRequest) => {
   return NextResponse.json({});
 };
 
-export const GET = async (request: NextRequest) => {
-  let url = request.nextUrl.searchParams.get("url");
-
-  // Exchange for livepeer url
-  const cid = url.replace("ipfs://", "");
-  const gatewayUrl = `${process.env.IPFS_DEFAULT_GATEWAY}/${cid}`;
-
-  // Get HEAD to get content type
-  const response = await fetch(gatewayUrl, { method: "HEAD" });
-  const contentType = response.headers.get("content-type");
-
-  // TODO: Cache this
-  const uploadRes = await fetch(
-    "https://livepeer.studio/api/asset/upload/url",
+export const GET = async (
+  req: NextRequest,
+  { params }: { params: { assetId: string } }
+) => {
+  const assetRequest = await fetch(
+    `https://livepeer.studio/api/asset/${params.assetId}`,
     {
-      method: "POST",
+      method: "GET",
       headers: {
         Authorization: `Bearer ${process.env.LIVEPEER_API_SECRET}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        name: "filename.mp4",
-        staticMp4: contentType === "video/mp4" ? true : false,
-        playbackPolicy: {
-          type: "public",
-        },
-        url: gatewayUrl,
-      }),
     }
   );
 
-  if (!uploadRes.ok) {
-    // console.error(uploadRes.status, await uploadRes.text());
-    return NextResponse.error();
+  const assetResponseJson = await assetRequest.json();
+  const { playbackUrl } = assetResponseJson;
+
+  if (!playbackUrl) {
+    return NextResponse.json({}, { status: 404 });
   }
 
-  const { asset } = await uploadRes.json();
-
   return NextResponse.json({
-    id: asset.id,
-    fallbackUrl: gatewayUrl,
-    mimeType: contentType,
+    url: playbackUrl,
   });
 };
 

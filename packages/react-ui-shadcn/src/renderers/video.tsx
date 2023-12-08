@@ -5,6 +5,7 @@ import videojs from "video.js";
 
 interface PlayerProps {
   videoSrc: string;
+  mimeType?: string;
 }
 
 const videoJSoptions: {
@@ -31,27 +32,9 @@ export const VideoRenderer = (props: PlayerProps) => {
   const playerRef = React.useRef<any>(null);
 
   const [videoSrc, setVideoSrc] = React.useState<string | undefined>();
-  const [overrideMimeType, setOverrideMimeType] = React.useState<
-    string | undefined
-  >(undefined);
 
   const [hasStartedPlaying, setHasStartedPlaying] =
     React.useState<boolean>(false);
-
-  const pollUrl = useCallback(
-    async (url: string) => {
-      const res = await fetch(url, { method: "HEAD" });
-      if (hasStartedPlaying) return;
-      if (res.ok) {
-        setVideoSrc(url);
-      } else {
-        setTimeout(() => {
-          pollUrl(url);
-        }, 1000);
-      }
-    },
-    [setVideoSrc, hasStartedPlaying]
-  );
 
   const options = useMemo(
     () => ({
@@ -61,7 +44,7 @@ export const VideoRenderer = (props: PlayerProps) => {
         {
           src: videoSrc ?? "",
           type:
-            overrideMimeType ||
+            props.mimeType ||
             (videoSrc?.endsWith(".m3u8")
               ? "application/x-mpegURL"
               : videoSrc?.endsWith(".mp4")
@@ -70,26 +53,12 @@ export const VideoRenderer = (props: PlayerProps) => {
         },
       ],
     }),
-    [videoSrc, overrideMimeType]
+    [videoSrc, props.mimeType]
   );
 
   useEffect(() => {
-    if (props.videoSrc.startsWith("ipfs://")) {
-      // Exchange ipfs:// for .m3u8 url via /livepeer-video?url=ipfs://...
-      const baseUrl = `${
-        process.env.NEXT_PUBLIC_API_URL || "https://api.modprotocol.org"
-      }/livepeer-video`;
-      const endpointUrl = `${baseUrl}?url=${props.videoSrc}`;
-      fetch(endpointUrl).then(async (res) => {
-        const { url, fallbackUrl, mimeType } = await res.json();
-        setOverrideMimeType(mimeType);
-        setVideoSrc(`${fallbackUrl}`);
-        pollUrl(url);
-      });
-    } else {
-      setVideoSrc(props.videoSrc);
-    }
-  }, [props.videoSrc, pollUrl]);
+    setVideoSrc(props.videoSrc);
+  }, [props.videoSrc]);
 
   useEffect(() => {
     // Make sure Video.js player is only initialized once

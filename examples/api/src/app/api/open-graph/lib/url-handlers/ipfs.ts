@@ -30,6 +30,7 @@ async function handleIpfsUrl(url: string): Promise<UrlMetadata | null> {
 }
 
 const handler: UrlHandler = {
+  name: "IPFS",
   matchers: ["ipfs://.*"],
   handler: handleIpfsUrl,
 };

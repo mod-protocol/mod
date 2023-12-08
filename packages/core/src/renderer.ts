@@ -31,6 +31,7 @@ export type ModElementRef<T> =
   | {
       type: "video";
       videoSrc: string;
+      mimeType?: string;
     }
   | {
       type: "link";
@@ -628,6 +629,7 @@ export class Renderer {
       case "POST":
       case "PUT":
       case "PATCH":
+      case "HEAD":
       case "DELETE": {
         const options = this.constructHttpAction(action);
 
@@ -677,8 +679,26 @@ export class Renderer {
                 }
 
                 if (action.ref) {
-                  set(this.refs, action.ref, { error });
+                  const actionRef = get(this.refs, action.ref);
+                  const retries = actionRef?._retries || 0;
+                  set(this.refs, action.ref, {
+                    ...actionRef,
+                    error,
+                    _retries: retries + 1,
+                  });
                   this.onTreeChange();
+
+                  if (action.retryTimeout) {
+                    if (
+                      action.retryCount !== undefined
+                        ? retries < action.retryCount
+                        : true
+                    ) {
+                      setTimeout(() => {
+                        this.stepIntoOrTriggerAction(action);
+                      }, action.retryTimeout);
+                    }
+                  }
                 }
 
                 this.asyncAction = null;
@@ -1213,6 +1233,9 @@ export class Renderer {
             {
               type: "video",
               videoSrc: this.replaceInlineContext(el.videoSrc),
+              mimeType: el.mimeType
+                ? this.replaceInlineContext(el.mimeType)
+                : undefined,
             },
             key
           );

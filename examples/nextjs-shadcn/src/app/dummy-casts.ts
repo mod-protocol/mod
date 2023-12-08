@@ -113,8 +113,8 @@ export const dummyCastData: Array<{
     embeds: [
       // video embed
       {
-        url: "https://lp-playback.com/hls/3087gff2uxc09ze1/index.m3u8",
-        // url: "ipfs://QmdeTAKogKpZVLpp2JLsjfM83QV46bnVrHTP1y89DvR57i",
+        // url: "https://lp-playback.com/hls/3087gff2uxc09ze1/index.m3u8",
+        url: "ipfs://QmdeTAKogKpZVLpp2JLsjfM83QV46bnVrHTP1y89DvR57i",
         status: "loaded",
         metadata: {
           mimeType: "video/mp4",
