@@ -13,7 +13,11 @@ import {
 } from "@mod-protocol/farcaster";
 import { CreationMod, RichEmbed } from "@mod-protocol/react";
 import { useEditor, EditorContent } from "@mod-protocol/react-editor";
-import { creationMods, defaultRichEmbedMod } from "@mod-protocol/mod-registry";
+import {
+  creationMods,
+  defaultRichEmbedMod,
+  creationModsExperimental,
+} from "@mod-protocol/mod-registry";
 import {
   Embed,
   EthPersonalSignActionResolverInit,
@@ -39,6 +43,7 @@ import {
   PopoverTrigger,
 } from "@mod-protocol/react-ui-shadcn/dist/components/ui/popover";
 import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
+import { useExperimentalMods } from "./use-experimental-mods";
 
 // Optionally replace with your API_URL here
 const API_URL =
@@ -78,6 +83,7 @@ const onSubmit = async ({
 };
 
 export default function EditorExample() {
+  const experimentalMods = useExperimentalMods();
   const {
     editor,
     getText,
@@ -191,7 +197,10 @@ export default function EditorExample() {
           }}
         >
           <PopoverTrigger></PopoverTrigger>
-          <ModsSearch mods={creationMods} onSelect={setCurrentMod} />
+          <ModsSearch
+            mods={experimentalMods ? creationModsExperimental : creationMods}
+            onSelect={setCurrentMod}
+          />
           <PopoverContent className="w-[400px] ml-2" align="start">
             <div className="space-y-4">
               <h4 className="font-medium leading-none">{currentMod?.name}</h4>
