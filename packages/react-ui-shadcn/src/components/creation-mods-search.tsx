@@ -57,7 +57,15 @@ export function ModsSearch(props: Props) {
                 className="cursor-pointer"
                 onSelect={handleSelect}
               >
-                <img height={24} width={24} alt={mod.name} src={mod.logo} />
+                <div className="bg-white rounded h-[28px] w-[28px] overflow-hidden items-center justify-center flex">
+                  <img
+                    height={16}
+                    width={16}
+                    alt={mod.name}
+                    src={mod.logo}
+                    className="object-contain"
+                  />
+                </div>
                 <span className="ml-2">{mod.name}</span>
               </CommandItem>
             ))}
