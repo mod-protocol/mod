@@ -316,8 +316,32 @@ export interface ExitActionResolver {
   (): void;
 }
 
-function replaceInlineContext(target: string, context: any): string {
-  return target.replace(/{{([^{{}}]+)}}/g, (_, key) => get(context, key, ``));
+function executeCommand(input: string, command: string) {
+  const [cmd, ...args] = command.split(" ");
+  switch (cmd) {
+    case "split":
+      return input.split(args[0]);
+    case "index":
+      return input[parseInt(args[0], 10)];
+    default:
+      return input;
+  }
+}
+
+export function replaceInlineContext(target: string, context: any): string {
+  return target.replace(/{{([^{{}}]+)}}/g, (_, key) => {
+    const parts = key.split("|").map((part: string) => part.trim());
+    let value = get(context, parts[0], "");
+
+    // Process additional commands if they exist
+    if (parts.length > 1) {
+      for (let i = 1; i < parts.length; i++) {
+        value = executeCommand(value, parts[i]);
+      }
+    }
+
+    return value;
+  });
 }
 
 function matchesOp(value: string, op: Op, context: any): boolean {
