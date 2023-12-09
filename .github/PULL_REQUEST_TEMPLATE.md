@@ -4,7 +4,7 @@
 
 ## Merge Checklist
 
-<!-- _Choose all relevant options below by adding an `x` now or at any time before submitting for review_ -->
+<!-- Check the completed and unnecessary tasks below -->
 
 - [ ] PR has a changeset
 - [ ] PR includes documentation if necessary
