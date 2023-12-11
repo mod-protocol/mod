@@ -77,10 +77,6 @@ const action: ModElement[] = [
                             type: "string",
                             value: "{{user.wallet.address}}",
                           },
-                          fid: {
-                            type: "string",
-                            value: "{{user.farcaster.fid}}",
-                          },
                         },
                       },
                     },

@@ -33,7 +33,6 @@ export async function POST(request: NextRequest) {
     // Required
     creator: {
       address: `0x${string}`;
-      id: string;
     };
     imageData: string;
     // Optional
@@ -60,8 +59,7 @@ export async function POST(request: NextRequest) {
   });
 
   const timeString = new Date().toISOString();
-  const title =
-    prefilledTitle || `Zora Create Mod - ${creator.id} - ${timeString}`;
+  const title = prefilledTitle || `Zora Create Mod - ${timeString}`;
   const description =
     prefilledDescription ||
     `This digital collectible was created using the Zora Create Mod.`;
