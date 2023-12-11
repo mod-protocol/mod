@@ -695,6 +695,8 @@ export class Renderer {
                   if (action.oncancel) {
                     this.stepIntoOrTriggerAction(action.oncancel);
                   }
+
+                  this.onTreeChange();
                 },
                 onSuccess: (files) => {
                   resolve();
@@ -720,6 +722,8 @@ export class Renderer {
                   if (action.onsuccess) {
                     this.stepIntoOrTriggerAction(action.onsuccess);
                   }
+
+                  this.onTreeChange();
                 },
                 onError: (error) => {
                   resolve();
@@ -737,6 +741,8 @@ export class Renderer {
                   if (action.onerror) {
                     this.stepIntoOrTriggerAction(action.onerror);
                   }
+
+                  this.onTreeChange();
                 },
               }
             );
