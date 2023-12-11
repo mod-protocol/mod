@@ -30,9 +30,7 @@ export type ModManifest = {
   /** A definition map of reusable elements, using their id as the key */
   elements?: Record<string, ModElement[]>;
   /** Permissions requested by the Mini-app */
-  permissions?: Array<
-    "user.wallet.address" | "web3.eth.personal.sign" | "user.farcaster.id"
-  >;
+  permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign">;
 };
 
 export type ModEvent =
