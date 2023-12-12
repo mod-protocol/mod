@@ -65,7 +65,7 @@ export const GET = async (request: NextRequest) => {
         playbackPolicy: {
           type: "public",
         },
-        url: gatewayUrl,
+        url: url,
       }),
     }
   );
