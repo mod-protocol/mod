@@ -15,6 +15,7 @@ import {
   CreationContext,
   EthPersonalSignActionResolver,
   SendEthTransactionActionResolver,
+  ModEvent,
 } from "@mod-protocol/core";
 import actionResolverHttp from "./action-resolver-http";
 import actionResolverOpenFile from "./action-resolver-open-file";
@@ -429,6 +430,8 @@ export type ResolverTypes = {
 type Props = ResolverTypes & {
   manifest: ModManifest;
   renderers: Renderers;
+  initialContext?: any;
+  initialAction?: ModEvent;
 };
 
 export const CreationMod = (
@@ -437,6 +440,8 @@ export const CreationMod = (
   const {
     manifest,
     variant,
+    initialAction,
+    initialContext,
     onHttpAction = actionResolverHttp,
     onOpenFileAction = actionResolverOpenFile,
     onSetInputAction = actionResolverSetInput,
@@ -477,6 +482,11 @@ export const CreationMod = (
     renderer.setContext(context);
     forceRerender();
   }, [forceRerender, context, renderer]);
+
+  React.useEffect(() => {
+    if (initialAction)
+      renderer.triggerActionWithContext(initialAction, initialContext);
+  }, [initialAction, initialContext, renderer]);
 
   return <Mod {...props} renderer={renderer} />;
 };

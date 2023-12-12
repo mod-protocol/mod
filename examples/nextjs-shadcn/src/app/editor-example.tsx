@@ -26,6 +26,7 @@ import {
   handleAddEmbed,
   handleOpenFile,
   handleSetInput,
+  ModEvent,
 } from "@mod-protocol/core";
 import { SiweMessage } from "siwe";
 import { useAccount, useSignMessage } from "wagmi";
@@ -153,6 +154,11 @@ export default function EditorExample() {
   );
 
   const [currentMod, setCurrentMod] = React.useState<ModManifest | null>(null);
+  const [initialModActionAndContext, setInitialModActionAndContext] =
+    React.useState<{
+      action: ModEvent;
+      context: any;
+    } | null>(null);
 
   const user = React.useMemo(() => {
     return {
@@ -162,11 +168,54 @@ export default function EditorExample() {
     };
   }, [checksummedAddress]);
 
+  React.useEffect(() => {
+    setInitialModActionAndContext(null);
+  }, [currentMod]);
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="p-2 border border-input rounded-md">
         <EditorContent
           editor={editor}
+          onPaste={async (e) => {
+            const isPastingText = e.clipboardData.getData("text");
+            if (isPastingText) return;
+
+            const files = e.clipboardData.files;
+
+            // Mod expects a blob, so we convert the file to a blob
+            const imageFiles = await Promise.all(
+              Array.from(files)
+                .filter(({ type }) => {
+                  return type.startsWith("image/");
+                })
+                .map(async (file) => {
+                  const arrayBuffer = await file.arrayBuffer();
+                  const blob = new Blob([new Uint8Array(arrayBuffer)], {
+                    type: file.type,
+                  });
+                  return { blob, ...file };
+                })
+            );
+
+            if (imageFiles.length === 0) return;
+
+            // Open the imgur upload mod
+            setCurrentMod(
+              creationModsExperimental.find(
+                (mod) => mod.slug === "imgur-upload"
+              )
+            );
+
+            setInitialModActionAndContext({
+              action: "#upload",
+              context: {
+                myOpenFileAction: {
+                  files: imageFiles,
+                },
+              },
+            });
+          }}
           autoFocus
           className="w-full h-full min-h-[200px]"
         />
@@ -206,6 +255,8 @@ export default function EditorExample() {
               <h4 className="font-medium leading-none">{currentMod?.name}</h4>
               <hr />
               <CreationMod
+                initialAction={initialModActionAndContext?.action}
+                initialContext={initialModActionAndContext?.context}
                 input={getText()}
                 embeds={getEmbeds()}
                 api={API_URL}

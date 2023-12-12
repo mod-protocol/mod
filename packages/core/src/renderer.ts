@@ -1024,6 +1024,11 @@ export class Renderer {
     }
   }
 
+  public triggerActionWithContext(action: ModEvent, context: any) {
+    this.refs = context;
+    this.stepIntoOrTriggerAction(action);
+  }
+
   private stepIntoOrTriggerAction(maybeElementTreeOrAction: ModEvent): void {
     if (this.interrupted) {
       return;
