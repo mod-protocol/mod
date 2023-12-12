@@ -39,27 +39,22 @@ export async function POST(request: NextRequest) {
     title: string | undefined;
     description: string | undefined;
     signature: string | undefined;
-    collection: PremintResponse["collection"] | undefined;
-    chain_name: string | undefined;
   };
   const {
     title: prefilledTitle,
     description: prefilledDescription,
     creator,
     imageData,
-    signature,
-    collection: prefilledCollection,
   } = requestData;
 
-  // Upload to NFT.storage // TODO: Detect mime type
   const [dataPrefix, b64data] = imageData.split(",");
   const mimeType = dataPrefix.split(";")[0].split(":")[1];
   const imageBlob = new Blob([Buffer.from(b64data, "base64")], {
     type: mimeType,
   });
 
-  const timeString = new Date().toISOString();
-  const title = prefilledTitle || `Zora Create Mod - ${timeString}`;
+  const timeString = new Date().toLocaleDateString();
+  const title = prefilledTitle || `Untitled - ${timeString}`;
   const description =
     prefilledDescription ||
     `This digital collectible was created using the Zora Create Mod.`;
@@ -82,32 +77,25 @@ export async function POST(request: NextRequest) {
     transport: http(),
   });
 
-  // TODO: If signature and sufficient data is present, just submit data to Zora API
-  if (!signature) {
-    // TODO: Custom collection metadata
-    const collection: PremintResponse["collection"] = {
-      contractAdmin: adminAccount.address,
-      contractName: title,
-      // Collection metadata same as token metadata
-      contractURI: tokenMetadataURI,
-      ...prefilledCollection,
-    };
+  const collection: PremintResponse["collection"] = {
+    contractAdmin: adminAccount.address,
+    contractName: title,
+    // Collection metadata same as token metadata
+    contractURI: tokenMetadataURI,
+  };
 
-    const premint = await premintAPI.createPremint({
-      checkSignature: true,
-      collection,
-      account: contractAdminWallet.account.address,
-      walletClient: contractAdminWallet,
-      token: {
-        tokenURI: tokenMetadataURI,
-        royaltyRecipient: creator.address,
-      },
-    });
+  const premint = await premintAPI.createPremint({
+    checkSignature: true,
+    collection,
+    account: contractAdminWallet.account.address,
+    walletClient: contractAdminWallet,
+    token: {
+      tokenURI: tokenMetadataURI,
+      royaltyRecipient: creator.address,
+    },
+  });
 
-    return NextResponse.json({ url: premint.zoraUrl });
-  } else {
-    return NextResponse.json({ message: "Not implemented" }, { status: 400 });
-  }
+  return NextResponse.json({ url: premint.zoraUrl });
 }
 
 // needed for preflight requests to succeed

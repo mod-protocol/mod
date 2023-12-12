@@ -1,6 +1,6 @@
 ---
-"@mod-protocol/miniapp-registry": patch
-"@miniapps/zora-create": patch
+"@mod-protocol/mod-registry": patch
+"@mod/zora-create": patch
 "api": patch
 ---
 
