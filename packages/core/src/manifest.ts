@@ -29,7 +29,7 @@ export type ModManifest = {
   richEmbedEntrypoints?: ModConditionalElement[];
   /** A definition map of reusable elements, using their id as the key */
   elements?: Record<string, ModElement[]>;
-  /** Permissions requested by the Mini-app */
+  /** Permissions requested by the Mod */
   permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign">;
 };
 

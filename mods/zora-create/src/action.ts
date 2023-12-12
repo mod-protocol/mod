@@ -6,7 +6,7 @@ const action: ModElement[] = [
     elements: [
       {
         type: "text",
-        label: "Upload and mint an image as a Zora freemint NFT",
+        label: "Upload and mint an image as a Zora free mint NFT",
       },
       {
         type: "input",
