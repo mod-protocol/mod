@@ -7,6 +7,28 @@ import { NFTStorage } from "nft.storage";
 
 const { NFT_STORAGE_API_KEY } = process.env;
 
+function formatDate(date: Date): string {
+  const day = date.getDate();
+  const month = date.toLocaleString("default", { month: "long" });
+  const year = date.getFullYear();
+
+  const nthNumber = (number) => {
+    if (number > 3 && number < 21) return "th";
+    switch (number % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  return `${day}${nthNumber(day)} ${month}, ${year}`;
+}
+
 async function storeImage({
   image,
   name = "Untitled",
@@ -53,7 +75,7 @@ export async function POST(request: NextRequest) {
     type: mimeType,
   });
 
-  const timeString = new Date().toLocaleDateString();
+  const timeString = formatDate(new Date());
   const title = prefilledTitle || `Untitled - ${timeString}`;
   const description =
     prefilledDescription ||
