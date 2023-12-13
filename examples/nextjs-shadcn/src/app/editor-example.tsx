@@ -153,6 +153,13 @@ export default function EditorExample() {
   );
 
   const [currentMod, setCurrentMod] = React.useState<ModManifest | null>(null);
+  const [modContentInput, setModContentInput] = React.useState<
+    string | { files: { blob: Blob }[] } | null
+  >(null);
+  const [inputMatchedMods, setInputMatchedMods] = React.useState<
+    ModManifest[] | null
+  >(null);
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
   const user = React.useMemo(() => {
     return {
@@ -162,11 +169,86 @@ export default function EditorExample() {
     };
   }, [checksummedAddress]);
 
+  const removeInputAtIndex = React.useCallback(
+    (index: number) => {
+      if (
+        modContentInput &&
+        typeof modContentInput !== "string" &&
+        modContentInput.files
+      ) {
+        const newFiles = [...modContentInput.files];
+        newFiles.splice(index, 1);
+        if (newFiles.length === 0) {
+          setModContentInput(null);
+          setInputMatchedMods(null);
+          return;
+        }
+        setModContentInput({ files: newFiles });
+      } else {
+        setModContentInput(null);
+      }
+    },
+    [modContentInput]
+  );
+
+  React.useEffect(() => {
+    if (currentMod && inputMatchedMods) {
+      // We've just selected a mod based on the input
+      setInputMatchedMods(null);
+    } else {
+      // We've just selected a mod otherwise
+      setModContentInput(null);
+      setInputMatchedMods(null);
+    }
+  }, [currentMod]);
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="p-2 border border-input rounded-md">
         <EditorContent
           editor={editor}
+          onPaste={async (e) => {
+            const isPastingText = e.clipboardData.getData("text");
+            if (isPastingText) return;
+
+            const files = e.clipboardData.files;
+
+            // Mod expects a blob, so we convert the file to a blob
+            const imageFiles = await Promise.all(
+              Array.from(files)
+                .filter(({ type }) => {
+                  return type.startsWith("image/");
+                })
+                .map(async (file) => {
+                  const arrayBuffer = await file.arrayBuffer();
+                  const blob = new Blob([new Uint8Array(arrayBuffer)], {
+                    type: file.type,
+                  });
+                  return { blob, ...file };
+                })
+            );
+
+            if (imageFiles.length === 0) return;
+
+            // Find mods that have an input entrypoint matching the pasted file type
+            const mods = experimentalMods
+              ? creationModsExperimental
+              : creationMods;
+
+            const matchingMods = mods.filter((mod) =>
+              mod.inputCreationEntrypoints?.some((entrypoint) =>
+                entrypoint.mimeTypes.some((pattern) =>
+                  imageFiles[0].blob.type.match(pattern)
+                )
+              )
+            );
+
+            if (matchingMods.length === 0) return;
+
+            setModContentInput({ files: imageFiles });
+            setInputMatchedMods(matchingMods);
+            setSearchOpen(true);
+          }}
           autoFocus
           className="w-full h-full min-h-[200px]"
         />
@@ -198,15 +280,22 @@ export default function EditorExample() {
         >
           <PopoverTrigger></PopoverTrigger>
           <ModsSearch
-            mods={experimentalMods ? creationModsExperimental : creationMods}
+            modContentInput={modContentInput}
+            mods={
+              inputMatchedMods ||
+              (experimentalMods ? creationModsExperimental : creationMods)
+            }
             onSelect={setCurrentMod}
+            open={searchOpen}
+            setOpen={setSearchOpen}
+            removeInputAtIndex={removeInputAtIndex}
           />
           <PopoverContent className="w-[400px] ml-2" align="start">
             <div className="space-y-4">
               <h4 className="font-medium leading-none">{currentMod?.name}</h4>
               <hr />
               <CreationMod
-                input={getText()}
+                input={modContentInput || getText()}
                 embeds={getEmbeds()}
                 api={API_URL}
                 user={user}

@@ -170,7 +170,7 @@ export type BaseContext = {
 };
 
 export type CreationContext = BaseContext & {
-  input: any;
+  input: string | { files: { blob: Blob }[] };
   embeds: Embed[];
   /** The url of the api hosting the mod backends. (including /api) **/
   api: string;
@@ -478,6 +478,23 @@ export class Renderer {
 
     if (options.variant === "creation") {
       this.currentTree = options.manifest.creationEntrypoints || [];
+
+      const { input } = options.context;
+      if (typeof input !== "string" && "files" in input) {
+        // TODO: support multiple files
+        const file = input.files[0];
+        if (!file) return;
+        const entrypoint = this.manifest.inputCreationEntrypoints?.find(
+          (entrypoint) =>
+            entrypoint.mimeTypes.some((pattern) =>
+              file.blob.type.match(pattern)
+            )
+        );
+        if (entrypoint) {
+          set(this.refs, entrypoint.contentRef, input);
+          this.stepIntoOrTriggerAction(entrypoint.elementId);
+        }
+      }
     } else {
       const entrypoints = options.manifest.richEmbedEntrypoints;
 

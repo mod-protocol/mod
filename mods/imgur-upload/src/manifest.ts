@@ -12,6 +12,13 @@ const manifest: ModManifest = {
   custodyGithubUsername: "stephancill",
   version: "0.0.1",
   creationEntrypoints: action,
+  inputCreationEntrypoints: [
+    {
+      elementId: "#upload",
+      mimeTypes: ["^image/.*$"],
+      contentRef: "myOpenFileAction",
+    },
+  ],
   elements: {
     "#action": action,
     "#upload": upload,

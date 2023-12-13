@@ -25,6 +25,15 @@ export type ModManifest = {
   modelDefinitions?: Record<string, JSONSchema7>;
   /** Interface this Mod exposes, if any, for Content Creation */
   creationEntrypoints?: ModElement[];
+  /** Interface this Mod exposes, if any, for Content Creation given a type of content as input */
+  inputCreationEntrypoints?: [
+    /**
+     * elementId is the id of the element that will be rendered in the creation interface
+     * mimeTypes is a list of mimeTypes that this Mod can handle
+     * contentRef is the ref of the content that will be passed to the Mod
+     */
+    { elementId: string; mimeTypes: string[]; contentRef: string }
+  ];
   /** Interface this Mod exposes, if any, for RichEmbed Rendering */
   richEmbedEntrypoints?: ModConditionalElement[];
   /** A definition map of reusable elements, using their id as the key */

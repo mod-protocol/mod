@@ -11,14 +11,26 @@ import {
 } from "components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "components/ui/popover";
 import { ModManifest } from "@mod-protocol/core";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 type Props = {
+  modContentInput: string | { files: { blob: Blob }[] };
   mods: ModManifest[];
   onSelect: (value: ModManifest) => void;
+  open?: boolean;
+  setOpen?: (value: boolean) => void;
+  removeInputAtIndex?: (index: number) => void;
 };
 
 export function ModsSearch(props: Props) {
-  const { mods, onSelect } = props;
+  const {
+    mods,
+    modContentInput,
+    onSelect,
+    open: openOverride,
+    setOpen: setOpenOverride,
+    removeInputAtIndex,
+  } = props;
 
   const [open, setOpen] = React.useState(false);
 
@@ -34,7 +46,13 @@ export function ModsSearch(props: Props) {
   );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={openOverride ? openOverride : open}
+      onOpenChange={(op) => {
+        setOpen(op);
+        setOpenOverride?.(op);
+      }}
+    >
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -47,6 +65,28 @@ export function ModsSearch(props: Props) {
       </PopoverTrigger>
       <PopoverContent className="w-[400px] p-0" align="start">
         <Command>
+          {modContentInput && typeof modContentInput !== "string" && (
+            <div className="flex gap-2 p-2">
+              {modContentInput.files.map(({ blob }, i) => (
+                <div key={i} className="h-8 w-8 rounded-md overflow-hidden">
+                  {removeInputAtIndex && (
+                    <button
+                      className="absolute bg-black rounded-full -mt-2 -ml-2 p-1"
+                      onClick={() => removeInputAtIndex(i)}
+                    >
+                      <Cross2Icon className="h-3 w-3" />
+                    </button>
+                  )}
+                  {blob.type.startsWith("image/") && (
+                    <img
+                      className="h-8 w-8 "
+                      src={URL.createObjectURL(blob)}
+                    ></img>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
           <CommandInput placeholder="Search Mods..." />
           <CommandEmpty>No Mod found.</CommandEmpty>
           <CommandGroup>
