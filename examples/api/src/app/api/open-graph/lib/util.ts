@@ -142,7 +142,7 @@ export async function fetchNFTMetadata({
   const collectionData = await collectionResponse.json();
 
   const collectionStatsResponse = await fetch(
-    `https://api.opensea.io/api/v1/collection/${collectionSlug}/stats`,
+    `https://api.opensea.io/api/v2/collections/${collectionSlug}/stats`,
     authOptions
   );
   // Collection stats should exist if the collection exists
@@ -177,8 +177,8 @@ export async function fetchNFTMetadata({
       creatorAddress: collectionData.owner,
       name: collectionData.name,
       description: collectionData.description,
-      itemCount: collectionStats.stats.count,
-      ownerCount: collectionStats.stats.num_owners,
+      itemCount: collectionStats.total.count || 0,
+      ownerCount: collectionStats.total.num_owners,
       imageUrl: image,
       // Always include the mint url if it was specified
       mintUrl: mintUrl,
