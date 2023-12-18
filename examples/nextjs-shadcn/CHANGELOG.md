@@ -1,5 +1,16 @@
 # web
 
+## 0.2.0
+
+### Minor Changes
+
+- 2c8a220: extract global css from videojs component into a separate export, remove tailwind plugins from being bundled in the library directly
+
+### Patch Changes
+
+- Updated dependencies [2c8a220]
+  - @mod-protocol/react-ui-shadcn@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes
