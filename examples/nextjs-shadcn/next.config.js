@@ -1,5 +1,6 @@
 module.exports = {
   reactStrictMode: true,
+  // this is mod-monorepo specific
   transpilePackages: ["@mod-protocol/react"],
 
   images: {

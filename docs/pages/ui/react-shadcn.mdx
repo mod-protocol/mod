@@ -1,0 +1,33 @@
+# Tailwind + Radix UI (Shadcn)
+
+This is a React UI implementation of Mod renderers for the web, using a combination of [Tailwind CSS](https://tailwindcss.com/) and [Radix UI](https://www.radix-ui.com/), and is
+being built using [Shadcn](https://ui.shadcn.com/). You can see an example using this library [here](https://example-nextjs.modprotocol.org/) and the code for it is [here](https://github.com/mod-protocol/mod/tree/main/examples/nextjs-shadcn)
+
+There are some additional steps needed to make sure the configuration is correct when using this library with your repo. These are some temporary quirks while
+we figure out a better way to do this.
+
+1. Add to your `tailwind.config.js`
+
+```js
+module.exports = {
+    // ...rest of your settings
+    content: [
+        // ...rest of your content rules, order doesn't matter
+
+        // make sure tailwind doesn't tree shake classes used by the library
+        "../../packages/react-ui-shadcn/dist/**/*.{ts,tsx,css,js}",
+    ],
+    plugins: [
+        // ...rest of your plugins, order doesn't matter
+
+        // load the text styling
+        require("@tailwindcss/typography"),
+        // make sure the open popover animations work
+        require("tailwindcss-animate")
+    ]
+}
+```
+
+2. If you support the `video-render` Mod, add a global css import to any file where you use the `<RichEmbed/>` component
+
+`import "@mod-protocol/react-ui-shadcn/dist/public/video-js.css"`
