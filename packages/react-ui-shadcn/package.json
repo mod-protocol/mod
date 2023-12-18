@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"**/*.ts*\" && tsc --noEmit",
-    "build": "tsup `find ./src \\( -name '*.ts' -o -name '*.tsx' \\)` --format cjs --dts",
+    "build": "tsup `find ./src \\( -name '*.ts' -o -name '*.tsx' \\)` --format cjs --dts --onSuccess \"cp -a src/public/. dist/public\"",
     "dev": "npm run build -- --watch"
   },
   "dependencies": {

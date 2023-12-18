@@ -55,6 +55,7 @@ import {
 } from "@wagmi/core";
 import { useMemo } from "react";
 import { useAccount } from "wagmi";
+import "@mod-protocol/react-ui-shadcn/dist/public/video-js.css";
 
 export function Embeds(props: { embeds: Array<Embed> }) {
   const { address } = useAccount();
@@ -125,6 +126,8 @@ export function Embeds(props: { embeds: Array<Embed> }) {
   );
 }
 ```
+
+If you're using `@mod-protocol/react-ui-shadcn`, follow the configuration steps for [@mod-protocol/react-ui-shadcn](/ui/react-shadcn.mdx)
 
 ## Customizing which Mods to support
 

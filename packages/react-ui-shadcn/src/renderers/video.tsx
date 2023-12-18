@@ -2,7 +2,6 @@
 
 import React, { useMemo, useEffect } from "react";
 import videojs from "video.js";
-import "video.js/dist/video-js.css";
 
 interface PlayerProps {
   videoSrc: string;

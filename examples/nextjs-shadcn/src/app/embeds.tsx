@@ -21,6 +21,7 @@ import {
 import { useMemo } from "react";
 import { useAccount } from "wagmi";
 import { useExperimentalMods } from "./use-experimental-mods";
+import "@mod-protocol/react-ui-shadcn/dist/public/video-js.css";
 
 export function Embeds(props: { embeds: Array<Embed> }) {
   const experimentalMods = useExperimentalMods();
