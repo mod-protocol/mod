@@ -1,3 +1,5 @@
+import { convertCastPlainTextToStructured } from "@mod-protocol/farcaster";
+
 export function useTextLength({
   getText,
   maxByteLength,
@@ -6,7 +8,15 @@ export function useTextLength({
   maxByteLength: number;
 }) {
   const text = getText();
-  const lengthInBytes = new TextEncoder().encode(text).length;
+
+  // Mentions don't occupy space in the cast, so we need to ignore them for our length calculation
+  const structuredTextUnits = convertCastPlainTextToStructured({ text });
+  const textWithoutMentions = structuredTextUnits.reduce((acc, unit) => {
+    if (unit.type !== "mention") acc += unit.serializedContent;
+    return acc;
+  }, "");
+
+  const lengthInBytes = new TextEncoder().encode(textWithoutMentions).length;
 
   const eightyFivePercentComplete = maxByteLength * 0.85;
 
