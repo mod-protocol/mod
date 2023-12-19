@@ -9,6 +9,7 @@ export const ImageRenderer = (
     <div className="rounded">
       <img
         src={imageSrc}
+        crossOrigin="anonymous"
         className="rounded"
         style={{ width: "100%" }}
         width={300}
