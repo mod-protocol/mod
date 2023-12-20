@@ -129,3 +129,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: err.message }, { status: err.status });
   }
 }
+
+// needed for preflight requests to succeed
+export const OPTIONS = async (request: NextRequest) => {
+  // Return Response
+  return NextResponse.json({});
+};
