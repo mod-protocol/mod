@@ -17,7 +17,8 @@ const upload: ModElement[] = [
       },
       onsuccess: {
         type: "ADDEMBED",
-        url: "https://lp-playback.com/hls/{{refs.myFileUploadRequest.response.data.data.asset.playbackId}}/index.m3u8",
+        // url: "https://lp-playback.com/hls/{{refs.myFileUploadRequest.response.data.data.asset.playbackId}}/index.m3u8",
+        url: "{{refs.myFileUploadRequest.response.data.data.url}}",
         name: "{{refs.myOpenFileAction.files[0].name}}",
         mimeType: "{{refs.myOpenFileAction.files[0].mimeType}}",
         onsuccess: {
