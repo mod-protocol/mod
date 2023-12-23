@@ -11,11 +11,11 @@ export default function actionResolverHttp(
   xhr.open(init.method, init.url);
 
   function parseBody() {
-    if (
-      ["application/json", "application/ld+json"].includes(
-        xhr.getResponseHeader("content-type") || ""
-      )
-    ) {
+    const contentType = xhr.getResponseHeader("content-type") || "";
+    const isContentTypeMatch = ["application/json", "application/ld+json"].some(
+      (type) => contentType.includes(type)
+    );
+    if (isContentTypeMatch) {
       return JSON.parse(xhr.response);
     }
     return xhr.response;
