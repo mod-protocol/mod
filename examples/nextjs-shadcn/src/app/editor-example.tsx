@@ -36,6 +36,9 @@ import { ModsSearch } from "@mod-protocol/react-ui-shadcn/dist/components/creati
 import { CastLengthUIIndicator } from "@mod-protocol/react-ui-shadcn/dist/components/cast-length-ui-indicator";
 import { ChannelPicker } from "@mod-protocol/react-ui-shadcn/dist/components/channel-picker";
 import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/dist/lib/embeds";
+import { MentionList } from "@mod-protocol/react-ui-shadcn/dist/components/mention-list";
+import { ChannelList } from "@mod-protocol/react-ui-shadcn/dist/components/channel-list";
+
 import { Button } from "@mod-protocol/react-ui-shadcn/dist/components/ui/button";
 import {
   Popover,
@@ -99,8 +102,13 @@ export default function EditorExample() {
     onError,
     onSubmit,
     linkClassName: "text-blue-600",
+    renderChannelsSuggestionConfig: createRenderMentionsSuggestionConfig({
+      getResults: (query) => getChannels(query, true),
+      RenderList: ChannelList,
+    }),
     renderMentionsSuggestionConfig: createRenderMentionsSuggestionConfig({
       getResults: getMentions,
+      RenderList: MentionList,
     }),
   });
 

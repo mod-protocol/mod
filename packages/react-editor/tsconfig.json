@@ -1,10 +1,21 @@
 {
   "extends": "tsconfig/react-library.json",
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"],
+  "include": [
+    "."
+  ],
+  "exclude": [
+    "dist",
+    "build",
+    "node_modules"
+  ],
   "compilerOptions": {
     "paths": {
-      "@mod-protocol/tiptap-extension-link": ["../tiptap-extension-link/src"]
+      "@mod-protocol/tiptap-extension-link": [
+        "../tiptap-extension-link/src"
+      ],
+      "@mod-protocol/tiptap-extension-channel-mention": [
+        "../tiptap-extension-channel-mention/src"
+      ],
     }
   }
 }
