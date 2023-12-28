@@ -1,15 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { NeynarChannel, HomeNeynarChannel } from "@mod-protocol/farcaster";
+import { Channel } from "@mod-protocol/farcaster";
 import { Levenshtein } from "./levenshtein-distance";
 
 // todo we should add cache headers to this
 export async function GET(
   request: NextRequest
-): Promise<
-  NextResponse<
-    { channels: Array<HomeNeynarChannel | NeynarChannel> } | { message: string }
-  >
-> {
+): Promise<NextResponse<{ channels: Array<Channel> } | { message: string }>> {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q").toLowerCase();
   const hideHome = searchParams.get("hideHome") === "true";
