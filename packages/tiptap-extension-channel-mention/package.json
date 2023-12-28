@@ -1,0 +1,22 @@
+{
+    "name": "@mod-protocol/tiptap-extension-channel-mention",
+    "version": "0.0.0",
+    "private": true,
+    "license": "MIT",
+    "main": "src/index.ts",
+    "dependencies": {
+        "linkifyjs": "^4.1.0"
+    },
+    "peerDependencies": {
+        "@tiptap/core": "^2.0.0",
+        "@tiptap/pm": "^2.0.0"
+    },
+    "workspaces": [
+        "configs/*",
+        "packages/*",
+        "examples/*"
+    ],
+    "scripts": {
+        "clean": "rm -rf dist"
+    }
+}

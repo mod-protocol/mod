@@ -23,6 +23,8 @@ import { useEditor, EditorContent } from "@mod-protocol/react-editor";
 import { EmbedsEditor } from "@mod-protocol/react-ui-shadcn/dist/lib/embeds";
 import { Embed, ModManifest, fetchUrlMetadata, handleAddEmbed, handleOpenFile, handleSetInput } from "@mod-protocol/core";
 import { Channel, getFarcasterChannels, getFarcasterMentions } from "@mod-protocol/farcaster";
+import { MentionList } from "@mod-protocol/react-ui-shadcn/dist/components/mention-list";
+import { ChannelList } from "@mod-protocol/react-ui-shadcn/dist/components/channel-list";
 
 // use our API_URL, self host our API, or use your own API.
 const getUrlMetadata = fetchUrlMetadata(API_URL);
@@ -35,8 +37,13 @@ const getChannels = getFarcasterChannels(API_URL);
     onError: (error) => console.error(error),
     onSubmit: (cast) => console.log(cast), // submit to your hub
     linkClassName: "text-blue-600",
+    renderChannelsSuggestionConfig: createRenderMentionsSuggestionConfig({
+      getResults: (query) => getChannels(query, true),
+      RenderList: ChannelList,
+    }),
     renderMentionsSuggestionConfig: createRenderMentionsSuggestionConfig({
       getResults: getResults,
+      RenderList: MentionList,
     }),
   });
   return (

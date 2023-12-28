@@ -10,6 +10,7 @@ import { Link } from "@mod-protocol/tiptap-extension-link";
 import {
   Channel,
   FARCASTER_MAX_EMBEDS,
+  homeVirtualChannel,
   isFarcasterCastIdEmbed,
   isFarcasterUrlEmbed,
   usernameRegex,
@@ -70,18 +71,14 @@ export function useEditor({
   onSubmit,
   onError,
   linkClassName,
+  renderChannelsSuggestionConfig,
   renderMentionsSuggestionConfig,
   maxEmbeds = FARCASTER_MAX_EMBEDS,
   editorOptions,
 }: useEditorParameter): useEditorReturn {
   const [embeds, setEmbeds] = useState<Embed[]>([]);
 
-  const [channel, setChannel] = useState<Channel>({
-    name: "Home",
-    parent_url: null,
-    image: "https://warpcast.com/~/channel-images/home.png",
-    channel_id: "home",
-  });
+  const [channel, setChannel] = useState<Channel>(homeVirtualChannel);
 
   const updateEmbedsWithLoadedData = useCallback(
     (url: string, urlMetadata: object) => {
@@ -184,12 +181,14 @@ export function useEditor({
         linkClassName,
         placeholderText,
         onAddLink,
+        renderChannelsSuggestionConfig,
         renderMentionsSuggestionConfig,
         editorOptions,
       }),
     [
       linkClassName,
       placeholderText,
+      renderChannelsSuggestionConfig,
       renderMentionsSuggestionConfig,
       onAddLink,
       editorOptions,
@@ -307,6 +306,8 @@ function findMentions(i: JSONContent): string[] {
     return i.content!.flatMap((x) => findMentions(x));
   if (i.type === "mention" && i.attrs?.id)
     return ["@" + i.attrs?.id] as string[];
+  if (i.type === "channel-mention" && i.attrs?.id)
+    return ["/" + i.attrs?.id] as string[];
   return [];
 }
 
@@ -350,10 +351,10 @@ function convertPlainTextToMentionsRecursive(
   if (el.type === "text") {
     const newContent: JSONContent[] =
       el.text
+        // future: add slash mentions split similar to this
         ?.split(usernameRegexForSplit)
         .map((part, i): JSONContent => {
           const e = usernameRegex.exec(part);
-
           if (mentions.includes(part) && e)
             return {
               type: "mention",
