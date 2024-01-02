@@ -2,13 +2,29 @@ import { NextRequest, NextResponse } from "next/server";
 import { Channel } from "@mod-protocol/farcaster";
 import { Levenshtein } from "./levenshtein-distance";
 
+const virtualChannels = [
+  // home
+  {
+    id: "",
+    description: "followers",
+    name: "Home",
+    object: "channel",
+    parent_url: null,
+    image_url: "https://warpcast.com/~/channel-images/home.png",
+    channel_id: "home",
+  },
+];
+
 // todo we should add cache headers to this
 export async function GET(
   request: NextRequest
 ): Promise<NextResponse<{ channels: Array<Channel> } | { message: string }>> {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q").toLowerCase();
-  const hideHome = searchParams.get("hideHome") === "true";
+
+  // virtual channels like /home can't be mentioned, so this parameter allows hiding them from the response
+  const hideVirtualChannels =
+    searchParams.get("hideVirtualChannels") === "true";
 
   const channelsRes = await fetch(
     "https://api.neynar.com/v2/farcaster/channel/list",
@@ -31,23 +47,13 @@ export async function GET(
 
   const channels = result.channels;
 
-  const channelsWithHome = hideHome
-    ? channels
-    : [
-        {
-          id: "",
-          description: "followers",
-          name: "Home",
-          object: "channel",
-          parent_url: null,
-          image_url: "https://warpcast.com/~/channel-images/home.png",
-          channel_id: "home",
-        },
-        ...channels,
-      ];
+  const allChannels = [
+    ...(hideVirtualChannels ? [] : virtualChannels),
+    ...channels,
+  ];
 
   if (!!q) {
-    const channelsWithLevenshteinDistance = channelsWithHome.map((channel) => ({
+    const channelsWithLevenshteinDistance = allChannels.map((channel) => ({
       channel: channel,
       // levenshtein distance is helpful to suggest channels despite typos in the query, a lower distance is better
       relevancy_score: Math.min(
@@ -72,7 +78,7 @@ export async function GET(
     });
   } else {
     return NextResponse.json({
-      channels: channelsWithHome.sort((a, b) => {
+      channels: allChannels.sort((a, b) => {
         // put home channel first, then alphabetical
         return a.id === "" ? -1 : b.id === "" ? 1 : a.name < b.name ? -1 : 1;
       }),

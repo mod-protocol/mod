@@ -14,11 +14,14 @@ export function getFarcasterMentions(api_url: string) {
 }
 
 export function getFarcasterChannels(api_url: string) {
-  return async (query: string, hideHome?: boolean): Promise<Channel[]> => {
+  return async (
+    query: string,
+    hideVirtualChannels?: boolean
+  ): Promise<Channel[]> => {
     const results = await fetch(
       `${api_url}/farcaster/channels/v2?q=${encodeURIComponent(
         query
-      )}&hideHome=${hideHome}`
+      )}&hideVirtualChannels=${hideVirtualChannels}`
     );
 
     const body = await results.json();
