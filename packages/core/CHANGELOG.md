@@ -1,5 +1,13 @@
 # @mod-protocol/core
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [cbfe215]
+- Updated dependencies [6ae4441]
+  - @mod-protocol/farcaster@0.1.0
+
 ## 0.1.0
 
 ### Minor Changes

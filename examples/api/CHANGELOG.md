@@ -1,5 +1,18 @@
 # api
 
+## 0.2.0
+
+### Minor Changes
+
+- cbfe215: add channel mentions
+
+### Patch Changes
+
+- 74f390d: fix: `/cast-embeds-metadata` CORS error
+- 6ae4441: fix: fetch channels list from neynar API
+- 7bc7ff6: fix: v2 opensea collection data api
+  - @mod-protocol/core@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

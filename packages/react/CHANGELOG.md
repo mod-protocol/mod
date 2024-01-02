@@ -1,5 +1,12 @@
 # @mod-protocol/react
 
+## 0.1.1
+
+### Patch Changes
+
+- 36f8928: fix: improved detection of json content in http response
+  - @mod-protocol/core@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes

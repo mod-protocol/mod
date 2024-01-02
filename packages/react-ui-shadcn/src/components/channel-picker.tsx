@@ -56,7 +56,7 @@ export function ChannelPicker(props: Props) {
           type="button"
         >
           <img
-            src={props.value.image ?? ""}
+            src={props.value.image_url ?? ""}
             alt={props.value.name}
             width={24}
             height={24}
@@ -84,7 +84,7 @@ export function ChannelPicker(props: Props) {
                   onSelect={() => handleSelect(channel)}
                 >
                   <img
-                    src={channel.image ?? ""}
+                    src={channel.image_url ?? ""}
                     alt={channel.name}
                     width={24}
                     height={24}

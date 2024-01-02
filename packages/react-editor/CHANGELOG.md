@@ -1,5 +1,19 @@
 # @mod-protocol/react-editor
 
+## 0.1.0
+
+### Minor Changes
+
+- cbfe215: add channel mentions
+
+### Patch Changes
+
+- 7f7d4c9: fix: editor shouldn't take mentions into account when calculating remaining characters in cast text
+- Updated dependencies [cbfe215]
+- Updated dependencies [6ae4441]
+  - @mod-protocol/farcaster@0.1.0
+  - @mod-protocol/core@0.1.1
+
 ## 0.0.3
 
 ### Patch Changes

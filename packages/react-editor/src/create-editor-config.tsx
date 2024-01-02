@@ -11,10 +11,12 @@ import {
   transformPastedHTML,
 } from "./extension-clipboard";
 import { EditorOptions } from "@tiptap/core";
+import TipTapChannelMention from "@mod-protocol/tiptap-extension-channel-mention";
 
 export type EditorConfig = {
   placeholderText: string;
   onAddLink: (link: Link) => void;
+  renderChannelsSuggestionConfig: Pick<MentionOptions, "suggestion">;
   renderMentionsSuggestionConfig: Pick<MentionOptions, "suggestion">;
   linkClassName: string;
   editorOptions?: Partial<EditorOptions>;
@@ -22,6 +24,7 @@ export type EditorConfig = {
 
 export function createEditorConfig({
   placeholderText,
+  renderChannelsSuggestionConfig,
   renderMentionsSuggestionConfig,
   linkClassName,
   onAddLink,
@@ -88,11 +91,25 @@ export function createEditorConfig({
       // EmojiMention.configure({
       //   suggestion: emojiSuggestion,
       // }),
+      TipTapChannelMention.configure({
+        HTMLAttributes: {
+          class: linkClassName,
+        },
+        ...renderChannelsSuggestionConfig,
+        suggestion: {
+          char: "/",
+          ...renderChannelsSuggestionConfig.suggestion,
+        },
+      }),
       TipTapMention.configure({
         HTMLAttributes: {
           class: linkClassName,
         },
         ...renderMentionsSuggestionConfig,
+        suggestion: {
+          char: "@",
+          ...renderMentionsSuggestionConfig.suggestion,
+        },
       }),
     ],
     content: ``,

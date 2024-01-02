@@ -1,23 +1,27 @@
 import tippy from "tippy.js";
 import { ReactRenderer } from "@tiptap/react";
-import { MentionList } from "components/mention-list";
-import { FarcasterMention } from "@mod-protocol/farcaster";
+import { Channel, FarcasterMention } from "@mod-protocol/farcaster";
 
 type MentionListRef = {
   onKeyDown: (props: { event: Event }) => boolean;
 };
 
-export const createRenderMentionsSuggestionConfig = ({
+export const createRenderMentionsSuggestionConfig = <
+  T = FarcasterMention | Channel
+>({
   getResults,
+  RenderList,
 }: {
-  getResults: (query: string) => Promise<Array<FarcasterMention | null>>;
+  RenderList: React.ForwardRefExoticComponent<
+    {
+      items: Array<T | null>;
+      command: any;
+    } & React.RefAttributes<MentionListRef>
+  >;
+  getResults: (query: string) => Promise<Array<T | null>>;
 }) => ({
   suggestion: {
-    items: async ({
-      query,
-    }: {
-      query: string;
-    }): Promise<Array<FarcasterMention | null>> => {
+    items: async ({ query }: { query: string }): Promise<Array<T | null>> => {
       const data = await getResults(query);
 
       if (!data?.length) {
@@ -34,7 +38,7 @@ export const createRenderMentionsSuggestionConfig = ({
 
       return {
         onStart: (props: any) => {
-          reactRenderer = new ReactRenderer(MentionList, {
+          reactRenderer = new ReactRenderer(RenderList, {
             props: props,
             editor: props.editor,
           });

@@ -89,7 +89,7 @@ export default function Page() {
                 <h2 className="font-bold mt-0">Feature support</h2>
                 <ul>
                   <li>✅ @ mentions</li>
-                  <li>✅ Channels</li>
+                  <li>✅ Channels, channel mentions with /</li>
                   <li>✅ Links & Auto embeds</li>
                   <li>✅ Image, url and video embeds</li>
                   <li>✅ Max cast length (320 bytes)</li>
