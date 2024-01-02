@@ -70,7 +70,7 @@ export async function GET(
     return NextResponse.json({
       channels: channelsWithLevenshteinDistance
         .filter((envelopedChannel) => {
-          return envelopedChannel.relevancy_score <= 1;
+          return envelopedChannel.relevancy_score <= 2;
         })
         // fixme: check correct order
         .sort((a, b) => a.relevancy_score - b.relevancy_score)
