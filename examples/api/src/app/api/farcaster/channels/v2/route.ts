@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Channel } from "@mod-protocol/farcaster";
+import { Channel, VirtualChannel } from "@mod-protocol/farcaster";
 import { Levenshtein } from "./levenshtein-distance";
 
-const virtualChannels = [
+const virtualChannels: VirtualChannel[] = [
   // home
   {
     id: "",
@@ -47,7 +47,7 @@ export async function GET(
 
   const channels = result.channels;
 
-  const allChannels = [
+  const allChannels: Channel[] = [
     ...(hideVirtualChannels ? [] : virtualChannels),
     ...channels,
   ];
@@ -59,8 +59,8 @@ export async function GET(
       relevancy_score: Math.min(
         // since channel name lengths are limited, performance issues with this algo which is O(n^2) where n is string length
         // which is reasonably bounded, however with thousands of channel results we may want to reconsider
-        Levenshtein.get(q, channel.name),
-        Levenshtein.get(q, channel.id),
+        Levenshtein.get(q, channel.name) + 1,
+        Levenshtein.get(q, channel.id) + 1,
         // Make sure query "cart" resolves to a lower distance for "cartoons" vs "darts", but not lower than a channel called "cart"
         channel.name.toLowerCase().startsWith(q) ? 1 : Infinity,
         channel.id.toLowerCase().startsWith(q) ? 1 : Infinity
@@ -70,7 +70,7 @@ export async function GET(
     return NextResponse.json({
       channels: channelsWithLevenshteinDistance
         .filter((envelopedChannel) => {
-          return envelopedChannel.relevancy_score <= 3;
+          return envelopedChannel.relevancy_score <= 1;
         })
         // fixme: check correct order
         .sort((a, b) => a.relevancy_score - b.relevancy_score)
