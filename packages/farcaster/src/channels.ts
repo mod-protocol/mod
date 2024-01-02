@@ -10,7 +10,17 @@ export type Channelv1 = {
 
 export type Channel = VirtualChannel | RealizedChannel;
 
-export const homeVirtualChannel = {
+export type VirtualChannel = {
+  id: string;
+  description: string;
+  name: string;
+  object: "channel";
+  parent_url: string | null;
+  image_url: string;
+  channel_id: string;
+};
+
+export const homeVirtualChannel: VirtualChannel = {
   id: "",
   description: "followers",
   name: "Home",
@@ -19,8 +29,6 @@ export const homeVirtualChannel = {
   image_url: "https://warpcast.com/~/channel-images/home.png",
   channel_id: "home",
 } as const;
-
-export type VirtualChannel = typeof homeVirtualChannel;
 
 // type is copied from Neynar response type
 export type RealizedChannel = {
