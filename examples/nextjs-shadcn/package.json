@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,11 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mod-protocol/core": "^0.1.0",
+    "@mod-protocol/core": "^0.1.1",
     "@mod-protocol/mod-registry": "^0.1.0",
-    "@mod-protocol/react": "^0.1.0",
-    "@mod-protocol/react-editor": "^0.0.3",
-    "@mod-protocol/react-ui-shadcn": "^0.2.0",
+    "@mod-protocol/react": "^0.1.1",
+    "@mod-protocol/react-editor": "^0.1.0",
+    "@mod-protocol/react-ui-shadcn": "^0.3.0",
     "@rainbow-me/rainbowkit": "^1.2.0",
     "encoding": "^0.1.13",
     "next": "^13.5.6",

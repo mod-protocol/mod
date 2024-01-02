@@ -1,5 +1,23 @@
 # @mod-protocol/react-ui-shadcn
 
+## 0.3.0
+
+### Minor Changes
+
+- cbfe215: add channel mentions
+
+### Patch Changes
+
+- e1d2bf9: fix: overflow issue with long urls in text renderer
+- Updated dependencies [36f8928]
+- Updated dependencies [cbfe215]
+- Updated dependencies [6ae4441]
+- Updated dependencies [7f7d4c9]
+  - @mod-protocol/react@0.1.1
+  - @mod-protocol/react-editor@0.1.0
+  - @mod-protocol/farcaster@0.1.0
+  - @mod-protocol/core@0.1.1
+
 ## 0.2.0
 
 ### Minor Changes

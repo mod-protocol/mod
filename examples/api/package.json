@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "db-types": "kysely-codegen --out-file src/app/api/cast-embeds-metadata/types/db.d.ts --dialect postgres",
@@ -13,7 +13,7 @@
     "@irys/sdk": "^0.0.4",
     "@lit-protocol/lit-node-client": "^3.0.24",
     "@lit-protocol/types": "^2.2.61",
-    "@mod-protocol/core": "^0.1.0",
+    "@mod-protocol/core": "^0.1.1",
     "@reservoir0x/reservoir-sdk": "^1.8.4",
     "@vercel/postgres-kysely": "^0.6.0",
     "chatgpt": "^5.2.5",
