@@ -2,7 +2,7 @@ import { MultiToken, Options, tokenize } from "linkifyjs";
 import { LinkifyLink } from "../link";
 
 const textcuts =
-  /(\b)([^ \.\n,]+)(\.)(twitter|github|lens|telegram|eth)($| |\n)/gi;
+  /(\b)([^ \.\n,]+)(\.)(twitter|github|lens|telegram|eth)($| |\n)/i;
 
 function isTokenTextcut(str: MultiToken): boolean {
   return textcuts.test(str.toString());
