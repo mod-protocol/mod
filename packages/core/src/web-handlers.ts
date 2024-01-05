@@ -41,6 +41,14 @@ export const handleAddEmbed =
     events.onSuccess();
   };
 
+async function blobToBase64(blob: File): Promise<string> {
+  return new Promise((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.readAsDataURL(blob);
+  });
+}
+
 export const handleOpenFile = (
   init: OpenFileActionResolverInit,
   events: OpenFileActionResolverEvents
@@ -54,17 +62,23 @@ export const handleOpenFile = (
   inputElement.accept = init.accept.join(",");
   inputElement.multiple = init.maxFiles > 1;
 
-  inputElement.addEventListener("change", (arg) => {
+  inputElement.addEventListener("change", async (arg) => {
     const inputElement = arg.target as HTMLInputElement;
     const files = inputElement.files ? Array.from(inputElement.files) : [];
 
-    events.onSuccess(
-      files.map((file) => ({
-        name: file.name,
-        mimeType: file.type,
-        blob: file,
-      }))
+    const processedFiles = await Promise.all(
+      files.map(async (file) => {
+        const base64 = await blobToBase64(file);
+        return {
+          name: file.name,
+          mimeType: file.type,
+          blob: file,
+          base64,
+        };
+      })
     );
+
+    events.onSuccess(processedFiles);
 
     document.body.removeChild(inputElement);
   });
