@@ -94,11 +94,6 @@ export class IndexerQueue {
       this.log.error(
         `[URL Indexer] Response not ok [${response.status}] ${queryUrl}`
       );
-      if (response.status === 400 && retries === 0) {
-        // Retry 400 errors
-        this.log.info(`[URL Indexer] Queueing retry for ${url}...`);
-        this.indexQueue.push({ url, retries: retries + 1 });
-      }
       return;
     }
 
