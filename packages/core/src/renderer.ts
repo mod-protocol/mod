@@ -630,6 +630,7 @@ export class Renderer {
 
                 if (action.ref) {
                   set(this.refs, action.ref, { response, progress: 100 });
+                  this.onTreeChange();
                 }
 
                 if (action.onsuccess) {
@@ -651,6 +652,7 @@ export class Renderer {
 
                 if (action.ref) {
                   set(this.refs, action.ref, { error });
+                  this.onTreeChange();
                 }
 
                 this.asyncAction = null;
