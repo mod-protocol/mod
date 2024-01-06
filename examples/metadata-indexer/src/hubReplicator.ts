@@ -288,9 +288,29 @@ export class HubReplicator {
           index,
         }));
 
-        await this.db
-          .insertInto("castEmbedUrls")
-          .values(
+        try {
+          if (urls.length > 0)
+            await this.db
+              .insertInto("castEmbedUrls")
+              .values(
+                urls.map(({ url, normalizedUrl, index }) => {
+                  return {
+                    castHash: castRow.hash,
+                    url: normalizedUrl, // Null values filtered above
+                    unnormalizedUrl: url,
+                    index,
+                  };
+                })
+              )
+              .onConflict((oc) => oc.doNothing())
+              .execute();
+        } catch (error) {
+          this.log.error(
+            `There was a problem processing cast with hash ${castRow.hash.toString()}`
+          );
+          this.log.error(error);
+
+          const query = this.db.insertInto("castEmbedUrls").values(
             urls.map(({ url, normalizedUrl, index }) => {
               return {
                 castHash: castRow.hash,
@@ -299,9 +319,9 @@ export class HubReplicator {
                 index,
               };
             })
-          )
-          .onConflict((oc) => oc.doNothing())
-          .execute();
+          );
+          this.log.error(query.compile().sql);
+        }
 
         // this.log.info(
         //   `[Sync] Indexed ${urls.length} URLs from cast ${bytesToHex(
