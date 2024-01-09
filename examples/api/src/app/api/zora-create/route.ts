@@ -1,9 +1,9 @@
+import { createPremintClient } from "@zoralabs/protocol-sdk";
 import { NextRequest, NextResponse } from "next/server";
-import { PremintAPI, PremintResponse } from "@zoralabs/premint-sdk";
-import { zora } from "viem/chains";
+import { NFTStorage } from "nft.storage";
 import { createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { NFTStorage } from "nft.storage";
+import { zora } from "viem/chains";
 
 const { NFT_STORAGE_API_KEY } = process.env;
 
@@ -86,38 +86,40 @@ export async function POST(request: NextRequest) {
     name: title,
     description: description,
   });
-
-  // Upload to zora
-  const premintAPI = new PremintAPI(zora);
-
   const adminAccount = privateKeyToAccount(
     process.env.ZORA_ADMIN_PRIVATE_KEY as `0x${string}`
   );
+
   const contractAdminWallet = createWalletClient({
     chain: zora,
     account: adminAccount,
     transport: http(),
   });
 
-  const collection: PremintResponse["collection"] = {
+  // Upload to zora
+  const premintClient = createPremintClient({
+    chain: zora,
+  });
+
+  const collection = {
     contractAdmin: adminAccount.address,
     contractName: title,
     // Collection metadata same as token metadata
     contractURI: tokenMetadataURI,
   };
 
-  const premint = await premintAPI.createPremint({
+  const premint = await premintClient.createPremint({
     checkSignature: true,
     collection,
-    account: contractAdminWallet.account.address,
+    creatorAccount: contractAdminWallet.account.address,
     walletClient: contractAdminWallet,
-    token: {
+    tokenCreationConfig: {
       tokenURI: tokenMetadataURI,
       royaltyRecipient: creator.address,
     },
   });
 
-  return NextResponse.json({ url: premint.zoraUrl });
+  return NextResponse.json({ url: premint.urls.zoraCollect });
 }
 
 // needed for preflight requests to succeed
