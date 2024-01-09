@@ -1,5 +1,11 @@
 # metadata-indexer
 
+## 0.0.4
+
+### Patch Changes
+
+- 11d0204: fix: handle insertion error when cast has no url embeds
+
 ## 0.0.3
 
 ### Patch Changes
