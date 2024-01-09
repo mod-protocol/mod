@@ -1,0 +1,28 @@
+diff --git a/node_modules/@zoralabs/protocol-sdk/dist/index.js b/node_modules/@zoralabs/protocol-sdk/dist/index.js
+index 9b61491..b409135 100644
+--- a/node_modules/@zoralabs/protocol-sdk/dist/index.js
++++ b/node_modules/@zoralabs/protocol-sdk/dist/index.js
+@@ -1192,8 +1192,9 @@ async function signAndSubmitPremint({
+   if (!account) {
+     throw new Error("No account provided");
+   }
++
+   const signature = await walletClient.signTypedData({
+-    account,
++    account: walletClient.account,
+     ...premintTypedDataDefinition({
+       verifyingContract,
+       ...premintConfigAndVersion,
+diff --git a/node_modules/@zoralabs/protocol-sdk/package.json b/node_modules/@zoralabs/protocol-sdk/package.json
+index c91b841..1d59c07 100644
+--- a/node_modules/@zoralabs/protocol-sdk/package.json
++++ b/node_modules/@zoralabs/protocol-sdk/package.json
+@@ -4,7 +4,7 @@
+   "repository": "https://github.com/ourzora/zora-protocol",
+   "license": "MIT",
+   "main": "./dist/index.js",
+-  "types": "./dist/index.d.ts",
++  "types": "./dist/src/index.d.ts",
+   "type": "module",
+   "scripts": {
+     "build": "tsup",
