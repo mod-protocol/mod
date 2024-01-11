@@ -7,11 +7,12 @@ import {
   SendEthTransactionActionResolverInit,
 } from "@mod-protocol/core";
 import {
-  richEmbedMods,
   defaultRichEmbedMod,
+  richEmbedMods,
   richEmbedModsExperimental,
 } from "@mod-protocol/mod-registry";
 import { RichEmbed } from "@mod-protocol/react";
+import "@mod-protocol/react-ui-shadcn/dist/public/video-js.css";
 import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
 import {
   sendTransaction,
@@ -21,7 +22,6 @@ import {
 import { useMemo } from "react";
 import { useAccount } from "wagmi";
 import { useExperimentalMods } from "./use-experimental-mods";
-import "@mod-protocol/react-ui-shadcn/dist/public/video-js.css";
 
 export function Embeds(props: { embeds: Array<Embed> }) {
   const experimentalMods = useExperimentalMods();
@@ -70,6 +70,9 @@ export function Embeds(props: { embeds: Array<Embed> }) {
       user: {
         wallet: {
           address,
+        },
+        farcaster: {
+          fid: "1214",
         },
       },
     };
