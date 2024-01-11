@@ -13,6 +13,7 @@ import ZoraNftMinter from "@mods/zora-nft-minter";
 import ImgurUpload from "@mods/imgur-upload";
 import DALLE from "@mods/dall-e";
 import ZoraCreate from "@mods/zora-create";
+import ERC20 from "@mods/erc-20";
 
 /** All - Stable, suitable for use  */
 
@@ -54,6 +55,7 @@ export const allModsExperimental = [
   ChatGPTShorten,
   ChatGPT,
   DALLE,
+  ERC20,
 ];
 
 export const creationModsExperimental: ModManifest[] =
