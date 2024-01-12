@@ -1,5 +1,11 @@
 # @mod-protocol/react
 
+## 0.1.2
+
+### Patch Changes
+
+- 00993e0: fix: debounce onload event calling to prevent infinite calling (#135)
+
 ## 0.1.1
 
 ### Patch Changes

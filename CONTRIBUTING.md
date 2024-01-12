@@ -46,3 +46,4 @@ yarn changeset version
 ## Publish all changed packages to npm
 
 yarn changeset publish
+git push --follow-tags origin main
