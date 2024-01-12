@@ -1,4 +1,7 @@
-import { createPremintClient } from "@zoralabs/protocol-sdk";
+import {
+  createPremintClient,
+  PremintConfigVersion,
+} from "@zoralabs/protocol-sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { NFTStorage } from "nft.storage";
 import { createWalletClient, http } from "viem";
@@ -86,6 +89,7 @@ export async function POST(request: NextRequest) {
     name: title,
     description: description,
   });
+
   const adminAccount = privateKeyToAccount(
     process.env.ZORA_ADMIN_PRIVATE_KEY as `0x${string}`
   );
@@ -109,13 +113,15 @@ export async function POST(request: NextRequest) {
   };
 
   const premint = await premintClient.createPremint({
+    premintConfigVersion: PremintConfigVersion.V2,
     checkSignature: true,
     collection,
     creatorAccount: contractAdminWallet.account.address,
     walletClient: contractAdminWallet,
     tokenCreationConfig: {
       tokenURI: tokenMetadataURI,
-      royaltyRecipient: creator.address,
+      payoutRecipient: creator.address,
+      // TODO: createReferral: mod creator address,
     },
   });
 
