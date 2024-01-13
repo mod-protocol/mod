@@ -9,6 +9,10 @@
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "npm run build -- --watch"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mod-protocol/mod/tree/main/packages/farcaster"
+  },
   "devDependencies": {
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
