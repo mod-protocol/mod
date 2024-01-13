@@ -9,6 +9,10 @@
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "npm run build -- --watch ../../mods"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mod-protocol/mod/tree/main/packages/mod-registry"
+  },
   "dependencies": {
     "@mod-protocol/core": "*"
   },
