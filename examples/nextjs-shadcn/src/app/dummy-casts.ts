@@ -178,6 +178,11 @@ export const dummyCastData: Array<{
         status: "loaded",
         metadata: {},
       },
+      {
+        url: "eip155:8453/erc20:0x4ed4e862860bed51a9570b96d89af5e1b0efefed",
+        status: "loaded",
+        metadata: {},
+      },
     ],
   },
 ];
