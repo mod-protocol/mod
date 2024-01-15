@@ -28,6 +28,7 @@ export * from "./render-embed";
 
 export type Renderers = {
   Container: React.ComponentType<{ children: React.ReactNode }>;
+  Padding: React.ComponentType<{ children: React.ReactNode }>;
   Video: React.ComponentType<{
     videoSrc: string;
   }>;
@@ -410,6 +411,16 @@ const WrappedCardRenderer = <T extends React.ReactNode>(props: {
   );
 };
 
+const WrappedPaddingRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Padding"];
+  element: Extract<ModElementRef<T>, { type: "padding" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { type, elements, ...rest } = element;
+
+  return <Component {...rest}>{elements}</Component>;
+};
+
 const useForceRerender = () => {
   const [, setValue] = React.useState(0);
   return React.useCallback(() => {
@@ -734,6 +745,14 @@ export const Mod = (props: Props & { renderer: Renderer }) => {
               <WrappedCardRenderer
                 key={key}
                 component={renderers["Card"]}
+                element={el}
+              />
+            );
+          case "padding":
+            return (
+              <WrappedPaddingRenderer
+                key={key}
+                component={renderers["Padding"]}
                 element={el}
               />
             );

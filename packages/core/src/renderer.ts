@@ -156,6 +156,10 @@ export type ModElementRef<T> =
       events: {
         onClick: () => void;
       };
+    }
+  | {
+      type: "padding";
+      elements?: T[];
     };
 
 export type BaseContext = {
@@ -275,6 +279,7 @@ export interface OpenLinkActionResolver {
     events: OpenLinkActionResolverEvents
   ): void;
 }
+
 export interface SetStateActionResolver {
   ref: string;
   value: string;
@@ -1515,6 +1520,18 @@ export class Renderer {
                   }
                 },
               },
+            },
+            key
+          );
+        }
+        case "padding": {
+          return fn(
+            {
+              type: el.type,
+              elements:
+                el.elements && isArray(el.elements)
+                  ? el.elements.map(mapper).filter(nonNullable)
+                  : undefined, // TODO reference
             },
             key
           );
