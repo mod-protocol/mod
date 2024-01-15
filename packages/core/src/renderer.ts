@@ -274,6 +274,10 @@ export interface OpenLinkActionResolver {
     events: OpenLinkActionResolverEvents
   ): void;
 }
+export interface SetStateActionResolver {
+  ref: string;
+  value: string;
+}
 
 export type EthPersonalSignActionResolverInit = {
   data: EthPersonalSignData;
@@ -861,6 +865,13 @@ export class Renderer {
           promise,
           ref: action,
         };
+        break;
+      }
+      case "SETSTATE": {
+        Object.entries(action.state).map(([key, value]) => {
+          set(this.refs, key, this.replaceInlineContext(value));
+        });
+        this.onTreeChange();
         break;
       }
       case "web3.eth.personal.sign": {

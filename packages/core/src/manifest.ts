@@ -130,6 +130,11 @@ type OpenLinkAction = BaseAction & {
   url: string;
 };
 
+type SetStateAction = BaseAction & {
+  type: "SETSTATE";
+  state: { [key: string]: string };
+};
+
 export type EthPersonalSignData = {
   statement: string;
   version: string;
@@ -171,6 +176,7 @@ export type ModAction =
   | AddEmbedAction
   | SetInputAction
   | OpenLinkAction
+  | SetStateAction
   | EthPersonalSignAction
   | SendEthTransactionAction
   | ExitAction;
