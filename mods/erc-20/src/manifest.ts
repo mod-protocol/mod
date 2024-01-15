@@ -1,5 +1,6 @@
 import { ModManifest } from "@mod-protocol/core";
 import view from "./view";
+import buying from "./buying";
 
 const manifest: ModManifest = {
   slug: "erc-20",
@@ -26,6 +27,7 @@ const manifest: ModManifest = {
   ],
   elements: {
     "#view": view,
+    "#buying": buying,
   },
   permissions: ["user.wallet.address"], // "user.farcaster.fid"
 };

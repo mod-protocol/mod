@@ -30,7 +30,9 @@ export type ModManifest = {
   /** A definition map of reusable elements, using their id as the key */
   elements?: Record<string, ModElement[]>;
   /** Permissions requested by the Mod */
-  permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign">;
+  permissions?: Array<
+    "user.wallet.address" | "web3.eth.personal.sign" | "user.farcaster.fid"
+  >;
 };
 
 export type ModEvent =
@@ -311,4 +313,9 @@ export type ModElement =
           bottomLeftBadge?: never;
           bottomRightBadge?: never;
         }
-    ));
+    ))
+  | {
+      type: "container";
+      elements?: string | ElementOrConditionalFlow[];
+      onclick?: ModEvent;
+    };
