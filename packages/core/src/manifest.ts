@@ -315,7 +315,7 @@ export type ModElement =
         }
     ))
   | {
-      type: "container";
+      type: "padding";
       elements?: string | ElementOrConditionalFlow[];
       onclick?: ModEvent;
     };
