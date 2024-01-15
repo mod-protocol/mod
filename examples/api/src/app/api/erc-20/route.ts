@@ -243,7 +243,7 @@ async function tokenInfo({
     return {
       symbol: json.symbol,
       name: json.name,
-      image: json.image?.thumb,
+      image: json.image?.small,
     };
   }
 
