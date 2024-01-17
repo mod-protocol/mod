@@ -175,12 +175,7 @@ const WrappedHorizontalLayoutRenderer = <T extends React.ReactNode>(props: {
   element: Extract<ModElementRef<T>, { type: "horizontal-layout" }>;
 }) => {
   const { component: Component, element } = props;
-  const { type, elements, ...rest } = element;
-
-  // Prevents the onLoad event from being called multiple times when
-  // the tree changes and reference to the events object changes.
-  // Assumes events are immutable over the lifecycle of a component
-  const [events] = React.useState(element.events);
+  const { events, type, elements, ...rest } = element;
 
   React.useEffect(() => {
     events.onLoad();
@@ -194,10 +189,7 @@ const WrappedVerticalLayoutRenderer = <T extends React.ReactNode>(props: {
   element: Extract<ModElementRef<T>, { type: "vertical-layout" }>;
 }) => {
   const { component: Component, element } = props;
-  const { type, elements, ...rest } = element;
-
-  // See WrappedHorizontalLayoutRenderer for explanation
-  const [events] = React.useState(element.events);
+  const { events, type, elements, ...rest } = element;
 
   React.useEffect(() => {
     events.onLoad();
