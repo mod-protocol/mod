@@ -454,13 +454,17 @@ export type RendererOptions = {
     }
 );
 
+const DEFAULT_ASYNC_ACTION_KEY = "__default";
+
 export class Renderer {
   private interrupted: boolean = false;
   private currentTree: ModElement[] = [];
-  private asyncAction: {
-    promise: Promise<any>;
-    ref: ModAction;
-  } | null = null;
+  private asyncActions: {
+    [key: string]: {
+      promise: Promise<any>;
+      ref: ModAction;
+    } | null;
+  } = {};
   private refs: Record<string, any> = {};
   private context: Readonly<ContextType>;
   private manifestContext: Record<string, any> = {};
@@ -609,6 +613,11 @@ export class Renderer {
     return options;
   }
   private executeAction(action: ModAction) {
+    const actionRef =
+      "ref" in action
+        ? action.ref || DEFAULT_ASYNC_ACTION_KEY
+        : DEFAULT_ASYNC_ACTION_KEY;
+
     switch (action.type) {
       case "GET":
       case "POST":
@@ -627,18 +636,18 @@ export class Renderer {
               onAbort: () => {
                 // TODO: we should probably support this
                 resolve();
-                if (this.asyncAction?.promise !== promise) {
+                if (this.asyncActions[actionRef]?.promise !== promise) {
                   return;
                 }
               },
               onSuccess: (response) => {
                 resolve();
 
-                if (this.asyncAction?.promise !== promise) {
+                if (this.asyncActions[actionRef]?.promise !== promise) {
                   return;
                 }
 
-                this.asyncAction = null;
+                this.asyncActions[actionRef] = null;
 
                 if (action.ref) {
                   set(this.refs, action.ref, { response, progress: 100 });
@@ -650,7 +659,10 @@ export class Renderer {
                 }
               },
               onUploadProgress: (progress) => {
-                if (action.ref && this.asyncAction?.promise === promise) {
+                if (
+                  action.ref &&
+                  this.asyncActions[action.ref]?.promise === promise
+                ) {
                   set(this.refs, action.ref, { progress });
                   this.onTreeChange();
                 }
@@ -658,7 +670,7 @@ export class Renderer {
               onError: (error) => {
                 resolve();
 
-                if (this.asyncAction?.promise !== promise) {
+                if (this.asyncActions[actionRef]?.promise !== promise) {
                   return;
                 }
 
@@ -667,7 +679,7 @@ export class Renderer {
                   this.onTreeChange();
                 }
 
-                this.asyncAction = null;
+                this.asyncActions[actionRef] = null;
 
                 if (action.onerror) {
                   this.stepIntoOrTriggerAction(action.onerror);
@@ -677,7 +689,7 @@ export class Renderer {
           }, 1);
         });
 
-        this.asyncAction = {
+        this.asyncActions[actionRef] = {
           promise,
           ref: action,
         };
@@ -696,11 +708,11 @@ export class Renderer {
                 onAbort: () => {
                   resolve();
 
-                  if (this.asyncAction?.promise !== promise) {
+                  if (this.asyncActions[actionRef]?.promise !== promise) {
                     return;
                   }
 
-                  this.asyncAction = null;
+                  this.asyncActions[actionRef] = null;
 
                   if (action.oncancel) {
                     this.stepIntoOrTriggerAction(action.oncancel);
@@ -711,11 +723,11 @@ export class Renderer {
                 onSuccess: (files) => {
                   resolve();
 
-                  if (this.asyncAction?.promise !== promise) {
+                  if (this.asyncActions[actionRef]?.promise !== promise) {
                     return;
                   }
 
-                  this.asyncAction = null;
+                  this.asyncActions[actionRef] = null;
 
                   if (!files.length) {
                     if (action.oncancel) {
@@ -738,7 +750,7 @@ export class Renderer {
                 onError: (error) => {
                   resolve();
 
-                  if (this.asyncAction?.promise !== promise) {
+                  if (this.asyncActions[actionRef]?.promise !== promise) {
                     return;
                   }
 
@@ -746,7 +758,7 @@ export class Renderer {
                     set(this.refs, action.ref, { error });
                   }
 
-                  this.asyncAction = null;
+                  this.asyncActions[actionRef] = null;
 
                   if (action.onerror) {
                     this.stepIntoOrTriggerAction(action.onerror);
@@ -759,7 +771,7 @@ export class Renderer {
           }, 1);
         });
 
-        this.asyncAction = {
+        this.asyncActions[actionRef] = {
           promise,
           ref: action,
         };
@@ -776,11 +788,11 @@ export class Renderer {
                 onSuccess: (input) => {
                   resolve();
 
-                  if (this.asyncAction?.promise !== promise) {
+                  if (this.asyncActions[actionRef]?.promise !== promise) {
                     return;
                   }
 
-                  this.asyncAction = null;
+                  this.asyncActions[actionRef] = null;
 
                   if (action.ref) {
                     set(this.refs, action.ref, input);
@@ -795,7 +807,7 @@ export class Renderer {
           }, 1);
         });
 
-        this.asyncAction = {
+        this.asyncActions[actionRef] = {
           promise,
           ref: action,
         };
@@ -814,11 +826,11 @@ export class Renderer {
                 onSuccess: () => {
                   resolve();
 
-                  if (this.asyncAction?.promise !== promise) {
+                  if (this.asyncActions[actionRef]?.promise !== promise) {
                     return;
                   }
 
-                  this.asyncAction = null;
+                  this.asyncActions[actionRef] = null;
 
                   if (action.onsuccess) {
                     this.stepIntoOrTriggerAction(action.onsuccess);
@@ -829,7 +841,7 @@ export class Renderer {
           }, 1);
         });
 
-        this.asyncAction = {
+        this.asyncActions[actionRef] = {
           promise,
           ref: action,
         };
@@ -852,11 +864,11 @@ export class Renderer {
                 onSuccess: () => {
                   resolve();
 
-                  if (this.asyncAction?.promise !== promise) {
+                  if (this.asyncActions[actionRef]?.promise !== promise) {
                     return;
                   }
 
-                  this.asyncAction = null;
+                  this.asyncActions[actionRef] = null;
 
                   if (action.onsuccess) {
                     this.stepIntoOrTriggerAction(action.onsuccess);
@@ -867,7 +879,7 @@ export class Renderer {
           }, 1);
         });
 
-        this.asyncAction = {
+        this.asyncActions[actionRef] = {
           promise,
           ref: action,
         };
@@ -898,11 +910,11 @@ export class Renderer {
                 onSuccess: ({ signature, signedMessage, address }) => {
                   resolve();
 
-                  if (this.asyncAction?.promise !== promise) {
+                  if (this.asyncActions[actionRef]?.promise !== promise) {
                     return;
                   }
 
-                  this.asyncAction = null;
+                  this.asyncActions[actionRef] = null;
 
                   if (action.ref) {
                     set(this.refs, action.ref, {
@@ -919,7 +931,7 @@ export class Renderer {
                 onError: (error) => {
                   resolve();
 
-                  if (this.asyncAction?.promise !== promise) {
+                  if (this.asyncActions[actionRef]?.promise !== promise) {
                     return;
                   }
 
@@ -927,7 +939,7 @@ export class Renderer {
                     set(this.refs, action.ref, { error });
                   }
 
-                  this.asyncAction = null;
+                  this.asyncActions[actionRef] = null;
 
                   if (action.onerror) {
                     this.stepIntoOrTriggerAction(action.onerror);
@@ -940,7 +952,7 @@ export class Renderer {
           }, 1);
         });
 
-        this.asyncAction = {
+        this.asyncActions[actionRef] = {
           promise,
           ref: action,
         };
@@ -994,11 +1006,11 @@ export class Renderer {
                 onConfirmed: (txHash, isSuccess) => {
                   resolve();
 
-                  if (this.asyncAction?.promise !== promise) {
+                  if (this.asyncActions[actionRef]?.promise !== promise) {
                     return;
                   }
 
-                  this.asyncAction = null;
+                  this.asyncActions[actionRef] = null;
 
                   if (action.ref) {
                     set(this.refs, action.ref, {
@@ -1017,7 +1029,7 @@ export class Renderer {
                 onError: (error) => {
                   resolve();
 
-                  if (this.asyncAction?.promise !== promise) {
+                  if (this.asyncActions[actionRef]?.promise !== promise) {
                     return;
                   }
 
@@ -1025,7 +1037,7 @@ export class Renderer {
                     set(this.refs, action.ref, { error });
                   }
 
-                  this.asyncAction = null;
+                  this.asyncActions[actionRef] = null;
 
                   if (action.onerror) {
                     this.stepIntoOrTriggerAction(action.onerror);
@@ -1038,7 +1050,7 @@ export class Renderer {
           }, 1);
         });
 
-        this.asyncAction = {
+        this.asyncActions[actionRef] = {
           promise,
           ref: action,
         };
@@ -1052,12 +1064,10 @@ export class Renderer {
       }
     }
 
-    if (this.asyncAction) {
-      if (
-        "onloading" in this.asyncAction.ref &&
-        this.asyncAction.ref.onloading
-      ) {
-        this.stepIntoOrTriggerAction(this.asyncAction.ref.onloading);
+    const asyncAction = this.asyncActions[actionRef];
+    if (asyncAction) {
+      if ("onloading" in asyncAction.ref && asyncAction.ref.onloading) {
+        this.stepIntoOrTriggerAction(asyncAction.ref.onloading);
       } else {
         // Maybe we need to re-render
         this.onTreeChange();
@@ -1088,15 +1098,20 @@ export class Renderer {
     }
 
     if ("type" in maybeElementTreeOrAction) {
-      if (this.asyncAction) {
+      const actionRef =
+        "ref" in maybeElementTreeOrAction
+          ? maybeElementTreeOrAction.ref || DEFAULT_ASYNC_ACTION_KEY
+          : DEFAULT_ASYNC_ACTION_KEY;
+      const asyncAction = this.asyncActions[actionRef];
+      if (asyncAction) {
         // eslint-disable-next-line no-console
         console.warn(
-          `Aborted in-flight action with type '${this.asyncAction.ref.type}' in favor of ` +
+          `Aborted in-flight action with type '${asyncAction.ref.type}' in favor of ` +
             `action with type '${maybeElementTreeOrAction.type}'`
         );
       }
 
-      this.asyncAction = null;
+      this.asyncActions[actionRef] = null;
 
       return this.executeAction(maybeElementTreeOrAction);
     }
@@ -1194,8 +1209,9 @@ export class Renderer {
               type: "button",
               loadingLabel: this.replaceInlineContext(el.loadingLabel ?? ""),
               label: this.replaceInlineContext(el.label),
-              isLoading: this.asyncAction?.ref === el.onclick,
-              isDisabled: Boolean(this.asyncAction),
+              isLoading:
+                this.asyncActions[DEFAULT_ASYNC_ACTION_KEY]?.ref === el.onclick,
+              isDisabled: Boolean(this.asyncActions[DEFAULT_ASYNC_ACTION_KEY]),
               variant: el.variant,
               events: {
                 onClick: () => {
