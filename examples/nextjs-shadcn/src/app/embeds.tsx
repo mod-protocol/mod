@@ -18,6 +18,7 @@ import {
   sendTransaction,
   switchNetwork,
   waitForTransaction,
+  getNetwork,
 } from "@wagmi/core";
 import { useMemo } from "react";
 import { useAccount } from "wagmi";
@@ -41,7 +42,10 @@ export function Embeds(props: { embeds: Array<Embed> }) {
           const parsedChainId = parseInt(chainId);
 
           // Switch chains if the user is not on the right one
-          await switchNetwork({ chainId: parsedChainId });
+          // Note: silently fails if switching to the same chain
+          const network = getNetwork();
+          if (network.chain.id !== parsedChainId)
+            await switchNetwork({ chainId: parsedChainId });
 
           // Send the transaction
           const { hash } = await sendTransaction({
@@ -58,6 +62,7 @@ export function Embeds(props: { embeds: Array<Embed> }) {
 
           onConfirmed(hash, status === "success");
         } catch (e) {
+          console.error(e);
           onError(e);
         }
       },
