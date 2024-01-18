@@ -13,7 +13,8 @@ const buy: ModElement[] = [
           {
             type: "text",
             label:
-              "Buying ~${{refs.buyAmountUsd}} of {{refs.tokenReq.response.data.tokenData.name}}...",
+              "Buying ~${{refs.buyAmountUsd}} of {{refs.tokenReq.response.data.name}}...",
+            variant: "secondary",
           },
         ],
       },
@@ -37,7 +38,7 @@ const buy: ModElement[] = [
         ],
       },
       {
-        type: "horizontal-layout",
+        type: "vertical-layout",
         onload: {
           type: "POST",
           url: "{{api}}/erc-20/buy?walletAddress={{user.wallet.address}}&token={{embed.url}}&buyAmountUsd={{refs.buyAmountUsd}}",
