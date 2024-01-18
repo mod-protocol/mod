@@ -65,7 +65,10 @@ export async function getFollowingHolderInfo({
   fid: string;
   tokenAddress: string;
   blockchain: string;
-}): Promise<{ user: FarcasterUser; amount: number }[]> {
+}): Promise<{
+  holders: { user: FarcasterUser; amount: number }[];
+  holdersCount: number;
+}> {
   const acc: any[] = [];
 
   let hasNextPage = true;
@@ -118,7 +121,7 @@ export async function getFollowingHolderInfo({
     })
     .sort((a, b) => Number(b.amount) - Number(a.amount));
 
-  return result;
+  return { holders: result, holdersCount: result.length };
 }
 
 export async function getPriceData({
@@ -170,7 +173,7 @@ export async function getPriceData({
       change24hNumber.toFixed(2)
     ).toLocaleString();
     const change24hFormatted =
-      change24hNumber > 0 ? `+${change24hPartial}%` : `-${change24hPartial}%`;
+      change24hNumber > 0 ? `+${change24hPartial}%` : `-${-change24hPartial}%`;
 
     return {
       unitPriceUsd: unitPriceUsdFormatted,
@@ -181,6 +184,7 @@ export async function getPriceData({
   }
 
   // Use on-chain data as fallback
+  // TODO: Query uniswap contracts directly
   const chain = chainByName[blockchain.toLowerCase()];
   const url = `https://api.1inch.dev/price/v1.1/${chain.id}/${tokenAddress}?currency=USD`;
   const res = await fetch(url, {
@@ -195,7 +199,7 @@ export async function getPriceData({
   };
 }
 
-export async function tokenInfo({
+export async function getTokenInfo({
   tokenAddress,
   blockchain,
 }: {
