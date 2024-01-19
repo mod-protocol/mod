@@ -175,7 +175,8 @@ const WrappedHorizontalLayoutRenderer = <T extends React.ReactNode>(props: {
   element: Extract<ModElementRef<T>, { type: "horizontal-layout" }>;
 }) => {
   const { component: Component, element } = props;
-  const { events, type, elements, ...rest } = element;
+  const { type, elements, ...rest } = element;
+  const [events] = React.useState(element.events);
 
   React.useEffect(() => {
     events.onLoad();
@@ -189,7 +190,8 @@ const WrappedVerticalLayoutRenderer = <T extends React.ReactNode>(props: {
   element: Extract<ModElementRef<T>, { type: "vertical-layout" }>;
 }) => {
   const { component: Component, element } = props;
-  const { events, type, elements, ...rest } = element;
+  const { type, elements, ...rest } = element;
+  const [events] = React.useState(element.events);
 
   React.useEffect(() => {
     events.onLoad();
