@@ -1099,7 +1099,15 @@ export class Renderer {
       el: ModElement | ConditionalFlow<ModElement>,
       index: number
     ): T | null => {
-      const key = index + "";
+      let key = index + "";
+
+      if ("onload" in el) {
+        if (typeof el.onload === "string") {
+          key += `-${el.onload}`;
+        } else if (typeof el.onload === "object" && "ref" in el.onload) {
+          key += `-${el.onload.ref}`;
+        }
+      }
 
       if ("if" in el) {
         const { if: if_, then: then_, else: else_ } = el;
