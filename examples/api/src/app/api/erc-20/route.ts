@@ -30,7 +30,8 @@ export async function GET(request: NextRequest) {
       fn: getFollowingHolderInfo,
       options: {
         headers: new Headers({
-          "Cache-Control": "public, max-age=3600, immutable",
+          // Cache for 1 day
+          "Cache-Control": "public, max-age=86400, immutable",
         }),
       },
     },
@@ -38,6 +39,7 @@ export async function GET(request: NextRequest) {
       fn: getPriceData,
       options: {
         headers: new Headers({
+          // Cache for 1 hour
           "Cache-Control": "public, max-age=3600, immutable",
         }),
       },
@@ -46,7 +48,8 @@ export async function GET(request: NextRequest) {
       fn: getTokenInfo,
       options: {
         headers: new Headers({
-          "Cache-Control": "public, max-age=3600, immutable",
+          // Cache for 1 month
+          "Cache-Control": "public, max-age=2592000, immutable",
         }),
       },
     },
