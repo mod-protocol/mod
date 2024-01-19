@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createPublicClient, http, parseEther } from "viem2";
-import { chainByName, parseTokenParam } from "../lib/utils";
-import { getEthUsdPrice } from "../lib/utils";
+import { parseEther } from "viem2";
+import { chainByName, getEthUsdPrice, parseTokenParam } from "../lib/utils";
 
 export async function POST(request: NextRequest) {
   // TODO: Expose separate execution/receiver addresses
@@ -31,15 +30,9 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  // Get eth balance on blockchain
   const chain = chainByName[blockchain];
-  const client = createPublicClient({
-    transport: http(),
-    chain,
-  });
 
   const ethPriceUsd = await getEthUsdPrice();
-
   const ethInputAmount = parseEther((buyAmountUsd / ethPriceUsd).toString());
 
   const swapCalldataParams: {
@@ -82,5 +75,6 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({
     transaction: swapCalldataJson.tx,
+    explorer: chain.blockExplorers.default,
   });
 }

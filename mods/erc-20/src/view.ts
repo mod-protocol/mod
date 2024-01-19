@@ -123,8 +123,9 @@ const view: ModElement[] = [
                                               label: "$5.00",
                                               onclick: {
                                                 type: "SETSTATE",
-                                                ref: "buyAmountUsd",
-                                                value: "5.00",
+                                                state: {
+                                                  buyAmountUsd: "5.00",
+                                                },
                                               },
                                             },
                                           },
@@ -141,8 +142,9 @@ const view: ModElement[] = [
                                               label: "$50.00",
                                               onclick: {
                                                 type: "SETSTATE",
-                                                ref: "buyAmountUsd",
-                                                value: "50.00",
+                                                state: {
+                                                  buyAmountUsd: "50.00",
+                                                },
                                               },
                                             },
                                           },
@@ -159,8 +161,9 @@ const view: ModElement[] = [
                                               label: "$500.00",
                                               onclick: {
                                                 type: "SETSTATE",
-                                                ref: "buyAmountUsd",
-                                                value: "500.00",
+                                                state: {
+                                                  buyAmountUsd: "500.00",
+                                                },
                                               },
                                             },
                                           },
@@ -250,8 +253,9 @@ const view: ModElement[] = [
                           variant: "secondary",
                           onclick: {
                             type: "SETSTATE",
-                            ref: "isBuying",
-                            value: "false",
+                            state: {
+                              isBuying: "false",
+                            },
                           },
                         },
                         else: {
@@ -259,8 +263,9 @@ const view: ModElement[] = [
                           label: "Buy",
                           onclick: {
                             type: "SETSTATE",
-                            ref: "isBuying",
-                            value: "true",
+                            state: {
+                              isBuying: "true",
+                            },
                           },
                         },
                       },
