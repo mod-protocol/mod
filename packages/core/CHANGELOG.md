@@ -1,5 +1,12 @@
 # @mod-protocol/core
 
+## 0.1.2
+
+### Patch Changes
+
+- 1b019e8: feat: add base64 encoded data to file selector action return value
+- 7053840: fix: onload events
+
 ## 0.1.1
 
 ### Patch Changes

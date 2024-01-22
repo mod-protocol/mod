@@ -1,5 +1,14 @@
 # @mod-protocol/mod-registry
 
+## 0.1.1
+
+### Patch Changes
+
+- 1b019e8: miniapp: zora create
+- Updated dependencies [1b019e8]
+- Updated dependencies [7053840]
+  - @mod-protocol/core@0.1.2
+
 ## 0.1.0
 
 ### Minor Changes
