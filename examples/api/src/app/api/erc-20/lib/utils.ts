@@ -211,11 +211,6 @@ export async function getTokenInfo({
   url: string;
   image?: string;
 }> {
-  //0x4ed4e862860bed51a9570b96d89af5e1b0efefed
-  // https://api.coingecko.com/api/v3/coins/0x4ed4e862860bed51a9570b96d89af5e1b0efefed/market_chart?vs_currency=usd&days=1
-  // https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0xd7c1eb0fe4a30d3b2a846c04aa6300888f087a5f&vs_currencies=usd&points&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true
-  // https://api.coingecko.com/api/v3/coins/ethereum/contract/0xd7c1eb0fe4a30d3b2a846c04aa6300888f087a5f
-  // https://api.coingecko.com/api/v3/coins/base/contract/0x27d2decb4bfc9c76f0309b8e88dec3a601fe25a8
   const res = await fetch(
     `https://api.coingecko.com/api/v3/coins/${blockchain}/contract/${tokenAddress}`
   );
@@ -223,7 +218,7 @@ export async function getTokenInfo({
   if (res.ok) {
     const json = await res?.json();
     return {
-      symbol: json.symbol,
+      symbol: json.symbol.toUpperCase(),
       name: json.name,
       image: json.image?.small,
       url: `https://www.coingecko.com/en/coins/${json.id}`,
@@ -245,7 +240,7 @@ export async function getTokenInfo({
   });
 
   return {
-    symbol: token.symbol,
+    symbol: token.symbol.toUpperCase(),
     name: token.name,
     url: `https://app.uniswap.org/tokens/${blockchain}/${tokenAddress}`,
   };
