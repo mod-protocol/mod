@@ -2,7 +2,7 @@ import { ModElement } from "@mod-protocol/core";
 
 const view: ModElement[] = [
   {
-    type: "horizontal-layout",
+    type: "vertical-layout",
     elements: [
       {
         type: "padding",
@@ -33,14 +33,6 @@ const view: ModElement[] = [
                 },
               },
               {
-                value: "{{refs.holdersReq.response.data}}",
-                match: {
-                  NOT: {
-                    equals: "",
-                  },
-                },
-              },
-              {
                 value: "{{refs.priceReq.response.data}}",
                 match: {
                   NOT: {
@@ -56,181 +48,52 @@ const view: ModElement[] = [
                   type: "horizontal-layout",
                   elements: [
                     {
-                      if: {
-                        value: "{{refs.tokenReq.response.data.image}}",
-                        match: {
-                          NOT: {
-                            equals: "",
-                          },
-                        },
-                      },
-                      then: {
-                        type: "avatar",
-                        src: "{{refs.tokenReq.response.data.image}}",
-                      },
-                    },
-                    {
-                      if: {
-                        value: "{{refs.isBuying}}",
-                        match: {
-                          equals: "true",
-                        },
-                      },
-                      then: {
-                        type: "vertical-layout",
-                        onload: {
-                          type: "GET",
-                          url: "{{api}}/erc-20/balances?walletAddress={{user.wallet.address}}&token={{embed.url}}&buyOptionsUsd=5,50,500",
-                          ref: "balancesReq",
-                        },
-                        elements: [
-                          {
-                            type: "horizontal-layout",
-                            elements: [
-                              {
-                                if: {
-                                  value: "{{refs.balancesReq.response.data}}",
-                                  match: {
-                                    NOT: {
-                                      equals: "",
-                                    },
-                                  },
-                                },
-                                then: {
-                                  type: "vertical-layout",
-                                  elements: [
-                                    {
-                                      if: {
-                                        value:
-                                          "{{refs.balancesReq.response.data.buyOptionsUsd[0]}}",
-                                        match: {
-                                          equals: "true",
-                                        },
-                                      },
-                                      then: {
-                                        type: "horizontal-layout",
-                                        elements: [
-                                          {
-                                            if: {
-                                              value:
-                                                "{{refs.balancesReq.response.data.buyOptionsUsd[0]}}",
-                                              match: {
-                                                equals: "true",
-                                              },
-                                            },
-                                            then: {
-                                              type: "button",
-                                              label: "$5.00",
-                                              onclick: {
-                                                type: "SETSTATE",
-                                                state: {
-                                                  buyAmountUsd: "5.00",
-                                                },
-                                              },
-                                            },
-                                          },
-                                          {
-                                            if: {
-                                              value:
-                                                "{{refs.balancesReq.response.data.buyOptionsUsd[1]}}",
-                                              match: {
-                                                equals: "true",
-                                              },
-                                            },
-                                            then: {
-                                              type: "button",
-                                              label: "$50.00",
-                                              onclick: {
-                                                type: "SETSTATE",
-                                                state: {
-                                                  buyAmountUsd: "50.00",
-                                                },
-                                              },
-                                            },
-                                          },
-                                          {
-                                            if: {
-                                              value:
-                                                "{{refs.balancesReq.response.data.buyOptionsUsd[2]}}",
-                                              match: {
-                                                equals: "true",
-                                              },
-                                            },
-                                            then: {
-                                              type: "button",
-                                              label: "$500.00",
-                                              onclick: {
-                                                type: "SETSTATE",
-                                                state: {
-                                                  buyAmountUsd: "500.00",
-                                                },
-                                              },
-                                            },
-                                          },
-                                        ],
-                                      },
-                                      else: {
-                                        type: "text",
-                                        label:
-                                          "Not enough ETH on {{refs.balancesReq.response.data.chain.name}}",
-                                      },
-                                    },
-                                  ],
-                                },
-                                else: {
-                                  type: "circular-progress",
-                                },
+                      type: "horizontal-layout",
+                      elements: [
+                        {
+                          if: {
+                            value: "{{refs.tokenReq.response.data.image}}",
+                            match: {
+                              NOT: {
+                                equals: "",
                               },
-                            ],
+                            },
                           },
-                        ],
-                      },
-                      else: {
-                        type: "horizontal-layout",
-                        elements: [
-                          {
-                            type: "link",
-                            label: "{{refs.tokenReq.response.data.name}}",
-                            variant: "secondary",
-                            url: "{{refs.tokenReq.response.data.url}}",
+                          then: {
+                            type: "avatar",
+                            src: "{{refs.tokenReq.response.data.image}}",
                           },
-                          {
+                        },
+                        {
+                          type: "link",
+                          label: "${{refs.tokenReq.response.data.symbol}}",
+                          variant: "link",
+                          url: "{{refs.tokenReq.response.data.url}}",
+                        },
+                        {
+                          type: "text",
+                          variant: "secondary",
+                          label:
+                            "${{refs.priceReq.response.data.unitPriceUsd}}",
+                        },
+                        {
+                          if: {
+                            value: "{{refs.priceReq.response.data.change24h}}",
+                            match: {
+                              NOT: {
+                                equals: "",
+                              },
+                            },
+                          },
+                          then: {
                             type: "text",
                             variant: "secondary",
                             label:
-                              "${{refs.priceReq.response.data.unitPriceUsd}}",
+                              "24h: {{refs.priceReq.response.data.change24h}}",
                           },
-                          {
-                            if: {
-                              value:
-                                "{{refs.priceReq.response.data.change24h}}",
-                              match: {
-                                NOT: {
-                                  equals: "",
-                                },
-                              },
-                            },
-                            then: {
-                              type: "horizontal-layout",
-                              elements: [
-                                {
-                                  type: "text",
-                                  variant: "secondary",
-                                  label: "24h:",
-                                },
-                                {
-                                  type: "text",
-                                  variant: "secondary",
-                                  label:
-                                    "{{refs.priceReq.response.data.change24h}}",
-                                },
-                              ],
-                            },
-                          },
-                        ],
-                      },
+                        },
+                      ],
                     },
-
                     {
                       if: {
                         value: "{{user.wallet.address}}",
@@ -244,23 +107,15 @@ const view: ModElement[] = [
                         if: {
                           value: "{{refs.isBuying}}",
                           match: {
-                            equals: "true",
+                            NOT: {
+                              equals: "true",
+                            },
                           },
                         },
                         then: {
                           type: "button",
-                          label: "Back",
-                          variant: "secondary",
-                          onclick: {
-                            type: "SETSTATE",
-                            state: {
-                              isBuying: "false",
-                            },
-                          },
-                        },
-                        else: {
-                          type: "button",
                           label: "Buy",
+                          variant: "secondary",
                           onclick: {
                             type: "SETSTATE",
                             state: {
@@ -274,13 +129,158 @@ const view: ModElement[] = [
                 },
                 {
                   if: {
-                    value: "{{refs.balancesReq.response.data.ethBalance}}",
+                    value: "{{refs.isBuying}}",
                     match: {
-                      NOT: {
-                        equals: "",
-                      },
+                      equals: "true",
                     },
                   },
+                  then: {
+                    type: "vertical-layout",
+                    onload: {
+                      type: "GET",
+                      url: "{{api}}/erc-20/balances?walletAddress={{user.wallet.address}}&token={{embed.url}}&buyOptionsUsd=5,50,500",
+                      ref: "balancesReq",
+                    },
+                    elements: [
+                      {
+                        type: "horizontal-layout",
+                        elements: [
+                          {
+                            if: {
+                              value: "{{refs.balancesReq.response.data}}",
+                              match: {
+                                NOT: {
+                                  equals: "",
+                                },
+                              },
+                            },
+                            then: {
+                              type: "vertical-layout",
+                              elements: [
+                                {
+                                  if: {
+                                    value:
+                                      "{{refs.balancesReq.response.data.buyOptionsUsd[0]}}",
+                                    match: {
+                                      equals: "true",
+                                    },
+                                  },
+                                  then: {
+                                    type: "horizontal-layout",
+                                    elements: [
+                                      {
+                                        if: {
+                                          value:
+                                            "{{refs.balancesReq.response.data.buyOptionsUsd[0]}}",
+                                          match: {
+                                            equals: "true",
+                                          },
+                                        },
+                                        then: {
+                                          type: "button",
+                                          label: "$5.00",
+                                          onclick: {
+                                            type: "SETSTATE",
+                                            state: {
+                                              buyAmountUsd: "5.00",
+                                            },
+                                          },
+                                        },
+                                      },
+                                      {
+                                        if: {
+                                          value:
+                                            "{{refs.balancesReq.response.data.buyOptionsUsd[1]}}",
+                                          match: {
+                                            equals: "true",
+                                          },
+                                        },
+                                        then: {
+                                          type: "button",
+                                          label: "$50.00",
+                                          onclick: {
+                                            type: "SETSTATE",
+                                            state: {
+                                              buyAmountUsd: "50.00",
+                                            },
+                                          },
+                                        },
+                                      },
+                                      {
+                                        if: {
+                                          value:
+                                            "{{refs.balancesReq.response.data.buyOptionsUsd[2]}}",
+                                          match: {
+                                            equals: "true",
+                                          },
+                                        },
+                                        then: {
+                                          type: "button",
+                                          label: "$500.00",
+                                          onclick: {
+                                            type: "SETSTATE",
+                                            state: {
+                                              buyAmountUsd: "500.00",
+                                            },
+                                          },
+                                        },
+                                      },
+                                      {
+                                        if: {
+                                          value: "{{refs.isBuying}}",
+                                          match: {
+                                            equals: "true",
+                                          },
+                                        },
+                                        then: {
+                                          type: "button",
+                                          label: "Cancel",
+                                          variant: "secondary",
+                                          onclick: {
+                                            type: "SETSTATE",
+                                            state: {
+                                              isBuying: "false",
+                                            },
+                                          },
+                                        },
+                                      },
+                                    ],
+                                  },
+                                  else: {
+                                    type: "text",
+                                    label:
+                                      "Not enough ETH on {{refs.balancesReq.response.data.chain.name}}",
+                                  },
+                                },
+                              ],
+                            },
+                            else: {
+                              type: "horizontal-layout",
+                              loading: true,
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+                {
+                  if: [
+                    {
+                      value: "{{refs.isBuying}}",
+                      match: {
+                        equals: "true",
+                      },
+                    },
+                    {
+                      value: "{{refs.balancesReq.response.data.ethBalance}}",
+                      match: {
+                        NOT: {
+                          equals: "",
+                        },
+                      },
+                    },
+                  ],
                   then: {
                     type: "text",
                     label:
@@ -288,15 +288,29 @@ const view: ModElement[] = [
                     variant: "secondary",
                   },
                   else: {
-                    type: "text",
-                    variant: "secondary",
-                    label:
-                      "{{refs.holdersReq.response.data.holdersCount}} holders you know",
+                    if: {
+                      value: "{{refs.holdersReq.response.data}}",
+                      match: {
+                        NOT: {
+                          equals: "",
+                        },
+                      },
+                    },
+                    then: {
+                      type: "text",
+                      variant: "secondary",
+                      label:
+                        "{{refs.holdersReq.response.data.holdersCount}} holders you follow",
+                    },
+                    else: {
+                      type: "horizontal-layout",
+                      loading: true,
+                    },
                   },
                 },
               ],
             },
-            else: { type: "circular-progress" },
+            else: { type: "horizontal-layout", loading: true },
           },
         ],
       },
