@@ -66,8 +66,14 @@ export type Renderers = {
     onClick: () => void;
   }>;
   CircularProgress: React.ComponentType<{}>;
-  HorizontalLayout: React.ComponentType<{ children: React.ReactNode }>;
-  VerticalLayout: React.ComponentType<{ children: React.ReactNode }>;
+  HorizontalLayout: React.ComponentType<{
+    children: React.ReactNode;
+    isLoading?: boolean;
+  }>;
+  VerticalLayout: React.ComponentType<{
+    children: React.ReactNode;
+    isLoading?: boolean;
+  }>;
   Input: React.ComponentType<{
     isClearable: boolean;
     placeholder?: string;

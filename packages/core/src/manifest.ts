@@ -216,11 +216,13 @@ export type ModElement =
       type: "horizontal-layout";
       elements?: string | ElementOrConditionalFlow[];
       onload?: ModEvent;
+      loading?: boolean;
     }
   | {
       type: "vertical-layout";
       elements?: string | ElementOrConditionalFlow[];
       onload?: ModEvent;
+      loading?: boolean;
     }
   | {
       type: "textarea";

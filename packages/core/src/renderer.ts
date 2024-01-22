@@ -62,6 +62,7 @@ export type ModElementRef<T> =
         onLoad: () => void;
       };
       elements?: T[];
+      isLoading?: boolean;
     }
   | {
       type: "vertical-layout";
@@ -69,6 +70,7 @@ export type ModElementRef<T> =
         onLoad: () => void;
       };
       elements?: T[];
+      isLoading?: boolean;
     }
   | {
       type: "combobox";
@@ -1249,6 +1251,7 @@ export class Renderer {
                   }
                 },
               },
+              isLoading: el.loading,
             },
             key
           );
