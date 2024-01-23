@@ -28,7 +28,6 @@ export const allMods = [
   ImageRender,
   ChatGPTShorten,
   ChatGPT,
-  TipEthMod,
 ];
 
 export const creationMods: ModManifest[] = allMods.filter(
