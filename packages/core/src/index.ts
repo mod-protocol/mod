@@ -32,6 +32,7 @@ export type {
   ContextType,
   RichEmbedContext,
   CreationContext,
+  ActionContext,
 } from "./renderer";
 export { Renderer, canRenderEntrypointWithContext } from "./renderer";
 export * from "./embeds";

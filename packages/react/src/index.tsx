@@ -13,6 +13,7 @@ import {
   AddEmbedActionResolver,
   RichEmbedContext,
   CreationContext,
+  ActionContext,
   EthPersonalSignActionResolver,
   SendEthTransactionActionResolver,
 } from "@mod-protocol/core";
@@ -463,6 +464,59 @@ export const CreationMod = (
         manifest,
         context,
         variant: "creation",
+        onTreeChange: forceRerender,
+        onHttpAction,
+        onOpenFileAction,
+        onSetInputAction,
+        onAddEmbedAction,
+        onOpenLinkAction,
+        onEthPersonalSignAction,
+        onSendEthTransactionAction,
+        onExitAction,
+      })
+  );
+
+  React.useEffect(() => {
+    renderer.setContext(context);
+    forceRerender();
+  }, [forceRerender, context, renderer]);
+
+  return <Mod {...props} renderer={renderer} />;
+};
+
+export const ActionMod = (
+  props: Props & ActionContext & { variant: "action" }
+) => {
+  const {
+    manifest,
+    variant,
+    onHttpAction = actionResolverHttp,
+    onOpenFileAction = actionResolverOpenFile,
+    onSetInputAction = actionResolverSetInput,
+    onAddEmbedAction = actionResolverAddEmbed,
+    onOpenLinkAction = actionResolverOpenLink,
+    onSendEthTransactionAction = actionResolverSendEthTransaction,
+    onEthPersonalSignAction = actionResolverEthPersonalSign,
+    onExitAction = actionResolverExit,
+  } = props;
+
+  const forceRerender = useForceRerender();
+
+  const context = React.useMemo<ActionContext>(() => {
+    return {
+      api: props.api,
+      author: props.author,
+      user: props.user,
+      post: props.post,
+    };
+  }, [props.api, props.user, props.post, props.author]);
+
+  const [renderer] = React.useState<Renderer>(
+    () =>
+      new Renderer({
+        manifest,
+        context,
+        variant: "action",
         onTreeChange: forceRerender,
         onHttpAction,
         onOpenFileAction,
