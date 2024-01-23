@@ -1,5 +1,15 @@
 # @mod-protocol/react
 
+## 0.1.3
+
+### Patch Changes
+
+- 88829f7: fix: revert #137 (debounce onload events)
+- 7053840: fix: onload events
+- Updated dependencies [1b019e8]
+- Updated dependencies [7053840]
+  - @mod-protocol/core@0.1.2
+
 ## 0.1.2
 
 ### Patch Changes

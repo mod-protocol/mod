@@ -220,7 +220,9 @@ export type OpenFileActionResolverInit = {
 };
 export type OpenFileActionResolverEvents = {
   onAbort: () => void;
-  onSuccess: (files: { name: string; mimeType: string; blob: any }[]) => void;
+  onSuccess: (
+    files: { name: string; mimeType: string; blob: any; base64: string }[]
+  ) => void;
   onError: (error: { message: string }) => void;
 };
 export interface OpenFileActionResolver {
@@ -693,6 +695,8 @@ export class Renderer {
                   if (action.oncancel) {
                     this.stepIntoOrTriggerAction(action.oncancel);
                   }
+
+                  this.onTreeChange();
                 },
                 onSuccess: (files) => {
                   resolve();
@@ -718,6 +722,8 @@ export class Renderer {
                   if (action.onsuccess) {
                     this.stepIntoOrTriggerAction(action.onsuccess);
                   }
+
+                  this.onTreeChange();
                 },
                 onError: (error) => {
                   resolve();
@@ -735,6 +741,8 @@ export class Renderer {
                   if (action.onerror) {
                     this.stepIntoOrTriggerAction(action.onerror);
                   }
+
+                  this.onTreeChange();
                 },
               }
             );
@@ -1091,7 +1099,15 @@ export class Renderer {
       el: ModElement | ConditionalFlow<ModElement>,
       index: number
     ): T | null => {
-      const key = index + "";
+      let key = index + "";
+
+      if ("onload" in el) {
+        if (typeof el.onload === "string") {
+          key += `-${el.onload}`;
+        } else if (typeof el.onload === "object" && "ref" in el.onload) {
+          key += `-${el.onload.ref}`;
+        }
+      }
 
       if ("if" in el) {
         const { if: if_, then: then_, else: else_ } = el;

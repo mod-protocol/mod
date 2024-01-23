@@ -12,11 +12,13 @@ import ChatGPTShorten from "@mods/chatgpt-shorten";
 import ZoraNftMinter from "@mods/zora-nft-minter";
 import ImgurUpload from "@mods/imgur-upload";
 import DALLE from "@mods/dall-e";
+import ZoraCreate from "@mods/zora-create";
 
 /** All - Stable, suitable for use  */
 
 export const allMods = [
   ImgurUpload,
+  ZoraCreate,
   InfuraIPFSUpload,
   LivepeerVideo,
   GiphyPicker,
@@ -42,6 +44,7 @@ export const richEmbedMods: ModManifest[] = allMods.filter(
 export const allModsExperimental = [
   ImgurUpload,
   InfuraIPFSUpload,
+  ZoraCreate,
   LivepeerVideo,
   GiphyPicker,
   VideoRender,

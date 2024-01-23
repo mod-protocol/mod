@@ -9,6 +9,10 @@
     "build": "tsup src/index.tsx --format cjs,esm --dts",
     "dev": "npm run build -- --watch . --watch ../tiptap-extension-channel-mention --watch ../tiptap-extension-link"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mod-protocol/mod/tree/main/package/react-editor"
+  },
   "dependencies": {
     "@tiptap/core": "^2.0.4",
     "@mod-protocol/core": "*",

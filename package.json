@@ -6,7 +6,8 @@
     "test": "echo \"no tests yet\"",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "publish-packages": "turbo run build lint test && changeset version && changeset publish"
+    "publish-packages": "turbo run build lint test && changeset version && changeset publish",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
     "@changesets/cli": "2.26.2",
@@ -27,5 +28,9 @@
     "mods/*",
     "packages/*",
     "docs"
-  ]
+  ],
+  "dependencies": {
+    "patch-package": "^8.0.0",
+    "postinstall-postinstall": "^2.1.0"
+  }
 }

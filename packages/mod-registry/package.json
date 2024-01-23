@@ -1,6 +1,6 @@
 {
   "name": "@mod-protocol/mod-registry",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -8,6 +8,10 @@
     "lint": "eslint \"**/*.ts*\" && tsc --noEmit",
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "npm run build -- --watch ../../mods"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mod-protocol/mod/tree/main/packages/mod-registry"
   },
   "dependencies": {
     "@mod-protocol/core": "*"
