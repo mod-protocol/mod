@@ -321,7 +321,7 @@ const view: ModElement[] = [
             type: "horizontal-layout",
             onload: {
               type: "GET",
-              url: "{{api}}/erc-20?fid={{user.farcaster.fid}}&token={{embed.url}}&function=token",
+              url: "{{api}}/erc-20/info/token?fid={{user.farcaster.fid}}&token={{embed.url}}",
               ref: "tokenReq",
             },
           },
@@ -329,7 +329,7 @@ const view: ModElement[] = [
             type: "horizontal-layout",
             onload: {
               type: "GET",
-              url: "{{api}}/erc-20?fid={{user.farcaster.fid}}&token={{embed.url}}&function=holders",
+              url: "{{api}}/erc-20/info/holders?fid={{user.farcaster.fid}}&token={{embed.url}}",
               ref: "holdersReq",
             },
           },
@@ -337,7 +337,7 @@ const view: ModElement[] = [
             type: "horizontal-layout",
             onload: {
               type: "GET",
-              url: "{{api}}/erc-20?fid={{user.farcaster.fid}}&token={{embed.url}}&function=price",
+              url: "{{api}}/erc-20/info/price?fid={{user.farcaster.fid}}&token={{embed.url}}",
               ref: "priceReq",
             },
           },

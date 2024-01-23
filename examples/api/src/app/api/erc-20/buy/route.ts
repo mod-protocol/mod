@@ -1,28 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseEther } from "viem2";
-import { chainByName, getEthUsdPrice, parseTokenParam } from "../lib/utils";
+import {
+  chainByName,
+  getEthUsdPrice,
+  parseInfoRequestParams,
+} from "../lib/utils";
 
 export async function POST(request: NextRequest) {
+  const { blockchain, tokenAddress } = parseInfoRequestParams(request);
+
   // TODO: Expose separate execution/receiver addresses
   const userAddress = request.nextUrl.searchParams
     .get("walletAddress")
     ?.toLowerCase();
-  const token = request.nextUrl.searchParams.get("token")?.toLowerCase();
-  let tokenAddress = request.nextUrl.searchParams
-    .get("tokenAddress")
-    ?.toLowerCase();
-  let blockchain = request.nextUrl.searchParams
-    .get("blockchain")
-    ?.toLowerCase();
   const buyAmountUsd = parseFloat(
     request.nextUrl.searchParams.get("buyAmountUsd")
   );
-
-  if (token) {
-    const parsedToken = parseTokenParam(token);
-    tokenAddress = parsedToken.tokenAddress;
-    blockchain = parsedToken.blockchain;
-  }
 
   if (!tokenAddress || !blockchain) {
     return new Response("Missing tokenAddress or blockchain", {
