@@ -47,10 +47,7 @@ import {
 } from "@mod-protocol/react-ui-shadcn/dist/components/ui/popover";
 import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
 import { useExperimentalMods } from "./use-experimental-mods";
-
-// Optionally replace with your API_URL here
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "https://api.modprotocol.org/api";
+import { API_URL } from "./constants";
 
 const getMentions = getFarcasterMentions(API_URL);
 const getChannels = getFarcasterChannels(API_URL);

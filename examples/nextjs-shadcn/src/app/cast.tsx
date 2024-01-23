@@ -1,12 +1,4 @@
-import { useRelativeDate } from "./relative-date";
-import React from "react";
-import {
-  CommentIcon,
-  HeartIcon,
-  ShareIcon,
-  SyncIcon,
-  BookmarkIcon,
-} from "@primer/octicons-react";
+import { Embed } from "@mod-protocol/core";
 import {
   StructuredCastImageUrl,
   StructuredCastMention,
@@ -18,8 +10,17 @@ import {
   StructuredCastVideo,
   convertCastPlainTextToStructured,
 } from "@mod-protocol/farcaster";
-import { Embed } from "@mod-protocol/core";
+import {
+  BookmarkIcon,
+  CommentIcon,
+  HeartIcon,
+  ShareIcon,
+  SyncIcon,
+} from "@primer/octicons-react";
+import React from "react";
+import { Actions } from "./actions";
 import { Embeds } from "./embeds";
+import { useRelativeDate } from "./relative-date";
 
 export const structuredCastToReactDOMComponentsConfig: Record<
   StructuredCastUnit["type"],
@@ -91,9 +92,11 @@ export function convertStructuredCastToReactDOMComponents(
 
 export function Cast(props: {
   cast: {
+    hash: string;
     avatar_url: string;
     display_name: string;
     username: string;
+    fid: string;
     timestamp: string;
     text: string;
     embeds: Array<Embed>;
@@ -128,10 +131,32 @@ export function Cast(props: {
               </div>
             </div>
             <div className="flex-grow">
-              <span>
-                <b>{props.cast.display_name}</b>
-              </span>{" "}
-              <span>@{props.cast.username}</span> <span>· {publishedAt}</span>
+              <div className="flex">
+                <div>
+                  <span>
+                    <b>{props.cast.display_name}</b>
+                  </span>{" "}
+                  <span>@{props.cast.username}</span>{" "}
+                  <span>· {publishedAt}</span>
+                </div>
+                <div className="ml-auto">
+                  {/* <button className="text-slate-500">
+                    <KebabHorizontalIcon />
+                  </button> */}
+                  <Actions
+                    post={{
+                      id: props.cast.hash,
+                      text: props.cast.text,
+                      embeds: props.cast.embeds,
+                    }}
+                    author={{
+                      farcaster: {
+                        fid: `${props.cast.fid}`,
+                      },
+                    }}
+                  />
+                </div>
+              </div>
               <div className="cursor-pointer mt-1 max-w-[600px]">
                 {convertStructuredCastToReactDOMComponents(structuredCast, {})}
                 <Embeds embeds={props.cast.embeds} />
