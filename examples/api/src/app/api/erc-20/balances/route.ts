@@ -5,29 +5,18 @@ import {
   getEthUsdPrice,
   numberWithCommas,
   parseTokenParam,
+  parseInfoRequestParams,
 } from "../lib/utils";
 
 export async function GET(request: NextRequest) {
+  const { blockchain, tokenAddress } = parseInfoRequestParams(request);
   const userAddress = request.nextUrl.searchParams
     .get("walletAddress")
-    ?.toLowerCase();
-  const token = request.nextUrl.searchParams.get("token")?.toLowerCase();
-  let tokenAddress = request.nextUrl.searchParams
-    .get("tokenAddress")
-    ?.toLowerCase();
-  let blockchain = request.nextUrl.searchParams
-    .get("blockchain")
     ?.toLowerCase();
   const buyOptionsUsd = request.nextUrl.searchParams
     .get("buyOptionsUsd")
     .split(",")
     .map((x) => parseFloat(x));
-
-  if (token) {
-    const parsedToken = parseTokenParam(token);
-    tokenAddress = parsedToken.tokenAddress;
-    blockchain = parsedToken.blockchain;
-  }
 
   if (!tokenAddress || !blockchain) {
     return new Response("Missing tokenAddress or blockchain", {

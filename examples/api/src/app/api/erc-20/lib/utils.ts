@@ -1,4 +1,5 @@
 import { FarcasterUser } from "@mod-protocol/core";
+import { NextRequest } from "next/server";
 import { publicActionReverseMirage } from "reverse-mirage";
 import { createPublicClient, http } from "viem2";
 import * as chains from "viem2/chains";
@@ -311,4 +312,27 @@ export async function getEthUsdPrice(): Promise<number> {
   const ethPriceUsd = (1 / Number(answer)) * 1e18;
 
   return ethPriceUsd;
+}
+
+export function parseInfoRequestParams(request: NextRequest) {
+  const fid = request.nextUrl.searchParams.get("fid");
+  const token = request.nextUrl.searchParams.get("token")?.toLowerCase();
+  let tokenAddress = request.nextUrl.searchParams
+    .get("tokenAddress")
+    ?.toLowerCase();
+  let blockchain = request.nextUrl.searchParams
+    .get("blockchain")
+    ?.toLowerCase();
+
+  if (token) {
+    const parsedToken = parseTokenParam(token);
+    tokenAddress = parsedToken.tokenAddress;
+    blockchain = parsedToken.blockchain;
+  }
+
+  return {
+    fid,
+    tokenAddress,
+    blockchain,
+  };
 }
