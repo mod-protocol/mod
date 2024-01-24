@@ -158,31 +158,41 @@ export type ModElementRef<T> =
       };
     };
 
-export type BaseContext = {
-  user?: {
-    wallet?: {
-      address?: string;
-    };
-    farcaster?: {
-      fid?: string;
-    };
+export type UserData = {
+  wallet?: {
+    address?: string;
   };
+  farcaster?: {
+    fid?: string;
+  };
+};
+
+export type BaseContext = {
+  user?: UserData;
+  /** The url of the api hosting the mod backends. (including /api) **/
+  api: string;
 };
 
 export type CreationContext = BaseContext & {
   input: any;
   embeds: Embed[];
-  /** The url of the api hosting the mod backends. (including /api) **/
-  api: string;
 };
 
 // Render Mini-apps only are triggered by a single embed right now
 export type RichEmbedContext = BaseContext & {
   embed: Embed;
-  api: string;
 };
 
-export type ContextType = CreationContext | RichEmbedContext;
+export type ActionContext = BaseContext & {
+  user: UserData;
+  author: Omit<UserData, "wallet">;
+  post: {
+    text: string;
+    embeds: Embed[];
+  };
+};
+
+export type ContextType = CreationContext | RichEmbedContext | ActionContext;
 
 function nonNullable<T>(value: T): value is NonNullable<T> {
   return value !== null && value !== undefined;
@@ -433,7 +443,7 @@ export type RendererOptions = {
   onEthPersonalSignAction: EthPersonalSignActionResolver;
   onSendEthTransactionAction: SendEthTransactionActionResolver;
   onExitAction: ExitActionResolver;
-} & (
+} & ( // TODO: Variant-specific actions
   | {
       variant: "creation";
       context: CreationContext;
@@ -441,6 +451,10 @@ export type RendererOptions = {
   | {
       variant: "richEmbed";
       context: RichEmbedContext;
+    }
+  | {
+      variant: "action";
+      context: ActionContext;
     }
 );
 
@@ -480,7 +494,7 @@ export class Renderer {
 
     if (options.variant === "creation") {
       this.currentTree = options.manifest.creationEntrypoints || [];
-    } else {
+    } else if (options.variant === "richEmbed") {
       const entrypoints = options.manifest.richEmbedEntrypoints;
 
       for (const entrypoint of entrypoints || []) {
@@ -489,6 +503,8 @@ export class Renderer {
           break;
         }
       }
+    } else if (options.variant === "action") {
+      this.currentTree = options.manifest.actionEntrypoints || [];
     }
   }
 

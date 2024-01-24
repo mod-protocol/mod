@@ -17,7 +17,7 @@ type Props = {
   onSelect: (value: ModManifest) => void;
 };
 
-export function ModsSearch(props: Props) {
+export function ModsSearch(props: Props & { children?: React.ReactNode }) {
   const { mods, onSelect } = props;
 
   const [open, setOpen] = React.useState(false);
@@ -36,14 +36,18 @@ export function ModsSearch(props: Props) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          type="button"
-        >
-          +
-        </Button>
+        {props.children ? (
+          props.children
+        ) : (
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            type="button"
+          >
+            +
+          </Button>
+        )}
       </PopoverTrigger>
       <PopoverContent className="w-[400px] p-0" align="start">
         <Command>

@@ -38,6 +38,8 @@ type ModManifest = {
   creationEntrypoints?: ModElement[];
   /** Interface this Mod exposes, if any, for Content Rendering */
   richEmbedEntrypoints?: ModConditionalElement[];
+  /** Interface this Mod exposes, if any, for Action Execution */
+  actionEntrypoints?: ModElement[];
   /** A definition map of reusable elements, using their id as the key */
   elements?: Record<string, ModElement[]>;
   /** Permissions requested by the Mod */
@@ -52,6 +54,7 @@ export type ModElement =
   | {
       type: "text";
       label: string;
+      variant?: "bold" | "secondary" | "regular";
     }
   | {
       type: "image";
@@ -60,13 +63,14 @@ export type ModElement =
   | {
       type: "link";
       label: string;
+      onclick?: ModEvent;
       variant?: "link" | "primary" | "secondary" | "destructive";
       url: string;
-      onclick?: ModEvent;
     }
   | {
       type: "button";
       label: string;
+      loadingLabel?: string;
       variant?: "primary" | "secondary" | "destructive";
       onclick: ModEvent;
     }
@@ -84,13 +88,39 @@ export type ModElement =
       onload?: ModEvent;
     }
   | {
+      type: "textarea";
       ref?: string;
+      placeholder?: string;
+      onchange?: ModEvent;
+      onsubmit?: ModEvent;
+    }
+  | {
       type: "select";
       options: Array<{ label: string; value: any }>;
+      ref?: string;
+      placeholder?: string;
+      isClearable?: boolean;
+      onchange?: ModEvent;
+    }
+  | {
+      type: "input";
+      ref?: string;
       placeholder?: string;
       isClearable?: boolean;
       onchange?: ModEvent;
       onsubmit?: ModEvent;
+    }
+  | {
+      type: "video";
+      videoSrc: string;
+    }
+  | {
+      type: "tabs";
+      ref?: string;
+      values: string[];
+      names: string[];
+      onload?: ModEvent;
+      onchange?: ModEvent;
     }
   | {
       type: "combobox";
@@ -103,36 +133,9 @@ export type ModElement =
       onpick?: ModEvent;
       onchange?: ModEvent;
     }
-  | {
-      ref?: string;
-      type: "textarea";
-      placeholder?: string;
-      onchange?: ModEvent;
-      onsubmit?: ModEvent;
-    }
-  | {
-      ref?: string;
-      type: "input";
-      placeholder?: string;
-      isClearable?: boolean;
-      onchange?: ModEvent;
-      onsubmit?: ModEvent;
-    }
-  | {
-      type: "video";
-      videoSrc: string;
-    }
-  | {
-      ref?: string;
-      type: "tabs";
-      values: string[];
-      names: string[];
-      onload?: ModEvent;
-      onchange?: ModEvent;
-    }
   | ({
-      ref?: string;
       type: "image-grid-list";
+      ref?: string;
       onload?: ModEvent;
       onpick?: ModEvent;
     } & (

@@ -1,18 +1,22 @@
 import { Embed } from "@mod-protocol/core";
 
 export const dummyCastData: Array<{
+  hash: string;
   avatar_url: string;
   display_name: string;
   username: string;
+  fid: string;
   timestamp: string;
   text: string;
   embeds: Array<Embed>;
 }> = [
   {
+    hash: "0x39a8237a349b9bc95ae96b4d838b39d3699e0701",
     avatar_url:
       "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
     display_name: "David Furlong",
     username: "df",
+    fid: "1214",
     timestamp: "2023-08-17 09:16:52.293739",
     text: "[Automated] @df just starred the repo 0xOlias/ponder on Github",
     embeds: [
@@ -31,10 +35,12 @@ export const dummyCastData: Array<{
     ],
   },
   {
+    hash: "0x39a8237a349b9bc95ae96b4d838b39d3699e0702",
     avatar_url:
       "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
     display_name: "David Furlong",
     username: "df",
+    fid: "1214",
     timestamp: "2023-08-17 09:16:52.293739",
     text: "a fluke",
     embeds: [
@@ -52,10 +58,12 @@ export const dummyCastData: Array<{
     ],
   },
   {
+    hash: "0x39a8237a349b9bc95ae96b4d838b39d3699e0703",
     avatar_url:
       "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
     display_name: "David Furlong",
     username: "df",
+    fid: "1214",
     timestamp: "2023-08-17 09:16:52.293739",
     text: "I just minted Farcaster v3",
     embeds: [
@@ -104,10 +112,12 @@ export const dummyCastData: Array<{
     ],
   },
   {
+    hash: "0x39a8237a349b9bc95ae96b4d838b39d3699e0704",
     avatar_url:
       "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
     display_name: "David Furlong",
     username: "df",
+    fid: "1214",
     timestamp: "2023-08-17 09:16:52.293739",
     text: "This is an example of an embedded video",
     embeds: [
@@ -120,10 +130,12 @@ export const dummyCastData: Array<{
     ],
   },
   {
+    hash: "0x39a8237a349b9bc95ae96b4d838b39d3699e0705",
     avatar_url:
       "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
     display_name: "David Furlong",
     username: "df",
+    fid: "1214",
     timestamp: "2023-08-17 09:16:52.293739",
     text: "I just minted this straight from my feed",
     embeds: [

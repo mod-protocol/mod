@@ -27,6 +27,8 @@ export type ModManifest = {
   creationEntrypoints?: ModElement[];
   /** Interface this Mod exposes, if any, for RichEmbed Rendering */
   richEmbedEntrypoints?: ModConditionalElement[];
+  /** Interface this Mod exposes, if any, for Action Execution */
+  actionEntrypoints?: ModElement[];
   /** A definition map of reusable elements, using their id as the key */
   elements?: Record<string, ModElement[]>;
   /** Permissions requested by the Mod */
