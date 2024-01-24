@@ -1,6 +1,6 @@
 # Getting started making a Mod
 
-A Mod consists of a manifest JSON file and optionally a backend which can handle requests from the Mod and make external requests. 
+A Mod consists of a manifest JSON file and optionally a backend which can handle requests from the Mod and make external requests.
 The Manifest contains metadata about the Mod, such as it's name and unique identifier, which Mod Elements it renders onto the page, and conditions under which to render them.
 
 Our convention is to write Mods in TypeScript, for better autocompletion and legibility, with the Mods being built to JSON.
@@ -26,8 +26,10 @@ There's a couple reasons, depending on what your goals are:
 
 ## Types of Mods
 
-There's currently two types of Mods supported:
+There's currently three types of Mods supported:
+
 1. Rich-embed Mods
 2. Creation Mods
+3. Action Mods
 
-We're planning to support more types of Mods in the near future, including Action Mods and Full screen Mods.
+We're planning to support more types of Mods in the near future.

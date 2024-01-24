@@ -1,0 +1,153 @@
+import Image from "next/image";
+
+# Post Action Mods
+
+Post Action Mods enable users to use Mods when interacting with posts, such as Mods for tipping, sharing, traslating or other mini-interactions that require the context of the post such as its author and contents.
+
+Here's an example of where post action Mods will typically be used:
+
+<Image
+  src="/post-action.png"
+  alt="Post Action Mod example"
+  width="400"
+  height="200"
+/>
+
+You can integrate Post Action Mods with or without our [Mod Metadata Cache](../metadata-cache.mdx).
+
+## Integration Example
+
+```tsx
+import { ActionMod } from "@mod-protocol/react";
+
+...
+
+  <ActionMod
+    input={text}
+    embeds={embeds}
+    api={API_URL}
+    variant="action"
+    manifest={currentMod}
+    renderers={renderers}
+    onOpenFileAction={handleOpenFile}
+    onExitAction={hideCurrentMod}
+  />
+```
+
+## Full Example with Mod Search
+
+```tsx
+import { Embed, ModManifest, handleOpenFile } from "@mod-protocol/core";
+import { actionMods, actionModsExperimental } from "@mod-protocol/mod-registry";
+import { ActionMod } from "@mod-protocol/react";
+import { ModsSearch } from "@mod-protocol/react-ui-shadcn/dist/components/creation-mods-search";
+import { Button } from "@mod-protocol/react-ui-shadcn/dist/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@mod-protocol/react-ui-shadcn/dist/components/ui/popover";
+import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
+import { KebabHorizontalIcon } from "@primer/octicons-react";
+import React, { useMemo } from "react";
+import { getAddress } from "viem";
+import { useAccount } from "wagmi";
+import { API_URL } from "./constants";
+import { useExperimentalMods } from "./use-experimental-mods";
+import { sendEthTransaction } from "./utils";
+
+export function Actions({
+  author,
+  post,
+}: {
+  author: {
+    farcaster: {
+      fid: string;
+    };
+  };
+  post: {
+    id: string;
+    text: string;
+    embeds: Embed[];
+  };
+}) {
+  const experimentalMods = useExperimentalMods();
+  const [currentMod, setCurrentMod] = React.useState<ModManifest | null>(null);
+
+  const { address: unchecksummedAddress } = useAccount();
+  const checksummedAddress = React.useMemo(() => {
+    if (!unchecksummedAddress) return null;
+    return getAddress(unchecksummedAddress);
+  }, [unchecksummedAddress]);
+  const user = React.useMemo(() => {
+    return {
+      wallet: {
+        address: checksummedAddress,
+      },
+    };
+  }, [checksummedAddress]);
+
+  const onSendEthTransactionAction = useMemo(() => sendEthTransaction, []);
+
+  return (
+    <Popover
+      open={!!currentMod}
+      onOpenChange={(op: boolean) => {
+        if (!op) setCurrentMod(null);
+      }}
+    >
+      <PopoverTrigger></PopoverTrigger>
+      <ModsSearch
+        mods={experimentalMods ? actionModsExperimental : actionMods}
+        onSelect={setCurrentMod}
+      >
+        <Button variant="ghost" role="combobox" type="button">
+          <KebabHorizontalIcon></KebabHorizontalIcon>
+        </Button>
+      </ModsSearch>
+      <PopoverContent className="w-[400px] ml-2" align="start">
+        <div className="space-y-4">
+          <h4 className="font-medium leading-none">{currentMod?.name}</h4>
+          <hr />
+          <ActionMod
+            api={API_URL}
+            user={user}
+            variant="action"
+            manifest={currentMod}
+            renderers={renderers}
+            onOpenFileAction={handleOpenFile}
+            onExitAction={() => setCurrentMod(null)}
+            onSendEthTransactionAction={onSendEthTransactionAction}
+            author={author}
+            post={{
+              text: post.text,
+              embeds: post.embeds,
+            }}
+          />
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+```
+
+This component can then be included in your post to allow it to be invoked by the user:
+
+```tsx
+...
+<div className="ml-auto">
+  <Actions
+    post={{
+      id: props.cast.hash,
+      text: props.cast.text,
+      embeds: props.cast.embeds,
+    }}
+    author={{
+      farcaster: {
+        fid: props.cast.fid,
+      },
+    }}
+  />
+</div>
+...
+```
