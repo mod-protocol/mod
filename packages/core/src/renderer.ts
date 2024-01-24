@@ -158,15 +158,17 @@ export type ModElementRef<T> =
       };
     };
 
-export type BaseContext = {
-  user?: {
-    wallet?: {
-      address?: string;
-    };
-    farcaster?: {
-      fid?: string;
-    };
+export type UserData = {
+  wallet?: {
+    address?: string;
   };
+  farcaster?: {
+    fid?: string;
+  };
+};
+
+export type BaseContext = {
+  user?: UserData;
   /** The url of the api hosting the mod backends. (including /api) **/
   api: string;
 };
@@ -182,16 +184,8 @@ export type RichEmbedContext = BaseContext & {
 };
 
 export type ActionContext = BaseContext & {
-  user: {
-    wallet?: {
-      address?: string;
-    };
-  };
-  author: {
-    farcaster?: {
-      fid?: string;
-    };
-  };
+  user: UserData;
+  author: Omit<UserData, "wallet">;
   post: {
     text: string;
     embeds: Embed[];
@@ -449,7 +443,7 @@ export type RendererOptions = {
   onEthPersonalSignAction: EthPersonalSignActionResolver;
   onSendEthTransactionAction: SendEthTransactionActionResolver;
   onExitAction: ExitActionResolver;
-} & (
+} & ( // TODO: Variant-specific actions
   | {
       variant: "creation";
       context: CreationContext;

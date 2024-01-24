@@ -140,9 +140,6 @@ export function Cast(props: {
                   <span>· {publishedAt}</span>
                 </div>
                 <div className="ml-auto">
-                  {/* <button className="text-slate-500">
-                    <KebabHorizontalIcon />
-                  </button> */}
                   <Actions
                     post={{
                       id: props.cast.hash,
@@ -151,7 +148,7 @@ export function Cast(props: {
                     }}
                     author={{
                       farcaster: {
-                        fid: `${props.cast.fid}`,
+                        fid: props.cast.fid,
                       },
                     }}
                   />

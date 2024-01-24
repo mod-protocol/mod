@@ -2,20 +2,20 @@ import { Embed, ModManifest, handleOpenFile } from "@mod-protocol/core";
 import { actionMods, actionModsExperimental } from "@mod-protocol/mod-registry";
 import { ActionMod } from "@mod-protocol/react";
 import { ModsSearch } from "@mod-protocol/react-ui-shadcn/dist/components/creation-mods-search";
+import { Button } from "@mod-protocol/react-ui-shadcn/dist/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@mod-protocol/react-ui-shadcn/dist/components/ui/popover";
 import { renderers } from "@mod-protocol/react-ui-shadcn/dist/renderers";
+import { KebabHorizontalIcon } from "@primer/octicons-react";
 import React, { useMemo } from "react";
 import { getAddress } from "viem";
 import { useAccount } from "wagmi";
 import { API_URL } from "./constants";
 import { useExperimentalMods } from "./use-experimental-mods";
 import { sendEthTransaction } from "./utils";
-import { KebabHorizontalIcon } from "@primer/octicons-react";
-import { Button } from "@mod-protocol/react-ui-shadcn/dist/components/ui/button";
 
 export function Actions({
   author,
@@ -62,7 +62,6 @@ export function Actions({
         mods={experimentalMods ? actionModsExperimental : actionMods}
         onSelect={setCurrentMod}
       >
-        {/* TODO: Find a better way to do this */}
         <Button variant="ghost" role="combobox" type="button">
           <KebabHorizontalIcon></KebabHorizontalIcon>
         </Button>
@@ -79,9 +78,6 @@ export function Actions({
             renderers={renderers}
             onOpenFileAction={handleOpenFile}
             onExitAction={() => setCurrentMod(null)}
-            // onSetInputAction={handleSetInput(setText)}
-            // onAddEmbedAction={handleAddEmbed(addEmbed)}
-            // onEthPersonalSignAction={getAuthSig}
             onSendEthTransactionAction={onSendEthTransactionAction}
             author={author}
             post={post}
