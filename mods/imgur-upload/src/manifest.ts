@@ -7,7 +7,7 @@ import upload from "./upload";
 const manifest: ModManifest = {
   slug: "imgur-upload",
   name: "Upload image to Imgur",
-  custodyAddress: "stephancill.eth",
+  custodyAddress: "0xdcC59cF0Adf4175973D4abc8c0715f83f90d2f1d",
   logo: "https://imgur.com/favicon.ico",
   custodyGithubUsername: "stephancill",
   version: "0.0.1",

@@ -5,7 +5,7 @@ import fullimage from "./fullimage";
 const manifest: ModManifest = {
   slug: "url-render",
   name: "View urls",
-  custodyAddress: "furlong.eth",
+  custodyAddress: "0xdcC59cF0Adf4175973D4abc8c0715f83f90d2f1d",
   version: "0.0.1",
   logo: "https://i.imgur.com/E7PAMHH.png",
   custodyGithubUsername: "davidfurlong",
