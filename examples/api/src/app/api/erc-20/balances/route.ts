@@ -4,7 +4,6 @@ import {
   chainByName,
   getEthUsdPrice,
   numberWithCommas,
-  parseTokenParam,
   parseInfoRequestParams,
 } from "../lib/utils";
 

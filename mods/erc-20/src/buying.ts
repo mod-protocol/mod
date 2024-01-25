@@ -41,10 +41,26 @@ const buy: ModElement[] = [
               type: "circular-progress",
             },
             {
-              type: "text",
-              label:
-                "Buying ~${{refs.buyAmountUsd}} of {{refs.tokenReq.response.data.name}}...",
-              variant: "secondary",
+              if: {
+                value: "{{refs.swapTxDataReq.response.data}}",
+                match: {
+                  NOT: {
+                    equals: "",
+                  },
+                },
+              },
+              then: {
+                type: "text",
+                label:
+                  "Buying ${{refs.buyAmountUsd}} of ${{refs.tokenReq.response.data.symbol}}...",
+                variant: "secondary",
+              },
+              else: {
+                type: "text",
+                label:
+                  "Calculating best swap route for ${{refs.tokenReq.response.data.symbol}}...",
+                variant: "secondary",
+              },
             },
           ],
         },
