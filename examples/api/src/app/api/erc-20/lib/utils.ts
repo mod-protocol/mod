@@ -1,4 +1,16 @@
 import { FarcasterUser } from "@mod-protocol/core";
+import { Protocol } from "@uniswap/router-sdk";
+import { Percent, Token, TradeType } from "@uniswap/sdk-core";
+import {
+  AlphaRouter,
+  AlphaRouterConfig,
+  CurrencyAmount,
+  SwapOptions,
+  SwapType,
+  nativeOnChain,
+} from "@uniswap/smart-order-router";
+import { ethers } from "ethers";
+import JSBI from "jsbi";
 import { NextRequest } from "next/server";
 import { publicActionReverseMirage } from "reverse-mirage";
 import { createPublicClient, http } from "viem2";
@@ -10,9 +22,21 @@ export function numberWithCommas(x: string | number) {
   return parts.join(".");
 }
 
-const { ERC_20_AIRSTACK_API_KEY } = process.env;
-const AIRSTACK_API_URL = "https://api.airstack.xyz/gql";
-const airstackQuery = `
+export async function getFollowingHolderInfo({
+  fid,
+  tokenAddress,
+  blockchain,
+}: {
+  fid: string;
+  tokenAddress: string;
+  blockchain: string;
+}): Promise<{
+  holders: { user: FarcasterUser; amount: number }[];
+  holdersCount: number;
+}> {
+  const { ERC_20_AIRSTACK_API_KEY } = process.env;
+  const AIRSTACK_API_URL = "https://api.airstack.xyz/gql";
+  const airstackQuery = `
 query MyQuery($identity: Identity!, $token_address: Address!, $blockchain: TokenBlockchain, $cursor: String) {
   SocialFollowings(
     input: {
@@ -58,18 +82,6 @@ query MyQuery($identity: Identity!, $token_address: Address!, $blockchain: Token
 }
 `;
 
-export async function getFollowingHolderInfo({
-  fid,
-  tokenAddress,
-  blockchain,
-}: {
-  fid: string;
-  tokenAddress: string;
-  blockchain: string;
-}): Promise<{
-  holders: { user: FarcasterUser; amount: number }[];
-  holdersCount: number;
-}> {
   const acc: any[] = [];
 
   let hasNextPage = true;
@@ -312,6 +324,108 @@ export async function getEthUsdPrice(): Promise<number> {
   const ethPriceUsd = (1 / Number(answer)) * 1e18;
 
   return ethPriceUsd;
+}
+
+export async function getSwapTransaction({
+  outTokenAddress,
+  blockchain,
+  ethInputAmountFormatted,
+  recipientAddress,
+  feeRecipientAddress,
+  feePercentageInt,
+}: {
+  outTokenAddress: string;
+  blockchain: string;
+  ethInputAmountFormatted: string;
+  recipientAddress: string;
+  feePercentageInt?: number;
+  feeRecipientAddress?: string;
+}) {
+  const tokenOut = await getUniswapToken({
+    tokenAddress: outTokenAddress,
+    blockchain,
+  });
+  const chain = chainByName[blockchain];
+  const provider = new ethers.providers.JsonRpcProvider(
+    chain.rpcUrls.default.http[0]
+  );
+
+  const router = new AlphaRouter({
+    chainId: chain.id,
+    provider,
+  });
+
+  const tokenIn = nativeOnChain(chain.id);
+  const amountIn = CurrencyAmount.fromRawAmount(
+    tokenIn,
+    JSBI.BigInt(
+      ethers.utils.parseUnits(ethInputAmountFormatted, tokenIn.decimals)
+    )
+  );
+
+  let swapOptions: SwapOptions = {
+    type: SwapType.UNIVERSAL_ROUTER,
+    recipient: recipientAddress,
+    slippageTolerance: new Percent(5, 100),
+    deadlineOrPreviousBlockhash: parseDeadline("360"),
+    fee:
+      feeRecipientAddress && feePercentageInt
+        ? {
+            fee: new Percent(feePercentageInt, 100),
+            recipient: feeRecipientAddress,
+          }
+        : undefined,
+  };
+
+  const partialRoutingConfig: Partial<AlphaRouterConfig> = {
+    protocols: [Protocol.V2, Protocol.V3],
+  };
+
+  const quote = await router.route(
+    amountIn,
+    tokenOut,
+    TradeType.EXACT_INPUT,
+    swapOptions,
+    partialRoutingConfig
+  );
+
+  if (!quote) return;
+  return quote;
+}
+
+async function getUniswapToken({
+  tokenAddress,
+  blockchain,
+}: {
+  tokenAddress: string;
+  blockchain: string;
+}): Promise<Token> {
+  const chain = chainByName[blockchain];
+  const client = createPublicClient({
+    transport: http(),
+    chain,
+  }).extend(publicActionReverseMirage);
+
+  const token = await client.getERC20({
+    erc20: {
+      address: tokenAddress as `0x${string}`,
+      chainID: chain.id,
+    },
+  });
+
+  const uniswapToken = new Token(
+    chain.id,
+    tokenAddress,
+    token.decimals,
+    token.symbol,
+    token.name
+  );
+
+  return uniswapToken;
+}
+
+function parseDeadline(deadline: string): number {
+  return Math.floor(Date.now() / 1000) + parseInt(deadline);
 }
 
 export function parseInfoRequestParams(request: NextRequest) {
