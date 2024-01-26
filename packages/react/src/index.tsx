@@ -108,6 +108,7 @@ export type Renderers = {
   Avatar: React.ComponentType<{
     src: string;
     size?: "sm" | "md" | "lg";
+    href?: string;
   }>;
   Card: React.ComponentType<{
     imageSrc?: string;

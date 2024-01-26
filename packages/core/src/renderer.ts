@@ -145,6 +145,7 @@ export type ModElementRef<T> =
   | {
       type: "avatar";
       src: string;
+      href?: string;
     }
   | {
       type: "card";
@@ -1504,6 +1505,7 @@ export class Renderer {
             {
               type: "avatar",
               src: this.replaceInlineContext(el.src),
+              href: el.href ? this.replaceInlineContext(el.href) : undefined,
             },
             key
           );

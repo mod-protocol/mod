@@ -293,6 +293,7 @@ export type ModElement =
   | {
       type: "avatar";
       src: string;
+      href?: string;
     }
   | ({
       type: "card";
