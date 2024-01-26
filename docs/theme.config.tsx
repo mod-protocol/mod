@@ -11,6 +11,8 @@ const config: DocsThemeConfig = {
     text: "Mod Protocol",
   },
   head: null,
+  primaryHue: { dark: 100, light: 248 },
+  primarySaturation: { dark: 55, light: 67 },
   useNextSeoProps() {
     return {
       titleTemplate: "%s - Mod Protocol Docs",

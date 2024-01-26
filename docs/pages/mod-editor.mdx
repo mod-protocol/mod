@@ -10,13 +10,13 @@ A fully featured, performant, and open source Cast creator for your React app.
 
 - We've spent over 100 hours on this open source library to get it just right for your Farcaster app.
 - It supports: @ mentions, channels, link highlighting & automatic embeds, image, url and video embeds, max lengths in bytes, open graph previews, textcuts
-- You can easily use Mods that allow users to add Rich Embeds like image uploads, video uploads or choosing a GIF.
+- You can easily use Mods that allow users to add Rich Embeds like image uploads (to imgur or IFPS), video uploads or choosing a GIF.
 - It's [open source](https://github.com/mod-protocol/mod/tree/main/packages/react-editor), MIT licensed and designed to put you in full control - you choose which if any Mods you want to use with it. 
 - You can and are free to use this even if you aren't integrating Mod - it doesn't depend on any of Mod's core SDKs.
 - It's lightweight, treeshakeable and performant, built on tiptap and prosemirror. It's extendable with your own Mods or tiptap plugins if you'd like.
 - It's unopinionated about UI and works with your UI library
 
-## Simple Example 
+## Step 1A: Simple Example (no image upload or other Mods)
 
 ```tsx
 import { useEditor, EditorContent } from "@mod-protocol/react-editor";
@@ -25,6 +25,14 @@ import { Embed, ModManifest, fetchUrlMetadata, handleAddEmbed, handleOpenFile, h
 import { Channel, getFarcasterChannels, getFarcasterMentions } from "@mod-protocol/farcaster";
 import { MentionList } from "@mod-protocol/react-ui-shadcn/dist/components/mention-list";
 import { ChannelList } from "@mod-protocol/react-ui-shadcn/dist/components/channel-list";
+import { ChannelPicker } from "@mod-protocol/react-ui-shadcn/dist/components/channel-picker";
+import { CastLengthUIIndicator } from "@mod-protocol/react-ui-shadcn/dist/components/cast-length-ui-indicator";
+import { RichEmbed } from "@mod-protocol/react";
+import { defaultRichEmbedMod } from "@mod-protocol/mod-registry";
+
+// Optionally replace with your API_URL here
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? "https://api.modprotocol.org/api";
 
 // use our API_URL, self host our API, or use your own API.
 const getUrlMetadata = fetchUrlMetadata(API_URL);
@@ -53,7 +61,15 @@ export default function EditorExample() {
             autoFocus
             className="w-full h-full min-h-[200px]"
         />
-        <EmbedsEditor embeds={getEmbeds()} setEmbeds={setEmbeds} />
+        <EmbedsEditor embeds={getEmbeds()} setEmbeds={setEmbeds} RichEmbed={({ embed }) => (
+          <RichEmbed
+            api={API_URL}
+            defaultRichEmbedMod={defaultRichEmbedMod}
+            mods={[defaultRichEmbedMod]}
+            embed={embed}
+            renderers={renderers}
+          />
+        )} />
         <ChannelPicker
           getChannels={getChannels}
           onSelect={setChannel}
@@ -65,7 +81,7 @@ export default function EditorExample() {
   );
 ```
 
-## Full Example Usage (next.js)
+## Step 1B: Full Example Usage (next.js)
 
 ```tsx
 "use client";
@@ -297,12 +313,16 @@ export default function EditorExample() {
             </div>
           </PopoverContent>
         </Popover>
+        {/* CastLengthUIIndicator only shows text when the user is low on characters */}
         <CastLengthUIIndicator getText={getText} />
         <div className="grow"></div>
-        <Button type="submit">Cast</Button>
+        <button type="submit">Cast</button>
       </div>
     </form>
   );
 }
-
 ```
+
+## Step 2: Styling setup
+
+If you're using `@mod-protocol/react-ui-shadcn`, follow the configuration steps for [@mod-protocol/react-ui-shadcn](/ui/react-shadcn.mdx)

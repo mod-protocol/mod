@@ -1,6 +1,6 @@
 {
-  "index": "Getting Started",
-  "integrate": "Integrate Mod",
+  "index": "Introduction",
+  "integrate": "Setup",
   "ui": "UI Libraries",
   "metadata-cache": "Metadata Indexer",
   "mod-editor": "Farcaster Editor",

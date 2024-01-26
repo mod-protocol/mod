@@ -1,14 +1,14 @@
 # Mod Monorepo
 
-This is the monorepo for the packages of `Mod protocol`
+This is the monorepo for the packages of [Mod protocol](https://www.modprotocol.org)
 
-## Getting started
+[![Quickstart](https://img.shields.io/badge/Quickstart-37a779?style=for-the-badge)](https://docs.modprotocol.org/integrate/getting-started)
 
-[Read the docs](https://docs.modprotocol.org)
+[Docs](https://docs.modprotocol.org)
 
-[See an example](https://example-nextjs.modprotocol.org)
+[Demo](https://example-nextjs.modprotocol.org)
 
-[Website](https://www.modprotocol.org)
+[Boilerplate starter](https://github.com/mod-protocol/mod-starter)
 
 ## Contributing
 
