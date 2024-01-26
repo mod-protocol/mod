@@ -12,8 +12,8 @@ export type ModManifest = {
   name: string;
   /** A (temporary) github username to define as the owner */
   custodyGithubUsername: string;
-  /** An ethereum address or ENS address to define as the owner */
-  custodyAddress: string;
+  /** An ethereum address to define as the owner */
+  custodyAddress: `0x${string}`;
   /** A valid url pointing to an image file, it should be a square */
   logo: string;
   /** should be the same as the package version */

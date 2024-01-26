@@ -7,7 +7,7 @@ import loading from "./loading";
 const manifest: ModManifest = {
   slug: "giphy-picker",
   name: "Add GIF/Sticker",
-  custodyAddress: "furlong.eth",
+  custodyAddress: "0xdcC59cF0Adf4175973D4abc8c0715f83f90d2f1d",
   custodyGithubUsername: "davidfurlong",
   logo: "https://i.imgur.com/vccxL2r.png",
   version: "0.0.1",

@@ -161,12 +161,13 @@ export type ModElementRef<T> =
 export type BaseContext = {
   user?: {
     wallet?: {
-      address?: string;
+      address?: `0x${string}`;
     };
     farcaster?: {
       fid?: string;
     };
   };
+  clientReferralAddress?: `0x${string}`;
 };
 
 export type CreationContext = BaseContext & {
@@ -933,13 +934,27 @@ export class Renderer {
       case "SENDETHTRANSACTION": {
         const promise = new Promise<void>((resolve) => {
           setTimeout(() => {
+            /* Populate attribution tags */
+            const zeroAddress = "0000000000000000000000000000000000000000";
+            const modTag = this.manifest.custodyAddress.startsWith("0x")
+              ? this.manifest.custodyAddress.slice(2)
+              : zeroAddress;
+            const clientTag =
+              this.context.clientReferralAddress?.slice(2) || zeroAddress;
+            let txData = this.replaceInlineContext(action.txData.data || "");
+            // Check if data is hex and contains at least a function signature
+            // 4 hex bytes (8 chars) + '0x' = 10 chars
+            if (txData.startsWith("0x") && txData.length >= 10) {
+              txData = txData + modTag + clientTag;
+            }
+
             this.onSendEthTransactionAction(
               {
                 data: {
                   from: this.replaceInlineContext(action.txData.from),
                   to: this.replaceInlineContext(action.txData.to),
                   value: this.replaceInlineContext(action.txData.value || "0"),
-                  data: this.replaceInlineContext(action.txData.data || ""),
+                  data: txData,
                 },
                 chainId: this.replaceInlineContext(action.chainId),
               },

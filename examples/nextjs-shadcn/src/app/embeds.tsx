@@ -72,6 +72,9 @@ export function Embeds(props: { embeds: Array<Embed> }) {
           address,
         },
       },
+      clientReferralAddress: process.env.NEXT_PUBLIC_CLIENT_REFERRAL_ADDRESS as
+        | `0x${string}`
+        | undefined,
     };
   }, [address]);
 

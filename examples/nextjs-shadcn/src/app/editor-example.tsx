@@ -51,6 +51,8 @@ import { useExperimentalMods } from "./use-experimental-mods";
 // Optionally replace with your API_URL here
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "https://api.modprotocol.org/api";
+const CLIENT_REFERRAL_ADDRESS = process.env
+  .NEXT_PUBLIC_CLIENT_REFERRAL_ADDRESS as `0x${string}` | undefined;
 
 const getMentions = getFarcasterMentions(API_URL);
 const getChannels = getFarcasterChannels(API_URL);
@@ -217,6 +219,7 @@ export default function EditorExample() {
                 input={getText()}
                 embeds={getEmbeds()}
                 api={API_URL}
+                clientReferralAddress={CLIENT_REFERRAL_ADDRESS}
                 user={user}
                 variant="creation"
                 manifest={currentMod}

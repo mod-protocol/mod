@@ -453,8 +453,14 @@ export const CreationMod = (
 
   const input = variant === "creation" ? props.input : "";
   const context = React.useMemo<CreationContext>(
-    () => ({ input, embeds: props.embeds, api: props.api, user: props.user }),
-    [input, props.api, props.embeds, props.user]
+    () => ({
+      input,
+      embeds: props.embeds,
+      api: props.api,
+      user: props.user,
+      clientReferralAddress: props.clientReferralAddress,
+    }),
+    [input, props.api, props.embeds, props.user, props.clientReferralAddress]
   );
 
   const [renderer] = React.useState<Renderer>(
@@ -501,8 +507,13 @@ export const RenderMod = (
   const forceRerender = useForceRerender();
 
   const context = React.useMemo<RichEmbedContext>(
-    () => ({ embed: props.embed, api: props.api, user: props.user }),
-    [props.embed, props.api, props.user]
+    () => ({
+      embed: props.embed,
+      api: props.api,
+      user: props.user,
+      clientReferralAddress: props.clientReferralAddress,
+    }),
+    [props.embed, props.api, props.user, props.clientReferralAddress]
   );
 
   const [renderer] = React.useState<Renderer>(
