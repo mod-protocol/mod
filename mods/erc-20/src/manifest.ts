@@ -5,7 +5,7 @@ import buying from "./buying";
 const manifest: ModManifest = {
   slug: "erc-20",
   name: "ERC-20",
-  custodyAddress: "stephancill.eth",
+  custodyAddress: "0xdcC59cF0Adf4175973D4abc8c0715f83f90d2f1d",
   version: "0.0.1",
   logo: "",
   custodyGithubUsername: "stephancill",
