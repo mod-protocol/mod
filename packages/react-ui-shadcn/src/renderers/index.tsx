@@ -18,6 +18,7 @@ import { ContainerRenderer } from "./container";
 import { SelectRenderer } from "./select";
 import { TextareaRenderer } from "./textarea";
 import { ComboboxRenderer } from "./combobox";
+import { PaddingRenderer } from "./padding";
 
 export const renderers: Renderers = {
   Select: SelectRenderer,
@@ -25,6 +26,7 @@ export const renderers: Renderers = {
   Combobox: ComboboxRenderer,
   Textarea: TextareaRenderer,
   Container: ContainerRenderer,
+  Padding: PaddingRenderer,
   Text: TextRenderer,
   Image: ImageRenderer,
   Card: CardRenderer,

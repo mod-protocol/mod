@@ -28,6 +28,7 @@ export * from "./render-embed";
 
 export type Renderers = {
   Container: React.ComponentType<{ children: React.ReactNode }>;
+  Padding: React.ComponentType<{ children: React.ReactNode }>;
   Video: React.ComponentType<{
     videoSrc: string;
   }>;
@@ -65,8 +66,14 @@ export type Renderers = {
     onClick: () => void;
   }>;
   CircularProgress: React.ComponentType<{}>;
-  HorizontalLayout: React.ComponentType<{ children: React.ReactNode }>;
-  VerticalLayout: React.ComponentType<{ children: React.ReactNode }>;
+  HorizontalLayout: React.ComponentType<{
+    children: React.ReactNode;
+    isLoading?: boolean;
+  }>;
+  VerticalLayout: React.ComponentType<{
+    children: React.ReactNode;
+    isLoading?: boolean;
+  }>;
   Input: React.ComponentType<{
     isClearable: boolean;
     placeholder?: string;
@@ -101,6 +108,7 @@ export type Renderers = {
   Avatar: React.ComponentType<{
     src: string;
     size?: "sm" | "md" | "lg";
+    href?: string;
   }>;
   Card: React.ComponentType<{
     imageSrc?: string;
@@ -408,6 +416,16 @@ const WrappedCardRenderer = <T extends React.ReactNode>(props: {
       {elements}
     </Component>
   );
+};
+
+const WrappedPaddingRenderer = <T extends React.ReactNode>(props: {
+  component: Renderers["Padding"];
+  element: Extract<ModElementRef<T>, { type: "padding" }>;
+}) => {
+  const { component: Component, element } = props;
+  const { type, elements, ...rest } = element;
+
+  return <Component {...rest}>{elements}</Component>;
 };
 
 const useForceRerender = () => {
@@ -723,6 +741,14 @@ export const Mod = (props: Props & { renderer: Renderer }) => {
               <WrappedCardRenderer
                 key={key}
                 component={renderers["Card"]}
+                element={el}
+              />
+            );
+          case "padding":
+            return (
+              <WrappedPaddingRenderer
+                key={key}
+                component={renderers["Padding"]}
                 element={el}
               />
             );

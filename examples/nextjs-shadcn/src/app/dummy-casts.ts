@@ -165,4 +165,24 @@ export const dummyCastData: Array<{
       },
     ],
   },
+  {
+    avatar_url:
+      "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
+    display_name: "David Furlong",
+    username: "df",
+    timestamp: "2023-08-17 09:16:52.293739",
+    text: "Just bought this token 🚀🚀🚀",
+    embeds: [
+      {
+        url: "eip155:1/erc20:0xd7c1eb0fe4a30d3b2a846c04aa6300888f087a5f",
+        status: "loaded",
+        metadata: {},
+      },
+      {
+        url: "eip155:8453/erc20:0x4ed4e862860bed51a9570b96d89af5e1b0efefed",
+        status: "loaded",
+        metadata: {},
+      },
+    ],
+  },
 ];

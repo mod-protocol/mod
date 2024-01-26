@@ -30,7 +30,9 @@ export type ModManifest = {
   /** A definition map of reusable elements, using their id as the key */
   elements?: Record<string, ModElement[]>;
   /** Permissions requested by the Mod */
-  permissions?: Array<"user.wallet.address" | "web3.eth.personal.sign">;
+  permissions?: Array<
+    "user.wallet.address" | "web3.eth.personal.sign" | "user.farcaster.fid"
+  >;
 };
 
 export type ModEvent =
@@ -130,6 +132,11 @@ type OpenLinkAction = BaseAction & {
   url: string;
 };
 
+type SetStateAction = BaseAction & {
+  type: "SETSTATE";
+  state: { [key: string]: string };
+};
+
 export type EthPersonalSignData = {
   statement: string;
   version: string;
@@ -171,6 +178,7 @@ export type ModAction =
   | AddEmbedAction
   | SetInputAction
   | OpenLinkAction
+  | SetStateAction
   | EthPersonalSignAction
   | SendEthTransactionAction
   | ExitAction;
@@ -208,11 +216,13 @@ export type ModElement =
       type: "horizontal-layout";
       elements?: string | ElementOrConditionalFlow[];
       onload?: ModEvent;
+      loading?: boolean;
     }
   | {
       type: "vertical-layout";
       elements?: string | ElementOrConditionalFlow[];
       onload?: ModEvent;
+      loading?: boolean;
     }
   | {
       type: "textarea";
@@ -283,6 +293,7 @@ export type ModElement =
   | {
       type: "avatar";
       src: string;
+      href?: string;
     }
   | ({
       type: "card";
@@ -305,4 +316,9 @@ export type ModElement =
           bottomLeftBadge?: never;
           bottomRightBadge?: never;
         }
-    ));
+    ))
+  | {
+      type: "padding";
+      elements?: string | ElementOrConditionalFlow[];
+      onclick?: ModEvent;
+    };
