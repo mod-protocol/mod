@@ -62,6 +62,7 @@ const view: ModElement[] = [
                           then: {
                             type: "avatar",
                             src: "{{refs.tokenReq.response.data.image}}",
+                            href: "{{refs.tokenReq.response.data.url}}",
                           },
                         },
                         {
