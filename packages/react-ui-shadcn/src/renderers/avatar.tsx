@@ -7,7 +7,14 @@ export const AvatarRenderer = (
 ) => {
   return (
     <Avatar>
-      <AvatarImage src={props.src}></AvatarImage>
+      {props.href ? (
+        <a href={props.href} target="_blank">
+          <AvatarImage src={props.src}></AvatarImage>
+        </a>
+      ) : (
+        <AvatarImage src={props.src}></AvatarImage>
+      )}
+
       <AvatarFallback></AvatarFallback>
     </Avatar>
   );
