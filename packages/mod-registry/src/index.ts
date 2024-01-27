@@ -13,6 +13,7 @@ import ZoraNftMinter from "@mods/zora-nft-minter";
 import ImgurUpload from "@mods/imgur-upload";
 import DALLE from "@mods/dall-e";
 import ZoraCreate from "@mods/zora-create";
+import FarcasterFramesRender from "@mods/farcaster-frames-render";
 
 /** All - Stable, suitable for use  */
 
@@ -27,6 +28,7 @@ export const allMods = [
   ImageRender,
   ChatGPTShorten,
   ChatGPT,
+  FarcasterFramesRender,
 ];
 
 export const creationMods: ModManifest[] = allMods.filter(
@@ -54,6 +56,7 @@ export const allModsExperimental = [
   ChatGPTShorten,
   ChatGPT,
   DALLE,
+  FarcasterFramesRender,
 ];
 
 export const creationModsExperimental: ModManifest[] =

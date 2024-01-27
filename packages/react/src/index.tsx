@@ -15,6 +15,7 @@ import {
   CreationContext,
   EthPersonalSignActionResolver,
   SendEthTransactionActionResolver,
+  SendFcFrameActionResolver,
 } from "@mod-protocol/core";
 import actionResolverHttp from "./action-resolver-http";
 import actionResolverOpenFile from "./action-resolver-open-file";
@@ -24,6 +25,7 @@ import actionResolverAddEmbed from "./action-resolver-add-embed";
 import actionResolverEthPersonalSign from "./action-resolver-eth-personal-sign";
 import actionResolverExit from "./action-resolver-exit";
 import actionResolverSendEthTransaction from "./action-resolver-send-eth-transaction";
+import actionResolverSendFcFrame from "./action-resolver-send-fc-frame-action";
 export * from "./render-embed";
 
 export type Renderers = {
@@ -424,6 +426,7 @@ export type ResolverTypes = {
   onAddEmbedAction?: AddEmbedActionResolver;
   onOpenLinkAction?: OpenLinkActionResolver;
   onEthPersonalSignAction?: EthPersonalSignActionResolver;
+  onSendFcFrameAction?: SendFcFrameActionResolver;
   onSendEthTransactionAction?: SendEthTransactionActionResolver;
   onExitAction?: ExitActionResolver;
 };
@@ -444,6 +447,7 @@ export const CreationMod = (
     onSetInputAction = actionResolverSetInput,
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
+    onSendFcFrameAction = actionResolverSendFcFrame,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
     onEthPersonalSignAction = actionResolverEthPersonalSign,
     onExitAction = actionResolverExit,
@@ -470,6 +474,7 @@ export const CreationMod = (
         onAddEmbedAction,
         onOpenLinkAction,
         onEthPersonalSignAction,
+        onSendFcFrameAction,
         onSendEthTransactionAction,
         onExitAction,
       })
@@ -494,6 +499,7 @@ export const RenderMod = (
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
     onEthPersonalSignAction = actionResolverEthPersonalSign,
+    onSendFcFrameAction = actionResolverSendFcFrame,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
     onExitAction = actionResolverExit,
   } = props;
@@ -518,6 +524,7 @@ export const RenderMod = (
         onAddEmbedAction,
         onOpenLinkAction,
         onEthPersonalSignAction,
+        onSendFcFrameAction,
         onSendEthTransactionAction,
         onExitAction,
       })
@@ -546,6 +553,7 @@ export const Mod = (props: Props & { renderer: Renderer }) => {
     onAddEmbedAction = actionResolverAddEmbed,
     onOpenLinkAction = actionResolverOpenLink,
     onEthPersonalSignAction = actionResolverEthPersonalSign,
+    onSendFcFrameAction = actionResolverSendFcFrame,
     onSendEthTransactionAction = actionResolverSendEthTransaction,
     onExitAction = actionResolverExit,
   } = props;
@@ -570,6 +578,9 @@ export const Mod = (props: Props & { renderer: Renderer }) => {
   React.useEffect(() => {
     renderer.setEthPersonalSignActionResolver(onEthPersonalSignAction);
   }, [onEthPersonalSignAction, renderer]);
+  React.useEffect(() => {
+    renderer.setSendFcFrameActionResolver(onSendFcFrameAction);
+  }, [onSendFcFrameAction, renderer]);
   React.useEffect(() => {
     renderer.setSendEthTransactionActionResolver(onSendEthTransactionAction);
   }, [onSendEthTransactionAction, renderer]);

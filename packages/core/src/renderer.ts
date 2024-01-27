@@ -295,6 +295,22 @@ export interface EthPersonalSignActionResolver {
   ): void;
 }
 
+export type SendFcFrameActionResolverInit = {
+  url: string;
+  action: string;
+};
+export type SendFcFrameActionResolverEvents = {
+  onSuccess: (customOpenGraph: object, htmlString: string) => void;
+  onError(error: { message: string }): void;
+};
+
+export interface SendFcFrameActionResolver {
+  (
+    init: SendFcFrameActionResolverInit,
+    events: SendFcFrameActionResolverEvents
+  ): void;
+}
+
 export type SendEthTransactionActionResolverInit = {
   data: EthTransactionData;
   chainId: string;
@@ -431,6 +447,7 @@ export type RendererOptions = {
   onAddEmbedAction: AddEmbedActionResolver;
   onOpenLinkAction: OpenLinkActionResolver;
   onEthPersonalSignAction: EthPersonalSignActionResolver;
+  onSendFcFrameAction: SendFcFrameActionResolver;
   onSendEthTransactionAction: SendEthTransactionActionResolver;
   onExitAction: ExitActionResolver;
 } & (
@@ -461,6 +478,7 @@ export class Renderer {
   private onSetInputAction: SetInputActionResolver;
   private onAddEmbedAction: AddEmbedActionResolver;
   private onOpenLinkAction: OpenLinkActionResolver;
+  private onSendFcFrameAction: SendFcFrameActionResolver;
   private onSendEthTransactionAction: SendEthTransactionActionResolver;
   private onEthPersonalSignAction: EthPersonalSignActionResolver;
   private onExitAction: ExitActionResolver;
@@ -472,6 +490,7 @@ export class Renderer {
     this.onHttpAction = options.onHttpAction;
     this.onOpenFileAction = options.onOpenFileAction;
     this.onSetInputAction = options.onSetInputAction;
+    this.onSendFcFrameAction = options.onSendFcFrameAction;
     this.onAddEmbedAction = options.onAddEmbedAction;
     this.onOpenLinkAction = options.onOpenLinkAction;
     this.onEthPersonalSignAction = options.onEthPersonalSignAction;
@@ -518,6 +537,10 @@ export class Renderer {
 
   setEthPersonalSignActionResolver(resolver: EthPersonalSignActionResolver) {
     this.onEthPersonalSignAction = resolver;
+  }
+
+  setSendFcFrameActionResolver(resolver: SendFcFrameActionResolver) {
+    this.onSendFcFrameAction = resolver;
   }
 
   setSendEthTransactionActionResolver(
@@ -892,6 +915,69 @@ export class Renderer {
                       signature,
                       signedMessage,
                       address,
+                    });
+                  }
+
+                  if (action.onsuccess) {
+                    this.stepIntoOrTriggerAction(action.onsuccess);
+                  }
+                },
+                onError: (error) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, { error });
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.onerror) {
+                    this.stepIntoOrTriggerAction(action.onerror);
+                  }
+
+                  this.onTreeChange();
+                },
+              }
+            );
+          }, 1);
+        });
+
+        this.asyncAction = {
+          promise,
+          ref: action,
+        };
+
+        break;
+      }
+      case "SENDFCFRAMEACTION": {
+        const promise = new Promise<void>((resolve) => {
+          setTimeout(() => {
+            this.onSendFcFrameAction(
+              {
+                url: action.post_url
+                  ? this.replaceInlineContext(action.post_url)
+                  : this.replaceInlineContext(action.url),
+                action: this.replaceInlineContext(action.action),
+              },
+              {
+                onSuccess: (customOpenGraph, htmlString) => {
+                  resolve();
+
+                  if (this.asyncAction?.promise !== promise) {
+                    return;
+                  }
+
+                  this.asyncAction = null;
+
+                  if (action.ref) {
+                    set(this.refs, action.ref, {
+                      htmlString: htmlString,
+                      customOpenGraph: customOpenGraph,
+                      status: "success",
                     });
                   }
 
