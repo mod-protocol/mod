@@ -64,9 +64,40 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
         property: "eth:nft:mint_url",
         fieldName: "ethNftMintUrl",
       },
+      {
+        multiple: false,
+        property: "fc:frame",
+        fieldName: "fcFrame",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:image",
+        fieldName: "fcFrameImage",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:1",
+        fieldName: "fcFrameButton1",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:2",
+        fieldName: "fcFrameButton2",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:3",
+        fieldName: "fcFrameButton3",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:4",
+        fieldName: "fcFrameButton4",
+      },
     ],
   });
 
+  /** Load any NFT metadata OG tags */
   let nftMetadata: NFTMetadata | undefined;
   if (
     data["customMetaTags"] &&
@@ -110,6 +141,16 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
     logo: data.ogLogo
       ? {
           url: data.ogLogo,
+        }
+      : undefined,
+    customOpenGraph: data["customMetaTags"]?.["fcFrame"]
+      ? {
+          "fc:frame": data["customMetaTags"]["fcFrame"],
+          "fc:frame:image": data["customMetaTags"]["fcFrameImage"],
+          "fc:frame:button:1": data["customMetaTags"]["fcFrameButton1"],
+          "fc:frame:button:2": data["customMetaTags"]["fcFrameButton2"],
+          "fc:frame:button:3": data["customMetaTags"]["fcFrameButton3"],
+          "fc:frame:button:4": data["customMetaTags"]["fcFrameButton4"],
         }
       : undefined,
     "json-ld": groupLinkedDataByType(linkedData),
