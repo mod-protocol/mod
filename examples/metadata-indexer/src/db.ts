@@ -92,6 +92,7 @@ export type CastEmbedUrlRow = {
 export type UrlMetadataRow = {
   id: GeneratedAlways<string>;
   url: string;
+  customOpenGraph: object | null;
   createdAt: Generated<Date>;
   updatedAt: Date | null; // null means it hasn't been indexed yet
   imageUrl: string | null;
