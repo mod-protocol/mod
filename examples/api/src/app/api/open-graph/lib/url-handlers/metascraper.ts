@@ -22,6 +22,8 @@ const ethDataSelectors: {
   },
 ];
 
+// TODO: Support fc:frame here or remove endpoint https://warpcast.notion.site/Farcaster-Frames-4bd47fe97dc74a42a48d3a234636d8c5
+
 const jsonLdDataSelector = new URLSearchParams({
   "data.json-ld.selectorAll": 'script[type="application/ld+json"]',
   "data.json-ld.attr": "text",
