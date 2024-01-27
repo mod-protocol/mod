@@ -127,6 +127,7 @@ export class IndexerQueue {
       .insertInto("urlMetadata")
       .values({
         url,
+        customOpenGraph: result.customOpenGraph ?? null,
         updatedAt: new Date(),
         imageUrl: result.image?.url,
         imageWidth: result.image?.width,
