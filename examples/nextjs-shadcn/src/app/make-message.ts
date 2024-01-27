@@ -1,21 +1,12 @@
 import {
-  Embed,
-  FarcasterNetwork,
   HashScheme,
-  makeCastAdd,
-  makeCastRemove,
-  makeLinkAdd,
-  makeLinkRemove,
-  makeReactionAdd,
-  makeReactionRemove,
   Message,
   MessageData,
   NobleEd25519Signer,
-  ReactionType,
-  Signer,
 } from "@farcaster/hub-web";
 import { blake3 } from "@noble/hashes/blake3";
 
+// fixme: actually store this?
 function getSigner(privateKey: string): NobleEd25519Signer {
   const ed25519Signer = new NobleEd25519Signer(Buffer.from(privateKey, "hex"));
   return ed25519Signer;

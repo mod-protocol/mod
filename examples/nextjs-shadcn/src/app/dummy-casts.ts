@@ -5,12 +5,14 @@ export const dummyCastData: Array<{
   display_name: string;
   username: string;
   timestamp: string;
+  fid: number;
+  hash: string;
   text: string;
   embeds: Array<Embed>;
 }> = [
   {
-    hash: ,
-    fid: ,
+    hash: "0x3a2d02b27ed6823ef4ef3c65b33cc7685d7ded99",
+    fid: 1214,
     avatar_url:
       "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
     display_name: "David Furlong",
@@ -33,8 +35,8 @@ export const dummyCastData: Array<{
     ],
   },
   {
-    hash: ,
-    fid: ,
+    hash: "0x3a2d02b27ed6823ef4ef3c65b33cc7685d7ded99",
+    fid: 1214,
     avatar_url:
       "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
     display_name: "David Furlong",
@@ -56,8 +58,8 @@ export const dummyCastData: Array<{
     ],
   },
   {
-    hash: ,
-    fid: ,
+    hash: "0x3a2d02b27ed6823ef4ef3c65b33cc7685d7ded99",
+    fid: 1214,
     avatar_url:
       "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
     display_name: "David Furlong",
@@ -110,8 +112,8 @@ export const dummyCastData: Array<{
     ],
   },
   {
-    hash: ,
-    fid: ,
+    hash: "0x3a2d02b27ed6823ef4ef3c65b33cc7685d7ded99",
+    fid: 1214,
     avatar_url:
       "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
     display_name: "David Furlong",
@@ -128,8 +130,8 @@ export const dummyCastData: Array<{
     ],
   },
   {
-    hash: ,
-    fid: ,
+    hash: "0x3a2d02b27ed6823ef4ef3c65b33cc7685d7ded99",
+    fid: 1214,
     avatar_url:
       "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
     display_name: "David Furlong",
@@ -176,6 +178,8 @@ export const dummyCastData: Array<{
     ],
   },
   {
+    fid: 1214,
+    hash: "0x3a2d02b27ed6823ef4ef3c65b33cc7685d7ded99",
     avatar_url:
       "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
     display_name: "David Furlong",
