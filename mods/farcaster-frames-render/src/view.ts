@@ -3,7 +3,7 @@ import { ModElement } from "@mod-protocol/core";
 const view: ModElement[] = [
   {
     type: "card",
-    aspectRatio: 16 / 9,
+    aspectRatio: 3 / 2,
     imageSrc: "{{embed.metadata.customOpenGraph['fc:frame:image']}}",
     elements: [
       {
