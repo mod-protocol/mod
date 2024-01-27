@@ -148,6 +148,13 @@ type EthPersonalSignAction = BaseAction & {
   data: EthPersonalSignData;
 };
 
+type SendFcFrameAction = BaseAction & {
+  type: "SENDFCFRAMEACTION";
+  url: string;
+  post_url?: string;
+  action: string;
+};
+
 type SendEthTransactionAction = BaseAction & {
   type: "SENDETHTRANSACTION";
   chainId: string;
@@ -171,6 +178,7 @@ export type ModAction =
   | AddEmbedAction
   | SetInputAction
   | OpenLinkAction
+  | SendFcFrameAction
   | EthPersonalSignAction
   | SendEthTransactionAction
   | ExitAction;

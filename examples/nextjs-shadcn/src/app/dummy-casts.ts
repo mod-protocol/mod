@@ -165,4 +165,36 @@ export const dummyCastData: Array<{
       },
     ],
   },
+  {
+    avatar_url:
+      "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_144/https%3A%2F%2Flh3.googleusercontent.com%2F-S5cdhOpZtJ_Qzg9iPWELEsRTkIsZ7qGYmVlwEORgFB00WWAtZGefRnS4Bjcz5ah40WVOOWeYfU5pP9Eekikb3cLMW2mZQOMQHlWhg",
+    display_name: "David Furlong",
+    username: "df",
+    timestamp: "2023-08-17 09:16:52.293739",
+    text: "What's your favorite color?",
+    embeds: [
+      {
+        url: "https://fc-polls.vercel.app/polls/d7e71f77-378c-4dcd-a0cc-2fa905bb94ae",
+        status: "loaded",
+        metadata: {
+          customOpenGraph: {
+            "fc:frame": "vNext",
+            "fc:frame:image":
+              "https://fc-polls.vercel.app/api/image?id=d7e71f77-378c-4dcd-a0cc-2fa905bb94ae",
+            "fc:frame:post_url":
+              "https://fc-polls.vercel.app/api/vote?id=d7e71f77-378c-4dcd-a0cc-2fa905bb94ae",
+            "fc:frame:button:1": "Blue",
+            "fc:frame:button:2": "Purple",
+            "fc:frame:button:3": "Red",
+            "fc:frame:button:4": "Black",
+          },
+          image: {
+            url: "https://fc-polls.vercel.app/api/image?id=d7e71f77-378c-4dcd-a0cc-2fa905bb94ae",
+          },
+          title: "What's your favourite color?",
+          publisher: "fc-polls.vercel.app",
+        },
+      },
+    ],
+  },
 ];

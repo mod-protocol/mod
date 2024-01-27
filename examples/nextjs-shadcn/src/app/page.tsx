@@ -101,6 +101,8 @@ export default function Page() {
             </div>
             <div className="flex flex-col md:w-1/2">
               <h2 className="text-xl">Embed renderers</h2>
+              <h3 className="mb-2 mt-4">Farcaster frames</h3>
+              <Cast cast={dummyCastData[5]} />
               <h3 className="mb-2 mt-2">NFT Mod with native minting</h3>
               <Cast cast={dummyCastData[4]} />
               <h3 className="mb-2 mt-4">Video Mod</h3>
