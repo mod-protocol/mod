@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@farcaster/core": "^0.13.5",
+    "@farcaster/hub-web": "^0.7.3",
     "@mod-protocol/core": "^0.1.1",
     "@mod-protocol/mod-registry": "^0.1.0",
     "@mod-protocol/react": "^0.1.1",

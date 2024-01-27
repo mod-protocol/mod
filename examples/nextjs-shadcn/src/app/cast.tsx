@@ -93,6 +93,8 @@ export function Cast(props: {
   cast: {
     avatar_url: string;
     display_name: string;
+    fid: number;
+    hash: string;
     username: string;
     timestamp: string;
     text: string;
@@ -134,7 +136,11 @@ export function Cast(props: {
               <span>@{props.cast.username}</span> <span>· {publishedAt}</span>
               <div className="cursor-pointer mt-1 max-w-[600px]">
                 {convertStructuredCastToReactDOMComponents(structuredCast, {})}
-                <Embeds embeds={props.cast.embeds} />
+                <Embeds
+                  embeds={props.cast.embeds}
+                  castFid={props.cast.fid}
+                  castHash={props.cast.hash}
+                />
               </div>
               <div className="flex justify-between mt-2 max-w-[400px]">
                 <button className="text-slate-500">
