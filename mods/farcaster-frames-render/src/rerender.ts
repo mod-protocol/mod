@@ -32,7 +32,6 @@ const rerender: ModElement[] = [
                 url: "{{embed.url}}",
                 action: "1",
                 onsuccess: "#rerender",
-                // todo: disable buttons onloading
               },
             },
           },
