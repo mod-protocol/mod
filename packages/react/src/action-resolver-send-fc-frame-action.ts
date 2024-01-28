@@ -9,6 +9,6 @@ export default function actionResolverSendFcFrame(
 ) {
   // eslint-disable-next-line no-console
   console.warn(
-    "Please implement 'SendFcFrameActionResolver' and configure the Mod to use it, using https://warpcast.notion.site/Farcaster-Frames-4bd47fe97dc74a42a48d3a234636d8c5."
+    "Please implement 'SendFcFrameActionResolver' and configure the Mod to use it, using https://github.com/mod-protocol/mod/blob/a96dc6b4482d6ede3fee7baada9d5abe8bb430a1/examples/nextjs-shadcn/src/app/embeds.tsx#L51 as reference code."
   );
 }

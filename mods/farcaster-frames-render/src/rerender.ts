@@ -3,15 +3,16 @@ import { ModElement } from "@mod-protocol/core";
 const rerender: ModElement[] = [
   {
     type: "card",
-    imageSrc: "{{embed.metadata.customOpenGraph['fc:frame:image']}}",
-    bottomRightBadge: "{{embed.url}}",
+    aspectRatio: 3 / 2,
+    imageSrc: "{{refs.frameActionResponse.customOpenGraph['fc:frame:image']}}",
     elements: [
       {
         type: "horizontal-layout",
         elements: [
           {
             if: {
-              value: "{{button.customOpenGraph['fc:frame:button:1']}}",
+              value:
+                "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:1']}}",
               match: {
                 NOT: {
                   equals: "",
@@ -20,11 +21,14 @@ const rerender: ModElement[] = [
             },
             then: {
               type: "button",
-              label: "{{button.customOpenGraph['fc:frame:button:1']}}",
+              variant: "secondary",
+              label:
+                "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:1']}}",
               onclick: {
-                ref: "button",
+                ref: "refs.frameActionResponse",
                 type: "SENDFCFRAMEACTION",
-                post_url: "{{button.customOpenGraph['fc:frame:post_url']}}",
+                post_url:
+                  "{{refs.frameActionResponse.customOpenGraph['fc:frame:post_url']}}",
                 url: "{{embed.url}}",
                 action: "1",
                 onsuccess: "#rerender",
@@ -34,7 +38,8 @@ const rerender: ModElement[] = [
           },
           {
             if: {
-              value: "{{button.customOpenGraph['fc:frame:button:2']}}",
+              value:
+                "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:2']}}",
               match: {
                 NOT: {
                   equals: "",
@@ -43,11 +48,14 @@ const rerender: ModElement[] = [
             },
             then: {
               type: "button",
-              label: "{{button.customOpenGraph['fc:frame:button:2']}}",
+              variant: "secondary",
+              label:
+                "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:2']}}",
               onclick: {
-                ref: "button",
+                ref: "refs.frameActionResponse",
                 type: "SENDFCFRAMEACTION",
-                post_url: "{{button.customOpenGraph['fc:frame:post_url']}}",
+                post_url:
+                  "{{refs.frameActionResponse.customOpenGraph['fc:frame:post_url']}}",
                 url: "{{embed.url}}",
                 action: "2",
                 onsuccess: "#rerender",
@@ -56,7 +64,8 @@ const rerender: ModElement[] = [
           },
           {
             if: {
-              value: "{{button.customOpenGraph['fc:frame:button:3']}}",
+              value:
+                "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:3']}}",
               match: {
                 NOT: {
                   equals: "",
@@ -65,11 +74,14 @@ const rerender: ModElement[] = [
             },
             then: {
               type: "button",
-              label: "{{button.customOpenGraph['fc:frame:button:3']}}",
+              variant: "secondary",
+              label:
+                "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:3']}}",
               onclick: {
-                ref: "button",
+                ref: "refs.frameActionResponse",
                 type: "SENDFCFRAMEACTION",
-                post_url: "{{button.customOpenGraph['fc:frame:post_url']}}",
+                post_url:
+                  "{{refs.frameActionResponse.customOpenGraph['fc:frame:post_url']}}",
                 url: "{{embed.url}}",
                 action: "3",
                 onsuccess: "#rerender",
@@ -78,7 +90,8 @@ const rerender: ModElement[] = [
           },
           {
             if: {
-              value: "{{button.customOpenGraph['fc:frame:button:4']}}",
+              value:
+                "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:4']}}",
               match: {
                 NOT: {
                   equals: "",
@@ -87,11 +100,14 @@ const rerender: ModElement[] = [
             },
             then: {
               type: "button",
-              label: "{{button.customOpenGraph['fc:frame:button:4']}}",
+              variant: "secondary",
+              label:
+                "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:4']}}",
               onclick: {
-                ref: "button",
+                ref: "refs.frameActionResponse",
                 type: "SENDFCFRAMEACTION",
-                post_url: "{{button.customOpenGraph['fc:frame:post_url']}}",
+                post_url:
+                  "{{refs.frameActionResponse.customOpenGraph['fc:frame:post_url']}}",
                 url: "{{embed.url}}",
                 action: "4",
                 onsuccess: "#rerender",

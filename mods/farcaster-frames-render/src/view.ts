@@ -20,9 +20,10 @@ const view: ModElement[] = [
             },
             then: {
               type: "button",
+              variant: "secondary",
               label: "{{embed.metadata.customOpenGraph['fc:frame:button:1']}}",
               onclick: {
-                ref: "button",
+                ref: "frameActionResponse",
                 type: "SENDFCFRAMEACTION",
                 post_url:
                   "{{embed.metadata.customOpenGraph['fc:frame:post_url']}}",
@@ -44,9 +45,10 @@ const view: ModElement[] = [
             },
             then: {
               type: "button",
+              variant: "secondary",
               label: "{{embed.metadata.customOpenGraph['fc:frame:button:2']}}",
               onclick: {
-                ref: "button",
+                ref: "frameActionResponse",
                 type: "SENDFCFRAMEACTION",
                 post_url:
                   "{{embed.metadata.customOpenGraph['fc:frame:post_url']}}",
@@ -67,9 +69,10 @@ const view: ModElement[] = [
             },
             then: {
               type: "button",
+              variant: "secondary",
               label: "{{embed.metadata.customOpenGraph['fc:frame:button:3']}}",
               onclick: {
-                ref: "button",
+                ref: "frameActionResponse",
                 type: "SENDFCFRAMEACTION",
                 post_url:
                   "{{embed.metadata.customOpenGraph['fc:frame:post_url']}}",
@@ -90,9 +93,10 @@ const view: ModElement[] = [
             },
             then: {
               type: "button",
+              variant: "secondary",
               label: "{{embed.metadata.customOpenGraph['fc:frame:button:4']}}",
               onclick: {
-                ref: "button",
+                ref: "frameActionResponse",
                 type: "SENDFCFRAMEACTION",
                 post_url:
                   "{{embed.metadata.customOpenGraph['fc:frame:post_url']}}",
