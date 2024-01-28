@@ -1,5 +1,11 @@
 # docs
 
+## 0.4.0
+
+### Minor Changes
+
+- 2ff629a: Add Farcaster frames support, including a new action Mods can call, ADDFCFRAMEACTION
+
 ## 0.3.0
 
 ### Minor Changes

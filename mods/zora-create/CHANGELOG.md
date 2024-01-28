@@ -1,5 +1,14 @@
 # @mods/zora-create
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [df98c06]
+- Updated dependencies [2901ee9]
+- Updated dependencies [2ff629a]
+  - @mod-protocol/core@0.2.0
+
 ## 0.0.2
 
 ### Patch Changes

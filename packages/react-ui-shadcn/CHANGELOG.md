@@ -1,5 +1,17 @@
 # @mod-protocol/react-ui-shadcn
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [df98c06]
+- Updated dependencies [2901ee9]
+- Updated dependencies [2ff629a]
+  - @mod-protocol/core@0.2.0
+  - @mod-protocol/mod-registry@0.2.0
+  - @mod-protocol/farcaster@0.2.0
+  - @mod-protocol/react@0.2.0
+
 ## 0.3.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,11 +11,11 @@
   "dependencies": {
     "@farcaster/core": "^0.13.5",
     "@farcaster/hub-web": "^0.7.3",
-    "@mod-protocol/core": "^0.1.1",
-    "@mod-protocol/mod-registry": "^0.1.0",
-    "@mod-protocol/react": "^0.1.1",
+    "@mod-protocol/core": "^0.2.0",
+    "@mod-protocol/mod-registry": "^0.2.0",
+    "@mod-protocol/react": "^0.2.0",
     "@mod-protocol/react-editor": "^0.1.0",
-    "@mod-protocol/react-ui-shadcn": "^0.3.0",
+    "@mod-protocol/react-ui-shadcn": "^0.3.1",
     "@rainbow-me/rainbowkit": "^1.2.0",
     "axios": "^1.6.7",
     "encoding": "^0.1.13",

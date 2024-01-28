@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "scripts": {
     "db-types": "kysely-codegen --out-file src/app/api/cast-embeds-metadata/types/db.d.ts --dialect postgres",
@@ -14,7 +14,7 @@
     "@irys/sdk": "^0.0.4",
     "@lit-protocol/lit-node-client": "^3.0.24",
     "@lit-protocol/types": "^2.2.61",
-    "@mod-protocol/core": "^0.1.2",
+    "@mod-protocol/core": "^0.2.0",
     "@reservoir0x/reservoir-sdk": "^1.8.4",
     "@vercel/postgres-kysely": "^0.6.0",
     "@zoralabs/protocol-sdk": "^0.5.0",

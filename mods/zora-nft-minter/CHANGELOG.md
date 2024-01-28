@@ -1,5 +1,14 @@
 # @mods/zora-nft-minter
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [df98c06]
+- Updated dependencies [2901ee9]
+- Updated dependencies [2ff629a]
+  - @mod-protocol/core@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes

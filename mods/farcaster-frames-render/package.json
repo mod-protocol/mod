@@ -2,9 +2,9 @@
     "name": "@mods/farcaster-frames-render",
     "main": "./index.ts",
     "types": "./index.ts",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "private": true,
     "dependencies": {
-        "@mod-protocol/core": "^0.1.0"
+        "@mod-protocol/core": "^0.2.0"
     }
 }

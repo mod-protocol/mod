@@ -1,6 +1,6 @@
 {
   "name": "@mod-protocol/react-ui-shadcn",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"**/*.ts*\" && tsc --noEmit",
@@ -12,9 +12,9 @@
     "url": "https://github.com/mod-protocol/mod/tree/main/packages/react-ui-shadcn"
   },
   "dependencies": {
-    "@mod-protocol/core": "^0.1.1",
-    "@mod-protocol/farcaster": "^0.1.0",
-    "@mod-protocol/react": "^0.1.1",
+    "@mod-protocol/core": "^0.2.0",
+    "@mod-protocol/farcaster": "^0.2.0",
+    "@mod-protocol/react": "^0.2.0",
     "@mod-protocol/react-editor": "^0.1.0",
     "@mod-protocol/mod-registry": "*",
     "@primer/octicons-react": "^19.5.0",

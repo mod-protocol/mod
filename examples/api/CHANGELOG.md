@@ -1,5 +1,15 @@
 # api
 
+## 0.2.2
+
+### Patch Changes
+
+- df98c06: add farcaster frames indexing
+- Updated dependencies [df98c06]
+- Updated dependencies [2901ee9]
+- Updated dependencies [2ff629a]
+  - @mod-protocol/core@0.2.0
+
 ## 0.2.1
 
 ### Patch Changes

@@ -3,8 +3,8 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": {
-    "@mod-protocol/core": "^0.1.0"
+    "@mod-protocol/core": "^0.2.0"
   }
 }
