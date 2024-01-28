@@ -297,10 +297,11 @@ export interface EthPersonalSignActionResolver {
 
 export type SendFcFrameActionResolverInit = {
   url: string;
+  post_url: string;
   action: string;
 };
 export type SendFcFrameActionResolverEvents = {
-  onSuccess: (customOpenGraph: object, htmlString: string) => void;
+  onSuccess: (customOpenGraph: object) => void;
   onError(error: { message: string }): void;
 };
 
@@ -958,32 +959,33 @@ export class Renderer {
           setTimeout(() => {
             this.onSendFcFrameAction(
               {
-                url: action.post_url
+                url: this.replaceInlineContext(action.url),
+                post_url: action.post_url
                   ? this.replaceInlineContext(action.post_url)
                   : this.replaceInlineContext(action.url),
                 action: this.replaceInlineContext(action.action),
               },
               {
-                onSuccess: (customOpenGraph, htmlString) => {
+                onSuccess: (customOpenGraph) => {
                   resolve();
 
                   if (this.asyncAction?.promise !== promise) {
                     return;
                   }
 
-                  this.asyncAction = null;
-
                   if (action.ref) {
                     set(this.refs, action.ref, {
-                      htmlString: htmlString,
                       customOpenGraph: customOpenGraph,
                       status: "success",
                     });
                   }
 
+                  this.asyncAction = null;
+
                   if (action.onsuccess) {
                     this.stepIntoOrTriggerAction(action.onsuccess);
                   }
+                  this.onTreeChange();
                 },
                 onError: (error) => {
                   resolve();

@@ -1,0 +1,10 @@
+import Image from "next/image";
+
+## By integrating Mod, you also get Farcaster Frames support automatically
+
+There is a Mod, [Farcaster Frames Render](https://github.com/mod-protocol/mod/blob/7f4d2c59c60c916ab1e683f112d7c319cbb5d3fc/mods/farcaster-frames-render) that integrates Farcaster Frames into your app. In order for the Farcaster Frames to work, you need to provide a `onSendFcFrameAction` property to the `RichEmbed` `resolvers` object.
+An example of this function implementation using neynar can be found [here](https://github.com/mod-protocol/mod/blob/a96dc6b4482d6ede3fee7baada9d5abe8bb430a1/examples/nextjs-shadcn/src/app/embeds.tsx#L51)
+
+#
+
+<Image src="/farcaster-frames.gif" alt="frames example" width="600" height="500"  />

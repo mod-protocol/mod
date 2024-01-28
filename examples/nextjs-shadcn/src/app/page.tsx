@@ -16,6 +16,8 @@ import { dummyCastData } from "./dummy-casts";
 import EditorExample from "./editor-example";
 
 import "@rainbow-me/rainbowkit/styles.css";
+import { useFarcasterIdentity } from "./use-farcaster-connect";
+import QRCode from "qrcode.react";
 
 const { chains, publicClient } = configureChains(
   [mainnet, polygon, optimism, arbitrum, base, zora],
@@ -36,6 +38,8 @@ const wagmiConfig = createConfig({
 });
 export default function Page() {
   const { resolvedTheme } = useTheme();
+  const { farcasterUser, loading, handleSignIn, logout } =
+    useFarcasterIdentity();
 
   return (
     <WagmiConfig config={wagmiConfig}>
@@ -70,7 +74,47 @@ export default function Page() {
                 </a>
               </div>
 
-              <div className="ml-auto">
+              <div className="ml-auto flex flex-row gap-4">
+                <div>
+                  {!farcasterUser?.status && (
+                    <button
+                      className="rounded bg-purple-200 p-2 px-4 text-purple-500"
+                      style={{
+                        cursor: loading ? "not-allowed" : "pointer",
+                      }}
+                      onClick={handleSignIn}
+                      disabled={loading}
+                    >
+                      {loading ? "Loading..." : "Sign in with farcaster"}
+                    </button>
+                  )}
+                  {farcasterUser?.status === "approved" && (
+                    <button
+                      className="rounded p-2 px-4 text-red-400"
+                      onClick={() => logout()}
+                    >
+                      Clear Farcaster signer
+                    </button>
+                  )}
+                  {farcasterUser?.status === "pending_approval" &&
+                    farcasterUser?.signer_approval_url && (
+                      <div className="signer-approval-container mr-4">
+                        Scan with your camera app
+                        <QRCode
+                          value={farcasterUser.signer_approval_url}
+                          size={64}
+                        />
+                        <div className="or-divider">OR</div>
+                        <a
+                          href={farcasterUser.signer_approval_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          open url
+                        </a>
+                      </div>
+                    )}
+                </div>
                 <ConnectButton />
               </div>
             </div>
@@ -102,7 +146,14 @@ export default function Page() {
             <div className="flex flex-col md:w-1/2">
               <h2 className="text-xl">Embed renderers</h2>
               <h3 className="mb-2 mt-4">Farcaster frames</h3>
-              <Cast cast={dummyCastData[5]} />
+              {farcasterUser?.status === "approved" ? (
+                <Cast cast={dummyCastData[5]} />
+              ) : (
+                <div className="text-red-400">
+                  Sign in to Farcaster using the button above to try the frame
+                  Mod
+                </div>
+              )}
               <h3 className="mb-2 mt-2">NFT Mod with native minting</h3>
               <Cast cast={dummyCastData[4]} />
               <h3 className="mb-2 mt-4">Video Mod</h3>

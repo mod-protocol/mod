@@ -24,13 +24,7 @@ import { useMemo } from "react";
 import { useAccount } from "wagmi";
 import { useExperimentalMods } from "./use-experimental-mods";
 import "@mod-protocol/react-ui-shadcn/dist/public/video-js.css";
-import {
-  FarcasterNetwork,
-  FrameActionData,
-  MessageType,
-  getFarcasterTime,
-} from "@farcaster/core";
-import { makeMessage } from "./make-message";
+import { useFarcasterIdentity } from "./use-farcaster-connect";
 
 export function Embeds(props: {
   embeds: Array<Embed>;
@@ -38,9 +32,9 @@ export function Embeds(props: {
   castFid: number;
 }) {
   const experimentalMods = useExperimentalMods();
+  const { farcasterUser } = useFarcasterIdentity();
   const { address } = useAccount();
-  // todo: Add Warpcast connect to example?
-  const fid = 1214;
+  const fid = farcasterUser?.fid;
 
   const context = useMemo<Omit<ContextType, "embed">>(() => {
     return {
@@ -52,100 +46,41 @@ export function Embeds(props: {
         },
       },
     };
-  }, [address]);
+  }, [address, fid]);
 
   const onSendFcFrameAction = useMemo(() => {
     async function onSendFcFrameActionRes(
-      { url, action }: SendFcFrameActionResolverInit,
+      { url, post_url, action }: SendFcFrameActionResolverInit,
       { onError, onSuccess }: SendFcFrameActionResolverEvents
     ) {
-      const messageJSON: FrameActionData = {
-        type: MessageType.FRAME_ACTION,
-        fid: fid,
-        timestamp: getFarcasterTime()._unsafeUnwrap(),
-        network: FarcasterNetwork.MAINNET,
-        frameActionBody: {
-          url: Buffer.from(url),
-          buttonIndex: Number(action) - 1,
-          castId: {
-            fid: props.castFid,
-            hash: Buffer.from(props.castHash),
+      try {
+        const options = {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
           },
-        },
-      };
-
-      const message = await makeMessage(messageJSON);
-
-      fetch(`${url}`, {
-        method: "POST",
-        body: JSON.stringify({
-          untrustedData: {
-            fid: fid,
-            url: url,
-            messageHash: Buffer.from(message.hash).toString("hex"),
-            timestamp: message.data.timestamp,
-            network: 1,
-            buttonIndex: Number(action) - 1,
-            castId: {
-              fid: props.castFid,
-              hash: props.castHash,
+          body: JSON.stringify({
+            cast_hash: props.castHash,
+            signer_uuid: farcasterUser.signer_uuid,
+            action: {
+              button: { title: "abc", index: Number(action) },
+              frames_url: url,
+              post_url: post_url,
             },
-          },
-          trustedData: {
-            messageBytes: Buffer.from(message.dataBytes).toString("hex"),
-          },
-        } as {
-          untrustedData: {
-            fid: number;
-            url: string;
-            messageHash: string;
-            timestamp: number;
-            network: number;
-            buttonIndex: number;
-            castId: { fid: number; hash: string };
-          };
-          trustedData: {
-            messageBytes: string;
-          };
-        }),
-      })
-        .then((res) => res.text())
-        .then((res) => {
-          // parse OG from htmlString
-          const doc = new DOMParser().parseFromString(res, "text/html");
-          const nextFrame = {
-            "fc:frame": doc
-              .querySelector('meta[property="fc:frame"]')
-              ?.getAttribute("content"),
-            "fc:frame:image": doc
-              .querySelector('meta[property="fc:frame:image"]')
-              ?.getAttribute("content"),
-            "fc:frame:post_url": doc
-              .querySelector('meta[property="fc:frame:post_url"]')
-              ?.getAttribute("content"),
-            "fc:frame:button:1": doc
-              .querySelector('meta[property="fc:frame:button:1"]')
-              ?.getAttribute("content"),
-            "fc:frame:button:2": doc
-              .querySelector('meta[property="fc:frame:button:2"]')
-              ?.getAttribute("content"),
-            "fc:frame:button:3": doc
-              .querySelector('meta[property="fc:frame:button:3"]')
-              ?.getAttribute("content"),
-            "fc:frame:button:4": doc
-              .querySelector('meta[property="fc:frame:button:4"]')
-              ?.getAttribute("content"),
-          };
+          }),
+        };
 
-          return onSuccess(nextFrame, res);
-        })
-        .catch(({ message }) => {
-          return onError({ message });
-        });
+        const res = await fetch("/post-message/frame-action", options);
+        const resJson = await res.json();
+
+        onSuccess(resJson);
+      } catch (err) {
+        onError(err);
+      }
     }
 
     return onSendFcFrameActionRes;
-  }, [fid]);
+  }, [fid, farcasterUser?.signer_uuid, props.castHash]);
 
   const onSendEthTransactionAction = useMemo(
     () =>
