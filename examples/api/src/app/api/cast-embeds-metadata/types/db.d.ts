@@ -6,6 +6,18 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
+export type Json = ColumnType<JsonValue, string, string>;
+
+export type JsonArray = JsonValue[];
+
+export type JsonObject = {
+  [K in string]?: JsonValue;
+};
+
+export type JsonPrimitive = boolean | number | string | null;
+
+export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
+
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface CastEmbedUrls {
@@ -59,6 +71,7 @@ export interface NftMetadata {
 export interface UrlMetadata {
   alt: string | null;
   created_at: Generated<Timestamp>;
+  custom_open_graph: Json | null;
   description: string | null;
   image_height: number | null;
   image_url: string | null;
