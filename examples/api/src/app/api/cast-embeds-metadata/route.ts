@@ -64,6 +64,7 @@ function formatRow(row): EmbedWithCastHash {
       logo: row.url_logo_url ? { url: row.url_logo_url } : undefined,
       mimeType: row.url_mime_type || undefined,
       nft: nftMetadata,
+      customOpenGraph: row.url_custom_open_graph || undefined,
     };
   }
 
@@ -124,6 +125,7 @@ export async function POST(request: NextRequest) {
         "url_metadata.mime_type as url_mime_type",
         "url_metadata.nft_collection_id as nft_collection_id",
         "url_metadata.nft_metadata_id as nft_metadata_id",
+        "url_metadata.custom_open_graph as url_custom_open_graph",
 
         // NFT Collection metadata
         "nft_collections.creator_address as collection_creator_address",
