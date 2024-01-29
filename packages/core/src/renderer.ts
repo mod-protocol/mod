@@ -936,9 +936,11 @@ export class Renderer {
           setTimeout(() => {
             /* Populate attribution tags */
             const zeroAddress = "0000000000000000000000000000000000000000";
-            const modTag = this.manifest.custodyAddress.startsWith("0x")
-              ? this.manifest.custodyAddress.slice(2)
-              : zeroAddress;
+            const modTag =
+              this.manifest.custodyAddress.startsWith("0x") &&
+              this.manifest.custodyAddress.length === 42
+                ? this.manifest.custodyAddress.slice(2)
+                : zeroAddress;
             const clientTag =
               this.context.clientReferralAddress?.slice(2) || zeroAddress;
             let txData = this.replaceInlineContext(action.txData.data || "");
