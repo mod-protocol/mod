@@ -960,9 +960,10 @@ export class Renderer {
             this.onSendFcFrameAction(
               {
                 url: this.replaceInlineContext(action.url),
-                post_url: action.post_url
-                  ? this.replaceInlineContext(action.post_url)
-                  : this.replaceInlineContext(action.url),
+                post_url:
+                  action.post_url && this.replaceInlineContext(action.post_url)
+                    ? this.replaceInlineContext(action.post_url)
+                    : this.replaceInlineContext(action.url),
                 action: this.replaceInlineContext(action.action),
               },
               {

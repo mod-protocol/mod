@@ -185,8 +185,26 @@ export const dummyCastData: Array<{
     display_name: "David Furlong",
     username: "df",
     timestamp: "2023-08-17 09:16:52.293739",
-    text: "What's your favorite color?",
+    text: "Frames!",
     embeds: [
+      {
+        url: "https://opepen.art/sets",
+        status: "loaded",
+        metadata: {
+          customOpenGraph: {
+            "fc:frame": "vNext",
+            "fc:frame:image":
+              "https://opepen.nyc3.cdn.digitaloceanspaces.com/OG/sets@frame.png",
+            "fc:frame:button:1": "View Website",
+            "fc:frame:button:2": "Browse Sets",
+          },
+          image: {
+            url: "https://opepen.nyc3.cdn.digitaloceanspaces.com/OG/sets.png",
+          },
+          title: "Opepen Sets",
+          publisher: "https://opepen.art/sets",
+        },
+      },
       {
         url: "https://fc-polls.vercel.app/polls/d7e71f77-378c-4dcd-a0cc-2fa905bb94ae",
         status: "loaded",

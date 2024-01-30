@@ -25,7 +25,7 @@ const rerender: ModElement[] = [
               label:
                 "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:1']}}",
               onclick: {
-                ref: "refs.frameActionResponse",
+                ref: "frameActionResponse",
                 type: "SENDFCFRAMEACTION",
                 post_url:
                   "{{refs.frameActionResponse.customOpenGraph['fc:frame:post_url']}}",
@@ -51,7 +51,7 @@ const rerender: ModElement[] = [
               label:
                 "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:2']}}",
               onclick: {
-                ref: "refs.frameActionResponse",
+                ref: "frameActionResponse",
                 type: "SENDFCFRAMEACTION",
                 post_url:
                   "{{refs.frameActionResponse.customOpenGraph['fc:frame:post_url']}}",
@@ -77,7 +77,7 @@ const rerender: ModElement[] = [
               label:
                 "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:3']}}",
               onclick: {
-                ref: "refs.frameActionResponse",
+                ref: "frameActionResponse",
                 type: "SENDFCFRAMEACTION",
                 post_url:
                   "{{refs.frameActionResponse.customOpenGraph['fc:frame:post_url']}}",
@@ -103,7 +103,7 @@ const rerender: ModElement[] = [
               label:
                 "{{refs.frameActionResponse.customOpenGraph['fc:frame:button:4']}}",
               onclick: {
-                ref: "refs.frameActionResponse",
+                ref: "frameActionResponse",
                 type: "SENDFCFRAMEACTION",
                 post_url:
                   "{{refs.frameActionResponse.customOpenGraph['fc:frame:post_url']}}",
