@@ -19,6 +19,7 @@ import { HubSubscriber } from "./hubSubscriber";
 import { IndexerQueue } from "./indexerQueue";
 import { bytesToHex, farcasterTimeToDate, normalizeUrl } from "./util/util";
 import { sql } from "kysely";
+import { Server } from "./server";
 
 // If you're hitting out-of-memory errors, try decreasing this to reduce overall
 // memory usage.
@@ -32,6 +33,7 @@ export class HubReplicator {
   private client: HubRpcClient;
   private subscriber: HubSubscriber;
   private indexerQueue: IndexerQueue;
+  private server: Server;
 
   constructor(
     private hubAddress: string,
@@ -71,6 +73,8 @@ export class HubReplicator {
 
     this.indexerQueue = new IndexerQueue(db, log);
 
+    this.server = new Server(this.indexerQueue);
+
     process
       .on("unhandledRejection", (reason, p) => {
         log.error(reason, "Unhandled Rejection at Promise", p);
@@ -88,6 +92,9 @@ export class HubReplicator {
     if (process.env["INDEX_DISABLE"] !== "true") {
       await this.indexerQueue.start();
     }
+
+    // Start API server
+    this.server.start();
 
     // Process live events going forward, starting from the last event we
     // processed (if there was one).
@@ -117,7 +124,7 @@ export class HubReplicator {
 
     this.subscriber.start(subscription?.lastEventId);
 
-    if (tooFarBehind) {
+    if (tooFarBehind && process.env["BACKFILL_DISABLE"] !== "true") {
       // Start backfilling all historical data in the background
       await this.backfill();
     } else {
