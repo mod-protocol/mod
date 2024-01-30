@@ -1,5 +1,11 @@
 # @mod-protocol/core
 
+## 0.2.1
+
+### Patch Changes
+
+- 3a7078a: fix: multi-step frames
+
 ## 0.2.0
 
 ### Minor Changes

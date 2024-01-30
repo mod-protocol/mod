@@ -1,5 +1,13 @@
 # @mods/farcaster-frames-render
 
+## 0.2.1
+
+### Patch Changes
+
+- 3a7078a: fix: multi-step frames
+- Updated dependencies [3a7078a]
+  - @mod-protocol/core@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

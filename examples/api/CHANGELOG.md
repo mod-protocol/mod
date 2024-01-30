@@ -1,5 +1,13 @@
 # api
 
+## 0.2.3
+
+### Patch Changes
+
+- d5359a3: feat: add custom opengraph to cast-embeds-metadata endpoint
+- Updated dependencies [3a7078a]
+  - @mod-protocol/core@0.2.1
+
 ## 0.2.2
 
 ### Patch Changes
