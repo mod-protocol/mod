@@ -1,5 +1,11 @@
 # @mod-protocol/mod-registry
 
+## 0.2.2
+
+### Patch Changes
+
+- Fix aspect ratio of frame mod
+
 ## 0.2.1
 
 ### Patch Changes
