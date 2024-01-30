@@ -140,37 +140,37 @@ export const dummyCastData: Array<{
     text: "I just minted this straight from my feed",
     embeds: [
       {
-        url: "https://zora.co/collect/zora:0x787c6366341fbb8a7bfff1064009bce60796338f/61",
+        url: "https://zora.co/collect/zora:0x81d226fb36ca785583e79e84312335d0e166d59b/1",
         status: "loaded",
         metadata: {
           image: {
-            url: "https://ipfs.io/ipfs/bafkreibyyf6rd5w3l3gxksy2narahb2yj3a2b4nngkqfvwpc3hkaj3daae",
+            url: "https://i.seadn.io/s/raw/files/d6384f27778a43e614caeee5bff07496.png?auto=format&dpr=1&w=640",
           },
-          alt: "Hyperbrand: Opepen",
-          description: "a collection expressing Opepen as a hyperbrand",
-          title: "Hyperbrand: Opepen",
+          alt: "Gitcoin Impact Report 01",
+          description: "Gitcoin Impact Report 01: PDF Onchain",
+          title: "Gitcoin Impact Report 01: PDF Onchain",
           publisher: "boop",
           logo: {
             url: "https://i.imgur.com/Cus7QVM.png",
           },
           nft: {
             mediaUrl:
-              "https://ipfs.io/ipfs/bafkreifass5p37alcfqz5vn5b5lrgpfvxq7lkvpz45ovwa354jogttwr5u",
-            tokenId: "61",
+              "https://i.seadn.io/s/raw/files/d6384f27778a43e614caeee5bff07496.png?auto=format&dpr=1&w=640",
+            tokenId: "1",
             collection: {
               chain: "zora",
-              contractAddress: "0x787c6366341fbb8a7bfff1064009bce60796338f",
-              creatorAddress: "0x5adf1c982bde935ce98a07e115ff8d09254ecb1b",
-              description: "a collection expressing Opepen as a hyperbrand",
-              id: "chain://eip155:7777777/erc1155:0x787c6366341fbb8a7bfff1064009bce60796338f",
+              contractAddress: "0x81d226fb36ca785583e79e84312335d0e166d59b",
+              creatorAddress: "0x3e364ebc92aa057c10597ef3d30c0201d84f03e8",
+              description: "Gitcoin's Impact Report on Zora Network",
+              id: "chain://eip155:7777777/erc721:0x81d226fb36ca785583e79e84312335d0e166d59b",
               imageUrl:
-                "https://ipfs.io/ipfs/bafkreibyyf6rd5w3l3gxksy2narahb2yj3a2b4nngkqfvwpc3hkaj3daae",
-              itemCount: 53,
+                "https://i.seadn.io/s/raw/files/d6384f27778a43e614caeee5bff07496.png?auto=format&dpr=1&w=640",
+              itemCount: 91324,
               mintUrl:
-                "https://mint.fun/zora/0x787c6366341fbb8a7bfff1064009bce60796338f",
-              name: "Hyperbrand: Opepen",
-              openSeaUrl: "https://opensea.io/collection/hyperbrand-opepen",
-              ownerCount: 22,
+                "https://zora.co/collect/zora:0x81d226fb36ca785583e79e84312335d0e166d59b/1",
+              name: "Impact on Zora Network",
+              openSeaUrl: "https://opensea.io/collection/rabby-desktop-genesis",
+              ownerCount: 78254,
             },
           },
         },
