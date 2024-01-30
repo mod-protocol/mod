@@ -3,7 +3,8 @@ import { ModElement } from "@mod-protocol/core";
 const rerender: ModElement[] = [
   {
     type: "card",
-    aspectRatio: 3 / 2,
+    // a warpcast special
+    aspectRatio: 1.9166,
     imageSrc: "{{refs.frameActionResponse.customOpenGraph['fc:frame:image']}}",
     elements: [
       {

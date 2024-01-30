@@ -1,5 +1,11 @@
 # @mod-protocol/mod-registry
 
+## 0.2.1
+
+### Patch Changes
+
+- Fix aspect ratio
+
 ## 0.2.0
 
 ### Minor Changes
