@@ -174,47 +174,53 @@ return <RichEmbed metadata={metadata} />;
 
 ```tsx
 type UrlMetadata = {
-    image?: {
-        url?: string;
-        width?: number;
-        height?: number;
-    };
-    "json-ld"?: Record<string, object[]>;
-    description?: string;
-    alt?: string;
-    title?: string;
-    publisher?: string;
-    logo?: {
-        url: string;
-    };
-    customOpenGraph?: {
-      "fc:frame"?: string;
-      "fc:frame:image"?: string;
-      "fc:frame:button:1"?: string;
-      "fc:frame:button:2"?: string;
-      "fc:frame:button:3"?: string;
-      "fc:frame:button:4"?: string;
-    };
-    nft?: {
-      owner?: FarcasterUser;
-      tokenId?: string;
-      mediaUrl?: string;
+  image?: {
+    url?: string;
+    width?: number;
+    height?: number;
+  };
+  "json-ld"?: Record<string, object[]>;
+  description?: string;
+  alt?: string;
+  title?: string;
+  publisher?: string;
+  logo?: {
+    url: string;
+  };
+  customOpenGraph?: {
+    "fc:frame"?: string;
+    "fc:frame:image"?: string;
+    "fc:frame:button:1"?: string;
+    "fc:frame:button:2"?: string;
+    "fc:frame:button:3"?: string;
+    "fc:frame:button:4"?: string;
+  };
+  nft?: {
+    owner?: FarcasterUser;
+    tokenId?: string;
+    mediaUrl?: string;
+    mintUrl?: string;
+    mimeType?: string;
+    collection: {
+      id: string;
+      name: string;
+      chain: string;
+      contractAddress: string;
+      creatorAddress: string;
+      itemCount: number;
+      ownerCount: number;
       mintUrl?: string;
-      mimeType?: string;
-      collection: {
-        id: string;
-        name: string;
-        chain: string;
-        contractAddress: string;
-        creatorAddress: string;
-        itemCount: number;
-        ownerCount: number;
-        mintUrl?: string;
-        description?: string;
-        imageUrl?: string;
-        openSeaUrl?: string;
-        creator?: FarcasterUser;
-      };
+      description?: string;
+      imageUrl?: string;
+      openSeaUrl?: string;
+      creator?: FarcasterUser;
     };
+  };
 };
 ```
+
+## Refreshing the cache
+
+It is possible to manually trigger a refresh of the cache for a given URL by making a request to the following endpoint:
+
+`POST /refresh?url=<url-encoded-url>`
