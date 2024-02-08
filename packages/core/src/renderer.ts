@@ -16,6 +16,12 @@ import {
   HTTPAction,
 } from "./manifest";
 import { Embed } from "./embeds";
+import Mustache from "mustache";
+
+// Prevent default HTML escaping behaviour
+Mustache.escape = function (value) {
+  return value;
+};
 
 export type ModElementRef<T> =
   | {
@@ -334,7 +340,18 @@ export interface ExitActionResolver {
 }
 
 function replaceInlineContext(target: string, context: any): string {
-  return target.replace(/{{([^{{}}]+)}}/g, (_, key) => get(context, key, ``));
+  const output = Mustache.render(target, {
+    ...context,
+    decimals: function () {
+      return function (text: string, render: (text: string) => string) {
+        var parts = text.split(" ");
+        var value = parseFloat(render(parts[0]));
+        var decimalPlaces = parseInt(render(parts[1]), 10);
+        return value.toFixed(decimalPlaces);
+      };
+    },
+  });
+  return output;
 }
 
 function matchesOp(value: string, op: Op, context: any): boolean {
