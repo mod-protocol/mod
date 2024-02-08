@@ -12,8 +12,10 @@
   "devDependencies": {
     "@changesets/cli": "2.26.2",
     "@turbo/gen": "^1.9.7",
+    "@types/jest": "^29.5.11",
     "eslint": "^8.46.0",
     "eslint-config-custom": "*",
+    "jest": "^29.7.0",
     "prettier": "^2.5.1",
     "react": "^18.2.0",
     "tsup": "^7.2.0",

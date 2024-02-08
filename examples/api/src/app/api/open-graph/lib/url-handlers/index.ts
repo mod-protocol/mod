@@ -4,6 +4,7 @@ import opensea from "./opensea";
 import zora from "./zora";
 import zoraPremint from "./zora-premint";
 import imageFileUrl from "./image-file";
+import ipfs from "./ipfs";
 import metascraper from "./metascraper";
 import localFetch from "./local-fetch";
 
@@ -13,6 +14,7 @@ const handlers: UrlHandler[] = [
   zora,
   caip19,
   imageFileUrl,
+  ipfs,
   localFetch,
   metascraper,
 ];
