@@ -76,6 +76,21 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
       },
       {
         multiple: false,
+        property: "fc:frame:image:aspect_ratio",
+        fieldName: "fcFrameImageAspectRatio",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:post_url",
+        fieldName: "fcFramePostUrl",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:input:text",
+        fieldName: "fcFrameImageInputText",
+      },
+      {
+        multiple: false,
         property: "fc:frame:button:1",
         fieldName: "fcFrameButton1",
       },
@@ -93,6 +108,46 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
         multiple: false,
         property: "fc:frame:button:4",
         fieldName: "fcFrameButton4",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:1:action",
+        fieldName: "fcFrameButton1Action",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:2:action",
+        fieldName: "fcFrameButton2Action",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:3:action",
+        fieldName: "fcFrameButton3Action",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:4:action",
+        fieldName: "fcFrameButton4Action",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:1:target",
+        fieldName: "fcFrameButton1Target",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:2:target",
+        fieldName: "fcFrameButton2Target",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:3:target",
+        fieldName: "fcFrameButton3Target",
+      },
+      {
+        multiple: false,
+        property: "fc:frame:button:4:target",
+        fieldName: "fcFrameButton4Target",
       },
     ],
   });
@@ -151,6 +206,25 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
           "fc:frame:button:2": data["customMetaTags"]["fcFrameButton2"],
           "fc:frame:button:3": data["customMetaTags"]["fcFrameButton3"],
           "fc:frame:button:4": data["customMetaTags"]["fcFrameButton4"],
+          "fc:frame:button:1:action":
+            data["customMetaTags"]["fcFrameButton1Action"],
+          "fc:frame:button:2:action":
+            data["customMetaTags"]["fcFrameButton2Action"],
+          "fc:frame:button:3:action":
+            data["customMetaTags"]["fcFrameButton3Action"],
+          "fc:frame:button:4:action":
+            data["customMetaTags"]["fcFrameButton4Action"],
+          "fc:frame:button:1:target":
+            data["customMetaTags"]["fcFrameButton1Target"],
+          "fc:frame:button:2:target":
+            data["customMetaTags"]["fcFrameButton2Target"],
+          "fc:frame:button:3:target":
+            data["customMetaTags"]["fcFrameButton3Target"],
+          "fc:frame:button:4:target":
+            data["customMetaTags"]["fcFrameButton4Target"],
+          "fc:frame:image:aspect_ratio":
+            data["customMetaTags"]["fcFrameImageAspectRatio"],
+          "fc:frame:post_url": data["customMetaTags"]["fcFramePostUrl"],
         }
       : undefined,
     "json-ld": groupLinkedDataByType(linkedData),
