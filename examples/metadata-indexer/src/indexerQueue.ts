@@ -157,10 +157,14 @@ export class IndexerQueue {
       customOpenGraph: result.customOpenGraph || null,
       updatedAt: new Date(),
       imageUrl: result.image?.url || null,
-      imageWidth: result.image?.width ? Math.floor(result.image.width) : null,
-      imageHeight: result.image?.height
-        ? Math.floor(result.image.height)
-        : null,
+      imageWidth:
+        result.image?.width && Math.floor(result.image.width)
+          ? Math.floor(result.image.width)
+          : null,
+      imageHeight:
+        result.image?.height && Math.floor(result.image.height)
+          ? Math.floor(result.image.height)
+          : null,
       description: result.description || null,
       alt: result.alt || null,
       title: result.title || null,
