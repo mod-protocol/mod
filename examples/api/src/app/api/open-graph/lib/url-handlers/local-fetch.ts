@@ -4,6 +4,7 @@ import { UrlHandler } from "../../types/url-handler";
 import { chainById } from "../chains/chain-index";
 import { fetchNFTMetadata } from "../util";
 import * as cheerio from "cheerio";
+import { getFrame } from "frames.js";
 
 export function groupLinkedDataByType<T = any>(
   linkedData: T[]
@@ -50,6 +51,15 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
       metaTags[key] = value;
     }
   });
+
+  // Validate frame
+  const { errors } = getFrame({ url, htmlString: html });
+  if (!errors) {
+    metaTags["mod_indexer:valid_frame"] = "true";
+  } else {
+    // In case the meta tags tried to include the frame validation, we remove it
+    delete metaTags["mod_indexer:valid_frame"];
+  }
 
   const { result: data } = await ogs({
     html,
