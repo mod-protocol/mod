@@ -83,10 +83,15 @@ export class IndexerQueue {
       .executeTakeFirst();
 
     // - We are no longer skipping URLs that have already been indexed
-    // if (alreadyIndexed?.updatedAt && !force) {
-    //   this.log.info(`[URL Indexer] Skipping ${url} since it's already indexed`);
-    //   return;
-    // }
+    if (
+      alreadyIndexed?.updatedAt &&
+      process.env["SKIP_INDEXED"] &&
+      process.env["SKIP_INDEXED"] !== "false" &&
+      !force
+    ) {
+      this.log.info(`[URL Indexer] Skipping ${url} since it's already indexed`);
+      return;
+    }
 
     this.jobsCompleted += 1;
 
