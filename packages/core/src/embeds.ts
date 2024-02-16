@@ -63,15 +63,7 @@ export type UrlMetadata = {
   alt?: string;
   title?: string;
   publisher?: string;
-  customOpenGraph?: {
-    "fc:frame"?: string;
-    "fc:frame:image"?: string;
-    "fc:frame:post_url"?: string;
-    "fc:frame:button:1"?: string;
-    "fc:frame:button:2"?: string;
-    "fc:frame:button:3"?: string;
-    "fc:frame:button:4"?: string;
-  };
+  customOpenGraph?: Record<string, string>;
   logo?: {
     url: string;
   };

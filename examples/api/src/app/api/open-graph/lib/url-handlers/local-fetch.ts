@@ -41,6 +41,16 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
     })
     .get();
 
+  // Get all meta tags and build an object with property/name as key and content as value
+  const metaTags: Record<string, string> = {};
+  $("meta").each((i, el) => {
+    const key = $(el).attr("property") || $(el).attr("name");
+    const value = $(el).attr("content");
+    if (key) {
+      metaTags[key] = value;
+    }
+  });
+
   const { result: data } = await ogs({
     html,
     customMetaTags: [
@@ -63,36 +73,6 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
         multiple: false,
         property: "eth:nft:mint_url",
         fieldName: "ethNftMintUrl",
-      },
-      {
-        multiple: false,
-        property: "fc:frame",
-        fieldName: "fcFrame",
-      },
-      {
-        multiple: false,
-        property: "fc:frame:image",
-        fieldName: "fcFrameImage",
-      },
-      {
-        multiple: false,
-        property: "fc:frame:button:1",
-        fieldName: "fcFrameButton1",
-      },
-      {
-        multiple: false,
-        property: "fc:frame:button:2",
-        fieldName: "fcFrameButton2",
-      },
-      {
-        multiple: false,
-        property: "fc:frame:button:3",
-        fieldName: "fcFrameButton3",
-      },
-      {
-        multiple: false,
-        property: "fc:frame:button:4",
-        fieldName: "fcFrameButton4",
       },
     ],
   });
@@ -143,16 +123,7 @@ async function localFetchHandler(url: string): Promise<UrlMetadata> {
           url: data.ogLogo,
         }
       : undefined,
-    customOpenGraph: data["customMetaTags"]?.["fcFrame"]
-      ? {
-          "fc:frame": data["customMetaTags"]["fcFrame"],
-          "fc:frame:image": data["customMetaTags"]["fcFrameImage"],
-          "fc:frame:button:1": data["customMetaTags"]["fcFrameButton1"],
-          "fc:frame:button:2": data["customMetaTags"]["fcFrameButton2"],
-          "fc:frame:button:3": data["customMetaTags"]["fcFrameButton3"],
-          "fc:frame:button:4": data["customMetaTags"]["fcFrameButton4"],
-        }
-      : undefined,
+    customOpenGraph: metaTags,
     "json-ld": groupLinkedDataByType(linkedData),
     publisher: data.ogSiteName,
     mimeType: response["headers"]["content-type"],
