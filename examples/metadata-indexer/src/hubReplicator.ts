@@ -124,7 +124,11 @@ export class HubReplicator {
 
     this.subscriber.start(subscription?.lastEventId);
 
-    if (tooFarBehind && process.env["BACKFILL_DISABLE"] !== "true") {
+    if (
+      (process.env["FORCE_BACKFILL"] &&
+        process.env["FORCE_BACKFILL"] !== "false") ||
+      (tooFarBehind && process.env["BACKFILL_DISABLE"] !== "true")
+    ) {
       // Start backfilling all historical data in the background
       await this.backfill();
     } else {
