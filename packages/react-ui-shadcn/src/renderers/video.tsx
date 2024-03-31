@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useEffect, useCallback } from "react";
 import videojs from "video.js";
 
 interface PlayerProps {
   videoSrc: string;
+  mimeType?: string;
 }
 
 const videoJSoptions: {
@@ -30,23 +31,34 @@ export const VideoRenderer = (props: PlayerProps) => {
   const videoRef = React.useRef<HTMLDivElement>(null);
   const playerRef = React.useRef<any>(null);
 
+  const [videoSrc, setVideoSrc] = React.useState<string | undefined>();
+
+  const [hasStartedPlaying, setHasStartedPlaying] =
+    React.useState<boolean>(false);
+
   const options = useMemo(
     () => ({
       ...videoJSoptions,
       // video is not necessarily rewritten yet
       sources: [
         {
-          src: props.videoSrc ?? "",
-          type: props.videoSrc?.endsWith(".m3u8")
-            ? "application/x-mpegURL"
-            : props.videoSrc?.endsWith(".mp4")
-            ? "video/mp4"
-            : "",
+          src: videoSrc ?? "",
+          type:
+            props.mimeType ||
+            (videoSrc?.endsWith(".m3u8")
+              ? "application/x-mpegURL"
+              : videoSrc?.endsWith(".mp4")
+              ? "video/mp4"
+              : ""),
         },
       ],
     }),
-    [props.videoSrc]
+    [videoSrc, props.mimeType]
   );
+
+  useEffect(() => {
+    setVideoSrc(props.videoSrc);
+  }, [props.videoSrc]);
 
   useEffect(() => {
     // Make sure Video.js player is only initialized once
@@ -63,8 +75,11 @@ export const VideoRenderer = (props: PlayerProps) => {
 
       player.autoplay(options.autoplay);
       player.src(options.sources);
+      player.on("play", () => {
+        setHasStartedPlaying(true);
+      });
     }
-  }, [options, videoRef, props]);
+  }, [options, videoRef, videoSrc]);
 
   // Dispose the Video.js player when the functional component unmounts
   useEffect(() => {

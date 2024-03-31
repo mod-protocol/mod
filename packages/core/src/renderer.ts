@@ -31,6 +31,7 @@ export type ModElementRef<T> =
   | {
       type: "video";
       videoSrc: string;
+      mimeType?: string;
     }
   | {
       type: "link";
@@ -333,8 +334,32 @@ export interface ExitActionResolver {
   (): void;
 }
 
-function replaceInlineContext(target: string, context: any): string {
-  return target.replace(/{{([^{{}}]+)}}/g, (_, key) => get(context, key, ``));
+function executeCommand(input: string, command: string) {
+  const [cmd, ...args] = command.split(" ");
+  switch (cmd) {
+    case "split":
+      return input.split(args[0]);
+    case "index":
+      return input[parseInt(args[0], 10)];
+    default:
+      return input;
+  }
+}
+
+export function replaceInlineContext(target: string, context: any): string {
+  return target.replace(/{{([^{{}}]+)}}/g, (_, key) => {
+    const parts = key.split("|").map((part: string) => part.trim());
+    let value = get(context, parts[0], "");
+
+    // Process additional commands if they exist
+    if (parts.length > 1) {
+      for (let i = 1; i < parts.length; i++) {
+        value = executeCommand(value, parts[i]);
+      }
+    }
+
+    return value;
+  });
 }
 
 function matchesOp(value: string, op: Op, context: any): boolean {
@@ -628,6 +653,7 @@ export class Renderer {
       case "POST":
       case "PUT":
       case "PATCH":
+      case "HEAD":
       case "DELETE": {
         const options = this.constructHttpAction(action);
 
@@ -677,8 +703,26 @@ export class Renderer {
                 }
 
                 if (action.ref) {
-                  set(this.refs, action.ref, { error });
+                  const actionRef = get(this.refs, action.ref);
+                  const retries = actionRef?._retries || 0;
+                  set(this.refs, action.ref, {
+                    ...actionRef,
+                    error,
+                    _retries: retries + 1,
+                  });
                   this.onTreeChange();
+
+                  if (action.retryTimeout) {
+                    if (
+                      action.retryCount !== undefined
+                        ? retries < action.retryCount
+                        : true
+                    ) {
+                      setTimeout(() => {
+                        this.stepIntoOrTriggerAction(action);
+                      }, action.retryTimeout);
+                    }
+                  }
                 }
 
                 this.asyncAction = null;
@@ -1286,6 +1330,9 @@ export class Renderer {
             {
               type: "video",
               videoSrc: this.replaceInlineContext(el.videoSrc),
+              mimeType: el.mimeType
+                ? this.replaceInlineContext(el.mimeType)
+                : undefined,
             },
             key
           );

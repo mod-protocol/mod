@@ -89,7 +89,14 @@ type HTTPBody =
       formData: Record<string, FormDataType>;
     };
 
-export type HTTPAction = BaseAction & { url: string } & (
+export type HTTPAction = BaseAction & {
+  url: string;
+  retryTimeout?: number;
+  retryCount?: number;
+} & (
+    | {
+        type: "HEAD";
+      }
     | {
         type: "GET";
         searchParams?: Record<string, string>;
@@ -248,6 +255,7 @@ export type ModElement =
   | {
       type: "video";
       videoSrc: string;
+      mimeType?: string;
     }
   | {
       type: "tabs";

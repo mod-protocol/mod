@@ -18,6 +18,15 @@ const manifest: ModManifest = {
       },
       element: view,
     },
+    {
+      if: {
+        value: "{{embed.metadata.mimeType}}",
+        match: {
+          startsWith: "video/",
+        },
+      },
+      element: view,
+    },
   ],
   elements: {
     "#view": view,
