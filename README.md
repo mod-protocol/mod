@@ -1,3 +1,5 @@
+# This is no longer supported, please consider using Open Frames & frames.js instead
+
 # Mod Monorepo
 
 This is the monorepo for the packages of [Mod protocol](https://www.modprotocol.org)
